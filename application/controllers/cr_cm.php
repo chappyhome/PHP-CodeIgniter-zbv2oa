@@ -36,7 +36,7 @@ class Cr_cm extends Admin_Controller {
 // ------------------------------------------------------------------------
 
     /**
-     * 客户分组默认页
+     * 客户来源默认页
      *
      * @access  public
      * @return  void
@@ -63,7 +63,7 @@ class Cr_cm extends Admin_Controller {
 // ------------------------------------------------------------------------
 
     /**
-     * 增加客户分组
+     * 增加客户来源
      *
      * @access  public
      * @return  void
@@ -80,7 +80,7 @@ class Cr_cm extends Admin_Controller {
 // ------------------------------------------------------------------------
 
     /**
-     * 修改客户分组
+     * 修改客户来源
      *
      * @access  public
      * @return  void
@@ -100,7 +100,7 @@ class Cr_cm extends Admin_Controller {
 // ------------------------------------------------------------------------
 
     /**
-     * 删除客户分组
+     * 删除客户来源
      *
      * @access  public
      * @return  void
@@ -119,7 +119,7 @@ class Cr_cm extends Admin_Controller {
 // ------------------------------------------------------------------------
 
     /**
-     * 客服关系默认页
+     * 获取表单POST
      *
      * @access  public
      * @return  void
@@ -137,8 +137,8 @@ class Cr_cm extends Admin_Controller {
             return $data;
         }
     }
-    
+
 }
 
 /* End of file cr_cm.php */
-/* Location: ./admin/controllers/cr_cm.php */
+/* Location: ./application/controllers/cr_cm.php */
