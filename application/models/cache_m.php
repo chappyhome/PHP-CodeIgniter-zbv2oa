@@ -85,7 +85,6 @@ class Cache_m extends CI_Model {
                     ->where('menu_level', 0)
                     ->where('menu_parent', 0)
                     ->join('zb_right', 'zb_menu.right_id = zb_right.right_id')
-                    ->order_by('menu_id','desc')
                     ->get('zb_menu')
                     ->result_array();
             foreach ($level_1_menus as & $i) {
