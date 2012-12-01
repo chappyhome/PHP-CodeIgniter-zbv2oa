@@ -15,4 +15,4 @@ _thumbs/
 */expressionengine/cache/*
 
 # Netbeans
-nbproject/*
+nbproject/
