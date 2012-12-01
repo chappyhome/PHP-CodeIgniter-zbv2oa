@@ -16,10 +16,10 @@ if (!defined('BASEPATH'))
 // ------------------------------------------------------------------------
 
 /**
- * ZBV2OA 客户关系控制器
+ * ZBV2OA 电话销售控制器
  * @author      Binarx
  */
-class Cr extends Admin_Controller {
+class Cr_tel extends Admin_Controller {
 
     /**
      * 构造函数
@@ -48,5 +48,5 @@ class Cr extends Admin_Controller {
 // ------------------------------------------------------------------------
 }
 
-/* End of file cr.php */
-/* Location: ./admin/controllers/cr.php */
+/* End of file cr_tel.php */
+/* Location: ./admin/controllers/cr_tel.php */
