@@ -59,9 +59,9 @@ class Cr_gm extends Admin_Controller {
         $data['pagination'] = $this->pagination->create_links();
         $this->_template('cr_gm_list_v',$data);
     }
-    
+
 // ------------------------------------------------------------------------
-    
+
     /**
      * 增加客户分组
      *
@@ -78,7 +78,7 @@ class Cr_gm extends Admin_Controller {
         }
     }
 // ------------------------------------------------------------------------
-    
+
     /**
      * 修改客户分组
      *
@@ -98,7 +98,7 @@ class Cr_gm extends Admin_Controller {
         }
     }
 // ------------------------------------------------------------------------
-    
+
     /**
      * 删除客户分组
      *
@@ -115,9 +115,9 @@ class Cr_gm extends Admin_Controller {
         }
         $this->customer_class_m->del_class($id);
         $this->_message('分组删除成功!', 'cr_gm/view/', TRUE);
-    }  
+    }
 // ------------------------------------------------------------------------
-    
+
     /**
      * 客服关系默认页
      *
@@ -136,8 +136,8 @@ class Cr_gm extends Admin_Controller {
             $data['class_introduce'] = $this->input->post('class_introduce', TRUE);
             return $data;
         }
-    }       
+    }
 }
 
 /* End of file cr_gm.php */
-/* Location: ./admin/controllers/cr_gm.php */
+/* Location: ./application/controllers/cr_gm.php */
