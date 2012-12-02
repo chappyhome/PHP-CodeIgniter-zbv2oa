@@ -48,7 +48,8 @@ class Customer_from_m extends CI_Model {
         if ($offset) {
             $this->db->offset($offset);
         }
-        return $this->db->select('from_id,from_name,rate')
+        return $this->db->select('from_id,from_name,rate,fullname')
+                        ->join('zb_user', 'zb_user.user_id = zb_customer_from.user_id', 'left')
                         ->get('zb_customer_from')
                         ->result();
     }

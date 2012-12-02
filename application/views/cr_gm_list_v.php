@@ -48,6 +48,6 @@
 <div class="pages_bar pagination"><?php echo $pagination; ?></div>
 <script language="javascript">
     $('a.confirm_delete').click(function(){
-        return confirm('是否要删除所选用户？');	
+        return confirm('是否要删除所选信息？');
     });
 </script>

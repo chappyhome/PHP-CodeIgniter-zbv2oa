@@ -72,7 +72,7 @@ class Ss_user extends Admin_Controller {
             $this->_message('用户添加成功!', 'ss_user/view', TRUE);
         } else {
             $data['roles'] = $this->user_m->get_roles();
-            $data['list'] = $department_id ? $this->user_m->get_em_users($department_id, 0, 0, 1) : 0;
+            $data['list'] = $department_id ? $this->user_m->get_em_users($department_id, 0, 0, 1, 1) : 0;
             $data['departments'] = $this->user_m->get_departments();
             $data['department_id'] = $department_id;
             $this->_template('ss_user_add_v', $data);
@@ -97,7 +97,7 @@ class Ss_user extends Admin_Controller {
         }
     }
 
-    // ------------------------------------------------------------------------    
+    // ------------------------------------------------------------------------
     /**
      * 修改用户表单生成/处理函数
      *
@@ -158,12 +158,12 @@ class Ss_user extends Admin_Controller {
             $this->user_m->stop_user($id);
             $this->_message('冻结用户成功，此用户将不能登陆系统!', 'ss_user/view/', TRUE);
         } else {
-            $this->user_m->stop_user($id,1);
+            $this->user_m->stop_user($id, 1);
             $this->_message('恢复用户成功!', 'ss_user/view/', TRUE);
         }
     }
 
-    // ------------------------------------------------------------------------    
+    // ------------------------------------------------------------------------
     /**
      * 获取表单数据
      *

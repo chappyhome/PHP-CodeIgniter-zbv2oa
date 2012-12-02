@@ -6,7 +6,7 @@
         <span>></span><span>列表</span>
     </div>
     <div class="operating">
-        <a class="hack_ie" href="<?php echo site_url('cr_gm/add'); ?>"><button class="operating_btn" type="button"><span class="addition">添加客户分组</span></button></a>
+        <a class="hack_ie" href="<?php echo site_url('cr_cm/add'); ?>"><button class="operating_btn" type="button"><span class="addition">添加客户来源</span></button></a>
     </div>
     <div class="field">
         <table class="list_table">
@@ -15,9 +15,9 @@
             <thead>
                 <tr>
                     <th></th>
-                    <th>分组名称</th>
+                    <th>来源名称</th>
                     <th>客户数量</th>
-                    <th>分组介绍</th>
+                    <th>关联员工</th>
                     <th>操作选项</th>
                 </tr>
             </thead>
@@ -33,12 +33,12 @@
             <?php foreach ($list as $v) : ?>
                 <tr>
                     <td></td>
-                    <td><?php echo $v->class_name; ?></td>
-                    <td><?php echo $this->customer_class_m->get_class_user_num($v->class_id) ?></td>
-                    <td><?php echo $v->class_introduce; ?></td>
+                    <td><?php echo $v->from_name; ?></td>
+                    <td><?php echo $this->customer_from_m->get_from_user_num($v->from_id) ?></td>
+                    <td><?php echo $v->fullname?$v->fullname:'[无关联员工]'; ?></td>
                     <td>
-                        <a href="<?php echo site_url('cr_gm/edit/' . $v->class_id); ?>"><img class="operator" src="theme/images/icon_edit.gif" alt="修改" title="修改"></a>
-                        <a class="confirm_delete" href="<?php echo site_url('cr_gm/del/' . $v->class_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
+                        <a href="<?php echo site_url('cr_cm/edit/' . $v->from_id); ?>"><img class="operator" src="theme/images/icon_edit.gif" alt="修改" title="修改"></a>
+                        <a class="confirm_delete" href="<?php echo site_url('cr_cm/del/' . $v->from_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
                     </td>
                 </tr>
             <?php endforeach; ?>
@@ -48,6 +48,6 @@
 <div class="pages_bar pagination"><?php echo $pagination; ?></div>
 <script language="javascript">
     $('a.confirm_delete').click(function(){
-        return confirm('是否要删除所选用户？');	
+        return confirm('是否要删除所选信息？');
     });
 </script>

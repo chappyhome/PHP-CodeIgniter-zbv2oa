@@ -44,7 +44,7 @@ class Em extends Admin_Controller {
     public function view($department_id = 0) {
         //$offset 分页偏移
         $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
-        $data['list'] = $this->user_m->get_em_users($department_id, 15, $offset, 0);
+        $data['list'] = $this->user_m->get_em_users($department_id, 15, $offset, 0, 0);
         $data['department_id'] = $department_id;
         $data['departments'] = $this->user_m->get_departments();
         //加载分页

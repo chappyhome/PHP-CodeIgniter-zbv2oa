@@ -189,7 +189,7 @@ class User_m extends CI_Model {
      * @param   int
      * @return  object
      */
-    public function get_em_users($department_id = 0, $limit = 0, $offset = 0, $is_not_admin = 0) {
+    public function get_em_users($department_id = 0, $limit = 0, $offset = 0, $is_not_admin = 0, $is_not_leave = 0) {
         if ($department_id) {
             $this->db->where('department_id', $department_id);
         }
@@ -201,6 +201,9 @@ class User_m extends CI_Model {
         }
         if ($is_not_admin) {
             $this->db->where('is_admin', 0);
+        }
+        if ($is_not_leave) {
+            $this->db->where('is_leave', 0);
         }
         return $this->db->from('zb_user')
                         ->where('fullname !=', 'NULL')
@@ -299,7 +302,7 @@ class User_m extends CI_Model {
         return $this->db->where('user_id', $id)->update('zb_user', $data);
     }
 
-    // ------------------------------------------------------------------------    
+    // ------------------------------------------------------------------------
 
     /**
      * 删除用户
