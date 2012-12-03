@@ -44,6 +44,18 @@ class Cr extends Admin_Controller {
     public function my() {
         $this->_template('default_v');
     }
+    
+// ------------------------------------------------------------------------
+
+    /**
+     * 客服关系默认页
+     *
+     * @access  public
+     * @return  void
+     */
+    public function add_customer() {
+        $this->_template('cr_customer_add_v');
+    }    
 
 // ------------------------------------------------------------------------
 }

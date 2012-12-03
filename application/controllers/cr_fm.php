@@ -19,7 +19,7 @@ if (!defined('BASEPATH'))
  * ZBV2OA 客户资料来源控制器
  * @author      Binarx
  */
-class Cr_cm extends Admin_Controller {
+class Cr_fm extends Admin_Controller {
 
     /**
      * 构造函数
@@ -46,18 +46,18 @@ class Cr_cm extends Admin_Controller {
         $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
         $data['list'] = $this->customer_from_m->get_from(15, $offset);
         if(empty($data['list'])){
-            $this->_message('客户来源列表为空!', 'cr_cm/add', TRUE);
+            $this->_message('客户来源列表为空!', 'cr_fm/add', TRUE);
         }
         //加载分页
         $this->load->library('pagination');
-        $config['base_url'] = site_url('cr_cm/view') . '?';
+        $config['base_url'] = site_url('cr_fm/view') . '?';
         $config['per_page'] = 15;
         $config['page_query_string'] = TRUE;
         $config['query_string_segment'] = 'page';
         $config['total_rows'] = $this->customer_from_m->get_froms_num();
         $this->pagination->initialize($config);
         $data['pagination'] = $this->pagination->create_links();
-        $this->_template('cr_cm_list_v',$data);
+        $this->_template('cr_fm_list_v',$data);
     }
 
 // ------------------------------------------------------------------------
@@ -72,12 +72,12 @@ class Cr_cm extends Admin_Controller {
         if ($this->_get_form_data(1)) {
             $data = $this->_get_form_data(1);
             $this->customer_from_m->add_from($data);
-            $this->_message('来源添加成功!', 'cr_cm/view', TRUE);
+            $this->_message('来源添加成功!', 'cr_fm/view', TRUE);
         } else {
             $data['list'] = $department_id ? $this->user_m->get_em_users($department_id, 0, 0, 0, 1) : 0;
             $data['departments'] = $this->user_m->get_departments();
             $data['department_id'] = $department_id;
-            $this->_template('cr_cm_add_v',$data);
+            $this->_template('cr_fm_add_v',$data);
         }
     }
 // ------------------------------------------------------------------------
@@ -95,9 +95,12 @@ class Cr_cm extends Admin_Controller {
         }
         if ($this->_get_form_data(0)) {
             $this->customer_from_m->edit_from($id, $this->_get_form_data(0));
-            $this->_message('来源修改成功!', 'cr_cm/view/', TRUE);
+            $this->_message('来源修改成功!', 'cr_fm/view/', TRUE);
         } else {
-            $this->_template('cr_cm_edit_v', $data);
+            $department_id  = $this->input->get('department_id');
+            $data['user'] = $department_id ? $this->user_m->get_em_users($department_id, 0, 0, 0, 1) : 0;
+            $data['departments'] = $this->user_m->get_departments();
+            $this->_template('cr_fm_edit_v', $data);
         }
     }
 // ------------------------------------------------------------------------
@@ -109,15 +112,12 @@ class Cr_cm extends Admin_Controller {
      * @return  void
      */
     public function del($id = 0) {
-        $class = $this->customer_class_m->get_class_by_id($id);
-        if (!$class) {
-            $this->_message('不存在的分组', '', FALSE);
+        $from = $this->customer_from_m->get_from_by_id($id);
+        if (!$from) {
+            $this->_message('不存在的来源', '', FALSE);
         }
-        if ($this->customer_class_m->get_class_user_num($id) > 0) {
-            $this->_message('该分组下有客户不允许删除!', '', FALSE);
-        }
-        $this->customer_class_m->del_class($id);
-        $this->_message('分组删除成功!', 'cr_gm/view/', TRUE);
+        $this->customer_from_m->del_from($id);
+        $this->_message('来源删除成功!', 'cr_fm/view/', TRUE);
     }
 // ------------------------------------------------------------------------
 
@@ -131,7 +131,7 @@ class Cr_cm extends Admin_Controller {
         $this->load->library('form_validation');
         $is_unique = $is_insert ? '|is_unique[zb_customer_from.from_name]' : '';
         $this->form_validation->set_rules('from_name', '来源名称', 'trim|required|max_length[30]' . $is_unique);
-        $this->form_validation->set_rules('user_id', '关联用户', 'trim|numeric');
+        $this->form_validation->set_rules('user_id', '此员工来源', 'trim|numeric|is_unique[zb_customer_from.user_id]');
         $this->form_validation->set_rules('rate', '业务点数', 'trim|numeric');
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
@@ -145,5 +145,5 @@ class Cr_cm extends Admin_Controller {
 
 }
 
-/* End of file cr_cm.php */
-/* Location: ./application/controllers/cr_cm.php */
+/* End of file cr_fm.php */
+/* Location: ./application/controllers/cr_fm.php */

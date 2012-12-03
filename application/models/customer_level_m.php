@@ -16,10 +16,10 @@ if (!defined('BASEPATH'))
 // ------------------------------------------------------------------------
 
 /**
- * ZBV2OA 客户来源操作模型
+ * ZBV2OA 客户分组操作模型
  * @author      Binarx
  */
-class Customer_from_m extends CI_Model {
+class Customer_level_m extends CI_Model {
 
     /**
      * 构造函数
@@ -34,111 +34,106 @@ class Customer_from_m extends CI_Model {
 
     // ------------------------------------------------------------------------
     /**
-     * 获取全部分页来源信息
+     * 获取级别信息
      *
      * @access  public
      * @param   int
      * @param   int
      * @return  object
      */
-    public function get_from($limit = 0, $offset = 0) {
+    public function get_level($limit = 0, $offset = 0) {
         if ($limit) {
             $this->db->limit($limit);
         }
         if ($offset) {
             $this->db->offset($offset);
         }
-        return $this->db->select('from_id,from_name,rate,fullname,department_id')
-                        ->join('zb_user', 'zb_user.user_id = zb_customer_from.user_id', 'left')
-                        ->get('zb_customer_from')
+        return $this->db->select('level_id,level_name,level_post')
+                        ->get('zb_customer_level')
                         ->result();
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 获取来源总数
+     * 获取级别总数
      *
      * @access  public
      * @return  int
      */
-    public function get_froms_num() {
-        return $this->db->count_all_results('zb_customer_from');
+    public function get_levels_num() {
+        return $this->db->count_all_results('zb_customer_level');
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 添加来源
+     * 添加级别
      *
      * @access  public
      * @param   array
      * @return  bool
      */
-    public function add_from($data) {
-        $this->db->insert('zb_customer_from', $data);
+    public function add_level($data) {
+        $this->db->insert('zb_customer_level', $data);
         return $this->db->insert_id();
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 修改来源
+     * 修改级别
      *
      * @access  public
      * @param   int
      * @param   array
      * @return  bool
      */
-    public function edit_from($id, $data) {
-        return $this->db->where('from_id', $id)->update('zb_customer_from', $data);
+    public function edit_level($id, $data) {
+        return $this->db->where('level_id', $id)->update('zb_customer_level', $data);
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 根据来源ID获取来源信息
+     * 根据级别ID获取级别信息
      *
      * @access  public
      * @param   int
      * @return  object
      */
-    public function get_from_by_id($id) {
-        return $this->db->select('zb_user.user_id,zb_user.department_id,from_id,from_name,rate')
-                        ->where('zb_customer_from.from_id', $id)
-                        ->join('zb_user', 'zb_user.user_id = zb_customer_from.user_id', 'left')
-                        ->get('zb_customer_from')
-                        ->row();
+    public function get_level_by_id($id) {
+        return $this->db->where('level_id', $id)->get('zb_customer_level')->row();
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 删除来源
+     * 删除级别
      *
      * @access  public
      * @param   int
      * @return  bool
      */
-    public function del_from($id) {
-        return $this->db->where('from_id', $id)->delete('zb_customer_from');
+    public function del_level($id) {
+        return $this->db->where('level_id', $id)->delete('zb_customer_level');
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 获取来源下的客户数
+     * 获取级别下的客户数
      *
      * @access  public
      * @param   int
      * @return  bool
      */
-    public function get_from_user_num($id) {
-        return $this->db->where('from_id', $id)->count_all_results('zb_customer');
+    public function get_level_user_num($id) {
+        return $this->db->where('customer_id', $id)->count_all_results('zb_customer');
     }
 
     // ------------------------------------------------------------------------
 }
 
-/* End of file customer_from_m.php */
-/* Location: ./application/models/customer_from_m.php */
+/* End of file customer_level_m.php */
+/* Location: ./application/models/customer_level_m.php */

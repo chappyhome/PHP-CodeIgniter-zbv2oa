@@ -8,14 +8,14 @@
 </div>
 <div class="content_box">
     <div class="content form_content">
-        <form action="<?php echo site_url('cr_cm/add'); ?>"  method="post">
+        <form action="<?php echo site_url('cr/add_customer'); ?>"  method="post">
             <table class="form_table">
                 <col width="150px" />
                 <col />
                 <tr>
                     <th> 关联员工所属部门：</th>
                     <td>
-                        <select class="normal" style="width:auto" name="role" onchange="location='<?php echo site_url('cr_cm/add'); ?>/'+this.value;">
+                        <select class="normal" style="width:auto" name="role" onchange="location='<?php echo site_url('cr_fm/add'); ?>/'+this.value;">
                             <option value="">选择部门</option>
                             <?php foreach ($departments as $k => $r): ?>
                                 <option <?php echo $department_id == $k ? 'selected="selected"' : '' ?> value="<?php echo $k; ?>"><?php echo $r; ?></option>
