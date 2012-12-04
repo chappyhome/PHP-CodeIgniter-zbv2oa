@@ -133,6 +133,20 @@ abstract class Admin_Controller extends CI_Controller {
     }
 
     // ------------------------------------------------------------------------
+
+    /**
+     * 如果数据为空则跳转到相应页面显示相应信息
+     *
+     * @access  public
+     * @return  void
+     */
+    public function _message_if_null($data = NULL, $message = '', $url = '') {
+        if (!$data) {
+            $this->_message($message, $url, TRUE);
+        }
+    }
+
+    // ------------------------------------------------------------------------
 }
 
 /* End of file Dili_Controller.php */

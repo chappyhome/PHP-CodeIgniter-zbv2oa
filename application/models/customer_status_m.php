@@ -16,7 +16,7 @@ if (!defined('BASEPATH'))
 // ------------------------------------------------------------------------
 
 /**
- * ZBV2OA 客户分组操作模型
+ * ZBV2OA 客户状态操作模型
  * @author      Binarx
  */
 class Customer_status_m extends CI_Model {
@@ -34,7 +34,7 @@ class Customer_status_m extends CI_Model {
 
     // ------------------------------------------------------------------------
     /**
-     * 获取级别信息
+     * 获取状态信息
      *
      * @access  public
      * @param   int
@@ -48,7 +48,7 @@ class Customer_status_m extends CI_Model {
         if ($offset) {
             $this->db->offset($offset);
         }
-        return $this->db->select('status_id,status_name,status_post')
+        return $this->db->select('status_id,status_stage,status_name,status_post')
                         ->get('zb_customer_status')
                         ->result();
     }
@@ -56,7 +56,7 @@ class Customer_status_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 获取级别总数
+     * 获取状态总数
      *
      * @access  public
      * @return  int
@@ -68,7 +68,7 @@ class Customer_status_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 添加级别
+     * 添加状态
      *
      * @access  public
      * @param   array
@@ -82,7 +82,7 @@ class Customer_status_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 修改级别
+     * 修改状态
      *
      * @access  public
      * @param   int
@@ -96,7 +96,7 @@ class Customer_status_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 根据级别ID获取级别信息
+     * 根据状态ID获取状态信息
      *
      * @access  public
      * @param   int
@@ -109,7 +109,7 @@ class Customer_status_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 删除级别
+     * 删除状态
      *
      * @access  public
      * @param   int
@@ -122,7 +122,7 @@ class Customer_status_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 获取级别下的客户数
+     * 获取状态下的客户数
      *
      * @access  public
      * @param   int
@@ -130,6 +130,23 @@ class Customer_status_m extends CI_Model {
      */
     public function get_status_user_num($id) {
         return $this->db->where('customer_id', $id)->count_all_results('zb_customer');
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * 获取某一阶段下的客户状态
+     *
+     * @access  public
+     * @param   int
+     * @return  bool
+     */
+    public function get_status_by_stage($stage = 0) {
+        return $this->db->select('status_id,status_name')
+                        ->where('status_id !=', '1')
+                        ->where('status_stage', $stage)
+                        ->get('zb_customer_status')
+                        ->result();
     }
 
     // ------------------------------------------------------------------------

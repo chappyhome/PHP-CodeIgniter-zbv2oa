@@ -1,8 +1,7 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <?php $current_tab = $this->input->get('tab') ? $this->input->get('tab') : 'add_em_user'; ?>
 <div class="headbar">
-    <div class="position"><span><?php $menu = $this->acl->current_location();
-echo $menu[1]; ?></span>
+    <div class="position"><span><?php $menu = $this->acl->current_location();echo $menu[1]; ?></span>
         <span>></span><span><?php echo $menu[2]; ?></span>
         <span>></span><span><?php echo $menu[3]; ?></span>
         <span>></span><span>添加</span>

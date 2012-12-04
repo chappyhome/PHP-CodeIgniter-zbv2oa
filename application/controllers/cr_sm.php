@@ -76,6 +76,7 @@ class Cr_sm extends Admin_Controller {
         } else {
             $data['is_add'] = 1;
             $data['status'] = NULL;
+            $data['status_stage'] = 0;
             $this->_template('cr_sm_form_v', $data);
         }
     }
@@ -101,6 +102,7 @@ class Cr_sm extends Admin_Controller {
             $this->_message('状态修改成功!', 'cr_sm/view/', TRUE);
         } else {
             $data['is_add'] = 0;
+            $data['status_stage'] = $data['status']->status_stage;
             $this->_template('cr_sm_form_v', $data);
         }
     }
@@ -128,7 +130,7 @@ class Cr_sm extends Admin_Controller {
         $this->_message('状态删除成功!', 'cr_sm/view/', TRUE);
     }
 
-// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     /**
      * 获取post提交数据
@@ -139,17 +141,20 @@ class Cr_sm extends Admin_Controller {
     public function _get_form_data($is_insert = 0) {
         $this->load->library('form_validation');
         $is_unique = $is_insert ? '|is_unique[zb_customer_status.status_name]' : '';
+        $this->form_validation->set_rules('status_stage', '所属状态', 'trim|required|is_natural');
         $this->form_validation->set_rules('status_name', '状态名称', 'trim|required|max_length[50]' . $is_unique);
         $this->form_validation->set_rules('status_post', '状态介绍', 'trim|max_length[150]');
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {
+            $data['status_stage'] = $this->input->post('status_stage', TRUE);
             $data['status_name'] = $this->input->post('status_name', TRUE);
             $data['status_post'] = $this->input->post('status_post', TRUE);
             return $data;
         }
     }
 
+    // ------------------------------------------------------------------------
 }
 
 /* End of file cr_sm.php */

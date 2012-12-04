@@ -16,6 +16,7 @@
                 <tr>
                     <th></th>
                     <th>分组名称</th>
+                    <th>客户阶段</th>
                     <th>客户数量</th>
                     <th>分组介绍</th>
                     <th>操作选项</th>
@@ -34,6 +35,14 @@
                 <tr>
                     <td></td>
                     <td><?php echo $v->status_name; ?></td>
+                    <td><?php switch ($v->status_stage){
+                        case 0:echo '未分配';break;
+                        case 1:echo '跟进中';break;
+                        case 2:echo '有效客户';break;
+                        default:echo '[客户阶段错误]';break;
+                        }?>
+                    </td>
+                    
                     <td><?php echo $this->customer_status_m->get_status_user_num($v->status_id) ?></td>
                     <td><?php echo $v->status_post; ?></td>
                     <td>
