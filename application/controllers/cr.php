@@ -30,7 +30,8 @@ class Cr extends Admin_Controller {
     public function __construct() {
         parent::__construct();
         $this->_check_permit();
-        $this->load->model(array('customer_m', 'customer_status_m', 'customer_from_m'));
+        $this->load->model(array('customer_m', 'customer_status_m', 'customer_from_m', 'customer_class_m', 'customer_level_m'));
+        $this->load->library('form_validation');
     }
 
     // ------------------------------------------------------------------------
@@ -43,6 +44,51 @@ class Cr extends Admin_Controller {
      */
     public function my() {
         $this->_template('default_v');
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * 增加客户视图
+     *
+     * @access  public
+     * @return  void
+     */
+    public function add_customer() {
+        $data['is_add'] = 1;
+        $data['status_0'] = $this->customer_status_m->get_status_by_stage($stage = 0);
+        $data['status_1'] = $this->customer_status_m->get_status_by_stage($stage = 1);
+        $data['status_2'] = $this->customer_status_m->get_status_by_stage($stage = 2);
+        $this->_message_if_null($data['status_0'], '客户状态为空，请先添加客户状态', 'cr_sm/view/');
+        $data['from'] = $this->customer_from_m->get_from();
+        $this->_message_if_null($data['from'], '客户来源为空，请先添加客户来源', 'cr_fm/view/');
+        $data['em_user'] = $this->user_m->get_em_users();
+        $this->_message_if_null($data['em_user'], '员工列表为空，请先添加员工', 'em/view/');
+        $data['class'] = $this->customer_class_m->get_class();
+        $this->_message_if_null($data['class'], '客户分类为空，请先添加分类', 'cr_gm/view/');
+        $data['level'] = $this->customer_level_m->get_level();
+        $this->_message_if_null($data['level'], '客户级别为空，请先添加级别', 'cr_lm/view/');
+        $data['province'] = $this->customer_m->get_district(1);
+
+        $this->_template('cr_customer_add_v', $data);
+    }
+
+    // ------------------------------------------------------------------------
+    /**
+     * 增加客户视图
+     *
+     * @access  public
+     * @return  void
+     */
+    public function ajax() {
+            $province = $this->input->post('province');
+            $data['city'] = $this->customer_m->get_district(2, $province);
+            echo "<select onchange='queryArea()'>\n";
+            echo "<option value='-1' selected></option>\n";
+            foreach ($data['city'] as $key) {
+                echo "<option value='$key->id'>$key->name</option>\n";
+            }
+            echo "</select>\n";
     }
 
     // ------------------------------------------------------------------------
