@@ -69,13 +69,12 @@ class Cr extends Admin_Controller {
         $data['level'] = $this->customer_level_m->get_level();
         $this->_message_if_null($data['level'], '客户级别为空，请先添加级别', 'cr_lm/view/');
         $data['province'] = $this->customer_m->get_district(1);
-
         $this->_template('cr_customer_add_v', $data);
     }
 
     // ------------------------------------------------------------------------
     /**
-     * 增加客户视图
+     * 地区AJAX
      *
      * @access  public
      * @return  void
@@ -86,7 +85,7 @@ class Cr extends Admin_Controller {
         if ($province) {
             $data['city'] = $this->customer_m->get_district(2, $province);
             echo "<select onchange='queryArea(this.options[this.selectedIndex].value)'
-                name='city' id='city' style='width:auto' class='normal'>\n";
+                name='city_id' id='city' style='width:auto' class='normal'>\n";
             echo "<option selected='selected'>请选择城市</option>";
             foreach ($data['city'] as $key) {
                 echo "<option value='$key->id'>$key->name</option>\n";
@@ -95,7 +94,7 @@ class Cr extends Admin_Controller {
         }
         if ($city) {
             $data['area'] = $this->customer_m->get_district(3, $city);
-            echo "<span id='area'><input name='city' type='checkbox' value='$city'><b> 市级&nbsp;&nbsp;&nbsp;&nbsp;</b>";
+            echo "<span id='area'>";
             foreach ($data['area'] as $key) {
                 echo "<input name='area[]' type='checkbox' value='$key->id'>
                        $key->name " . '&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -113,16 +112,12 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function add_0_customer() {
-        if ($this->_get_form_data(1)) {
-            $data = $this->_get_form_data(1);
-            $this->customer_status_m->add_status($data);
-            $this->_message('状态添加成功!', 'cr_sm/view', TRUE);
+        if ($this->_get_form_data(0)) {
+            $data = $this->_get_form_data(0);
+            $this->customer_m->add_customer($data);
+            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
-            $data['is_add'] = 1;
-            $data['status'] = $this->customer_status_m->get_status_by_stage($stage = 0);
-            $this->_message_if_null($data['status'], '客户状态为空，请先添加客户状态', 'cr_sm/view/');
-            $data['from'] = $this->customer_from_m->get_from();
-            $this->_template('cr_customer_add_v', $data);
+            $this->add_customer();
         }
     }
 
@@ -137,13 +132,10 @@ class Cr extends Admin_Controller {
     public function add_1_customer() {
         if ($this->_get_form_data(1)) {
             $data = $this->_get_form_data(1);
-            $this->customer_status_m->add_status($data);
-            $this->_message('状态添加成功!', 'cr_sm/view', TRUE);
+            $this->customer_m->add_customer($data);
+            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
-            $data['is_add'] = 1;
-            $data['status'] = NULL;
-            $data['status_stage'] = 0;
-            $this->_template('cr_sm_form_v', $data);
+            $this->add_customer();
         }
     }
 
@@ -156,15 +148,12 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function add_2_customer() {
-        if ($this->_get_form_data(1)) {
-            $data = $this->_get_form_data(1);
-            $this->customer_status_m->add_status($data);
-            $this->_message('状态添加成功!', 'cr_sm/view', TRUE);
+        if ($this->_get_form_data(2)) {
+            $data = $this->_get_form_data(2);
+            $this->customer_m->add_customer($data);
+            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
-            $data['is_add'] = 1;
-            $data['status'] = NULL;
-            $data['status_stage'] = 0;
-            $this->_template('cr_sm_form_v', $data);
+            $this->add_customer();
         }
     }
 
@@ -176,18 +165,49 @@ class Cr extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function _get_form_data($is_insert = 0) {
+    public function _get_form_data($add = 0) {
+        $required_2 = $required_3 = '';
+        if ($add >= 2) {
+            $required_2 = '|required';
+        } elseif ($add == 3) {
+            $required_3 = '|required';
+        }
         $this->load->library('form_validation');
-        $is_unique = $is_insert ? '|is_unique[zb_customer_status.status_name]' : '';
-        $this->form_validation->set_rules('status_stage', '所属状态', 'trim|required|is_natural');
-        $this->form_validation->set_rules('status_name', '状态名称', 'trim|required|max_length[50]' . $is_unique);
-        $this->form_validation->set_rules('status_post', '状态介绍', 'trim|max_length[150]');
+        $this->form_validation->set_rules('from_id', '客户来源', 'trim|required|is_natural');
+        $this->form_validation->set_rules('from_detail', '客户来源详细', 'trim');
+        $this->form_validation->set_rules('status_id', '客户状态', 'trim|required|is_natural');
+        $this->form_validation->set_rules('customer_name', '客户姓名', 'trim|required');
+        $this->form_validation->set_rules('tel', '客户电话', 'trim|required|is_natural');
+        $this->form_validation->set_rules('fax', '客户传真', 'trim');
+        $this->form_validation->set_rules('address', '客户所在地', 'trim');
+        $this->form_validation->set_rules('company', '客户公司或行业', 'trim');
+        $this->form_validation->set_rules('intention', '客户意向或备注', 'trim');
+        $this->form_validation->set_rules('user_id', '负责人', 'trim|is_natural' . $required_2);
+        $this->form_validation->set_rules('class_id', '客户分组', 'trim|is_natural' . $required_3);
+        $this->form_validation->set_rules('level_id', '客户级别', 'trim|is_natural' . $required_3);
+        $this->form_validation->set_rules('district_level', '代理级别', 'trim|is_natural' . $required_3);
+        $this->form_validation->set_rules('district_id', '代理地区', 'trim' . $required_3);
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {
-            $data['status_stage'] = $this->input->post('status_stage', TRUE);
-            $data['status_name'] = $this->input->post('status_name', TRUE);
-            $data['status_post'] = $this->input->post('status_post', TRUE);
+            $data['from_id'] = $this->input->post('from_id', TRUE);
+            $data['from_detail'] = $this->input->post('from_detail', TRUE);
+            $data['status_id'] = $this->input->post('status_id', TRUE);
+            $data['customer_name'] = $this->input->post('customer_name', TRUE);
+            $data['tel'] = $this->input->post('tel', TRUE);
+            $data['fax'] = $this->input->post('fax', TRUE);
+            $data['address'] = $this->input->post('address', TRUE);
+            $data['company'] = $this->input->post('company', TRUE);
+            $data['intention'] = $this->input->post('intention', TRUE);
+            $data['user_id'] = $this->input->post('user_id', TRUE);
+            $data['user_detail'] = $this->user_m->get_employment_by_userid($data['user_id'])->fullname.','.$this->user_m->get_employment_by_userid($data['user_id'])->tel;
+            $data['class_id'] = $this->input->post('class_id', TRUE);
+            $data['level_id'] = $this->input->post('level_id', TRUE);
+            $data['district_level'] = $this->input->post('district_level', TRUE);
+            $data['district_id'] = $this->input->post('district_id', TRUE);
+            $data['district_detail'] = 
+            $data['create_time'] = date('Y-m-d H:i:s');
+            $data['entry_fullname'] = $this->_admin->fullname;
             return $data;
         }
     }

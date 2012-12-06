@@ -74,9 +74,9 @@ class Customer_m extends CI_Model {
      * @param   array
      * @return  bool
      */
-    public function add_status($data) {
-//        $this->db->insert('zb_customer_status', $data);
-//        return $this->db->insert_id();
+    public function add_customer($data) {
+        $this->db->insert('zb_customer', $data);
+        return $this->db->insert_id();
     }
 
     // ------------------------------------------------------------------------

@@ -36,9 +36,7 @@ class Test extends CI_Controller {
     }
 
     function data(){
-        $data2 = "2012-09-14";
-        $data1 = date('Y-m-d');
-        echo $data1<$data2?1:0;
+        echo date('Y-m-d H:i:s');
     }
 
 }
