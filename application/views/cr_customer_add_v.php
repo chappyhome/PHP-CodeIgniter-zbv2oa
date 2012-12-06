@@ -1,19 +1,13 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed'); ?>
 <script type="text/javascript">
 function queryCity(province){
-    $.get('<?php echo site_url('cr/ajax');  ?>',{'province':province},function(data,statusText){$("#city").append(data);},'html')
-    
-    
-    
-	createXMLHttpRequest();
-	var url="<?php echo site_url('cr/ajax') ?>?type=province&province="+province;
-	xmlHttp.open("GET",url,true);
-	xmlHttp.onreadystatechange=handleStateChange;
-	xmlHttp.send(null);
+    $.get('<?php echo site_url('cr/ajax');  ?>',{'province':province},function(data){$("#city").replaceWith(data);},'html')
+}
+function queryArea(city){
+    $.get('<?php echo site_url('cr/ajax');  ?>',{'city':city},function(data){$("#area").replaceWith(data);},'html')
 }
 </script>
 <?php $current_tab = $this->input->get('tab') ? $this->input->get('tab') : 'add_0_customer'; ?>
-<div id="city"></div>
 <div class="headbar">
     <div class="position"><span><?php $menu = $this->acl->current_location();echo $menu[1]; ?></span>
         <span>></span><span><?php echo $menu[2]; ?></span>
@@ -251,14 +245,22 @@ function queryCity(province){
                 <tr>
                     <th> 代理地区：</th>
                     <td>
-                        <select class="normal" style="width:auto" name="province" onchange="queryCity(this.options[this.selectedIndex].value)">
-                            <option value="-1">请选择省份</option>
+                        <select class="normal" style="width:auto" id="province" name="province" onchange="queryCity(this.options[this.selectedIndex].value)">
+                            <option selected="selected">请选择省份</option>
                             <?php foreach ($province as $key): ?>
                                 <option value="<?php echo $key->id; ?>"><?php echo $key->name; ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <label><span style="color:red">*</span> 选择客户代理地区.</label>
+                        <span id="city"></span>
+                        <label></label>
                         <b style="color:red"><?php echo form_error('level_id'); ?></b></td>
+                </tr>
+                <tr>
+                    <th> </th>
+                    <td>
+                        <span id="area">请先选择省市</span>
+                        <label><span style="color:red">*</span> 代理地区.</label>
+                        <b style="color:red"><?php echo form_error('customer_name'); ?></b></td>
                 </tr>
                 <tr>
                     <th> 姓名：</th>

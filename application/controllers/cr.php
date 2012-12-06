@@ -81,14 +81,27 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function ajax() {
-            $province = $this->input->post('province');
+        $city = $this->input->get('city');
+        $province = $this->input->get('province');
+        if ($province) {
             $data['city'] = $this->customer_m->get_district(2, $province);
-            echo "<select onchange='queryArea()'>\n";
-            echo "<option value='-1' selected></option>\n";
+            echo "<select onchange='queryArea(this.options[this.selectedIndex].value)'
+                name='city' id='city' style='width:auto' class='normal'>\n";
+            echo "<option selected='selected'>请选择城市</option>";
             foreach ($data['city'] as $key) {
                 echo "<option value='$key->id'>$key->name</option>\n";
             }
             echo "</select>\n";
+        }
+        if ($city) {
+            $data['area'] = $this->customer_m->get_district(3, $city);
+            echo "<span id='area'><input name='city' type='checkbox' value='$city'><b> 市级&nbsp;&nbsp;&nbsp;&nbsp;</b>";
+            foreach ($data['area'] as $key) {
+                echo "<input name='area[]' type='checkbox' value='$key->id'>
+                       $key->name " . '&nbsp;&nbsp;&nbsp;&nbsp;';
+            }
+            echo "</span>";
+        }
     }
 
     // ------------------------------------------------------------------------

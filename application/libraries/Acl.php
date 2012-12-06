@@ -200,7 +200,7 @@ class Acl {
                 break;
             }
         }
-        if ($ok == 1) {
+        if ($ok == 1||$this->_method == 'ajax') {
             return 1;
         } else {
             return 0;
