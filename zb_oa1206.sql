@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2012 年 12 月 05 日 10:48
+-- 生成日期: 2012 年 12 月 06 日 10:33
 -- 服务器版本: 5.5.16
 -- PHP 版本: 5.3.8
 
@@ -58,20 +58,33 @@ CREATE TABLE IF NOT EXISTS `zb_article_info` (
 
 CREATE TABLE IF NOT EXISTS `zb_customer` (
   `customer_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `class_id` int(10) NOT NULL,
+  `user_id` int(10) unsigned NOT NULL,
+  `user_detail` varchar(30) NOT NULL,
+  `class_id` int(10) unsigned NOT NULL,
+  `status_id` int(10) unsigned NOT NULL,
+  `level_id` int(10) unsigned NOT NULL,
+  `district_id` varchar(30) NOT NULL,
+  `district_level` int(2) unsigned NOT NULL,
+  `district_detail` varchar(90) NOT NULL,
   `customer_name` varchar(20) NOT NULL,
   `tel` varchar(20) NOT NULL,
   `address` varchar(50) DEFAULT NULL,
   `fax` varchar(20) DEFAULT NULL,
-  `vocation` varchar(50) DEFAULT NULL,
+  `company` varchar(50) DEFAULT NULL,
   `from_id` int(10) unsigned NOT NULL,
-  `intention` varchar(50) DEFAULT NULL,
-  `now_user_id` int(10) unsigned NOT NULL,
-  `now_mark` varchar(50) DEFAULT NULL,
-  `is_read` bit(1) DEFAULT NULL,
+  `from_detail` varchar(60) DEFAULT NULL,
+  `intention` varchar(255) DEFAULT NULL,
+  `entry_fullname` varchar(30) NOT NULL,
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `zb_customer`
+--
+
+INSERT INTO `zb_customer` (`customer_id`, `user_id`, `user_detail`, `class_id`, `status_id`, `level_id`, `district_id`, `district_level`, `district_detail`, `customer_name`, `tel`, `address`, `fax`, `company`, `from_id`, `from_detail`, `intention`, `entry_fullname`, `create_time`) VALUES
+(1, 0, '', 0, 2, 0, '0', 0, '', '一个客户', '15874125896', '', '', '', 4, '', '', '周斌', '2012-12-06 10:20:29');
 
 -- --------------------------------------------------------
 
@@ -45415,7 +45428,7 @@ CREATE TABLE IF NOT EXISTS `zb_right` (
   `right_class` varchar(150) DEFAULT NULL,
   `right_method` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`right_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=47 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=50 ;
 
 --
 -- 转存表中的数据 `zb_right`
@@ -45430,7 +45443,7 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 (6, '用户管理（列表）', 'ss_user', 'view'),
 (7, '编辑用户组', 'ss_role', 'edit'),
 (8, '查询客户', 'cr', 'check_customer'),
-(9, '新增客户', 'cr', 'add_customer'),
+(9, '新增客户（显示）', 'cr', 'add_customer'),
 (10, '客户分配', 'cr', 'allot_customer'),
 (11, '添加用户组', 'ss_role', 'add'),
 (12, '删除用户组', 'ss_role', 'del'),
@@ -45467,7 +45480,10 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 (43, '客户级别管理（列表）', 'cr_lm', 'view'),
 (44, '增加客户级别', 'cr_lm', 'add'),
 (45, '修改客户级别', 'cr_lm', 'edit'),
-(46, '删除客户级别', 'cr_lm', 'del');
+(46, '删除客户级别', 'cr_lm', 'del'),
+(47, '新增未分配客户', 'cr', 'add_0_customer'),
+(48, '新增跟进中客户', 'cr', 'add_1_customer'),
+(49, '新增有效客户', 'cr', 'add_2_customer');
 
 -- --------------------------------------------------------
 
@@ -45487,7 +45503,7 @@ CREATE TABLE IF NOT EXISTS `zb_role` (
 --
 
 INSERT INTO `zb_role` (`role_id`, `role_name`, `rights`) VALUES
-(1, '超级管理员', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46'),
+(1, '超级管理员', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49'),
 (2, '测试组1', '1,2,3,4,5'),
 (4, '牛人组', '1,2,3,4,5,6,8,9,10,11,12,13,14,15');
 
