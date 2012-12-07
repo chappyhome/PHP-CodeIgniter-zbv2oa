@@ -30,7 +30,8 @@ class Cr extends Admin_Controller {
     public function __construct() {
         parent::__construct();
         $this->_check_permit();
-        $this->load->model(array('customer_m', 'customer_status_m', 'customer_from_m', 'customer_class_m', 'customer_level_m'));
+        $this->load->model(array('customer_m', 'customer_status_m', 'customer_from_m',
+            'district_m', 'customer_class_m', 'customer_level_m'));
         $this->load->library('form_validation');
     }
 
@@ -84,21 +85,25 @@ class Cr extends Admin_Controller {
         $province = $this->input->get('province');
         if ($province) {
             $data['city'] = $this->customer_m->get_district(2, $province);
+            echo "<span class='_city'>";
             echo "<select onchange='queryArea(this.options[this.selectedIndex].value)'
-                name='city_id' id='city' style='width:auto' class='normal'>\n";
-            echo "<option selected='selected'>请选择城市</option>";
+                name='city_id' style='width:auto' class='normal'>\n";
+            echo "<option selected='selected' value=''>请选择城市</option>";
             foreach ($data['city'] as $key) {
                 echo "<option value='$key->id'>$key->name</option>\n";
             }
             echo "</select>\n";
+            echo "</span>";
         }
         if ($city) {
             $data['area'] = $this->customer_m->get_district(3, $city);
-            echo "<span id='area'>";
+            echo "<span class='_area'>";
+            echo "<select name='area_id' style='width:auto' class='normal'>\n";
+            echo "<option selected='selected' value=''>请选择地区</option>";
             foreach ($data['area'] as $key) {
-                echo "<input name='area[]' type='checkbox' value='$key->id'>
-                       $key->name " . '&nbsp;&nbsp;&nbsp;&nbsp;';
+                echo "<option value='$key->id'>$key->name</option>\n";
             }
+            echo "</select>\n";
             echo "</span>";
         }
     }
@@ -114,8 +119,9 @@ class Cr extends Admin_Controller {
     public function add_0_customer() {
         if ($this->_get_form_data(0)) {
             $data = $this->_get_form_data(0);
-            $this->customer_m->add_customer($data);
-            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+            var_dump($data);
+//            $this->customer_m->add_customer($data);
+//            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
             $this->add_customer();
         }
@@ -132,8 +138,9 @@ class Cr extends Admin_Controller {
     public function add_1_customer() {
         if ($this->_get_form_data(1)) {
             $data = $this->_get_form_data(1);
-            $this->customer_m->add_customer($data);
-            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+            var_dump($data);
+//            $this->customer_m->add_customer($data);
+//            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
             $this->add_customer();
         }
@@ -150,8 +157,9 @@ class Cr extends Admin_Controller {
     public function add_2_customer() {
         if ($this->_get_form_data(2)) {
             $data = $this->_get_form_data(2);
-            $this->customer_m->add_customer($data);
-            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+            var_dump($data);
+//            $this->customer_m->add_customer($data);
+//            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
             $this->add_customer();
         }
@@ -166,11 +174,12 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function _get_form_data($add = 0) {
-        $required_2 = $required_3 = '';
-        if ($add >= 2) {
-            $required_2 = '|required';
-        } elseif ($add == 3) {
-            $required_3 = '|required';
+        $required_gj = $required_yx = $required_province = $required_city = $required_area = '';
+        if ($add >= 1) {
+            $required_gj = '|required';
+        }
+        if ($add == 2) {
+            $required_yx = '|required';
         }
         $this->load->library('form_validation');
         $this->form_validation->set_rules('from_id', '客户来源', 'trim|required|is_natural');
@@ -182,11 +191,23 @@ class Cr extends Admin_Controller {
         $this->form_validation->set_rules('address', '客户所在地', 'trim');
         $this->form_validation->set_rules('company', '客户公司或行业', 'trim');
         $this->form_validation->set_rules('intention', '客户意向或备注', 'trim');
-        $this->form_validation->set_rules('user_id', '负责人', 'trim|is_natural' . $required_2);
-        $this->form_validation->set_rules('class_id', '客户分组', 'trim|is_natural' . $required_3);
-        $this->form_validation->set_rules('level_id', '客户级别', 'trim|is_natural' . $required_3);
-        $this->form_validation->set_rules('district_level', '代理级别', 'trim|is_natural' . $required_3);
-        $this->form_validation->set_rules('district_id', '代理地区', 'trim' . $required_3);
+        $this->form_validation->set_rules('user_id', '负责人', 'trim|is_natural' . $required_gj);
+        $this->form_validation->set_rules('class_id', '客户分组', 'trim|is_natural' . $required_yx);
+        $this->form_validation->set_rules('level_id', '客户级别', 'trim|is_natural' . $required_yx);
+        $this->form_validation->set_rules('district_level', '代理级别', 'trim|is_natural' . $required_yx);
+        $district_id = $this->input->post('district_id', TRUE);
+        if($district_id == 1) {
+            $required_province = '|required';
+        }
+        if ($district_id == 2 || $district_id == 3) {
+            $required_city = '|required';
+        }
+        if ($district_id == 4) {
+            $required_area = '|required';
+        }
+        $this->form_validation->set_rules('province_id', '省份', 'trim' . $required_province);
+        $this->form_validation->set_rules('city_id', '城市', 'trim' . $required_city);
+        $this->form_validation->set_rules('area_id', '县区', 'trim' . $required_area);
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {
@@ -200,12 +221,36 @@ class Cr extends Admin_Controller {
             $data['company'] = $this->input->post('company', TRUE);
             $data['intention'] = $this->input->post('intention', TRUE);
             $data['user_id'] = $this->input->post('user_id', TRUE);
-            $data['user_detail'] = $this->user_m->get_employment_by_userid($data['user_id'])->fullname.','.$this->user_m->get_employment_by_userid($data['user_id'])->tel;
+            $data['user_detail'] = $data['user_id'] ?
+                    $this->user_m->get_employment_by_userid($data['user_id'])->fullname .
+                    ':' . $this->user_m->get_employment_by_userid($data['user_id'])->tel : '';
             $data['class_id'] = $this->input->post('class_id', TRUE);
             $data['level_id'] = $this->input->post('level_id', TRUE);
             $data['district_level'] = $this->input->post('district_level', TRUE);
-            $data['district_id'] = $this->input->post('district_id', TRUE);
-            $data['district_detail'] = 
+            $data['province_id'] = $data['city_id'] = $data['area_id'] = NULL;
+            switch ($data['district_level']) {
+                case 1:
+                    $data['province_id'] = $this->input->post('province_id', TRUE);
+                    break;
+                case 2:
+                    $data['province_id'] = $this->input->post('province_id', TRUE);
+                    $data['city_id'] = $this->input->post('city_id', TRUE);
+                    break;
+                case 3:
+                    $data['province_id'] = $this->input->post('province_id', TRUE);
+                    $data['city_id'] = $this->input->post('city_id', TRUE);
+                    break;
+                case 4:
+                    $data['province_id'] = $this->input->post('province_id', TRUE);
+                    $data['city_id'] = $this->input->post('city_id', TRUE);
+                    $data['area_id'] = $this->input->post('area_id', TRUE);
+                    break;
+            }
+            $province_name = $data['province_id'] ? $this->district_m->get_name_by_id($data['province_id'])->name : '';
+            $city_name = $data['city_id'] ? $this->district_m->get_name_by_id($data['city_id'])->name : '';
+            $area_name = $data['area_id'] ? $this->district_m->get_name_by_id($data['area_id'])->name : '';
+            $data['district_detail'] = $province_name . $city_name . $area_name;
+            if($data['district_level'] ==0) $data['district_detail'] = '团购';
             $data['create_time'] = date('Y-m-d H:i:s');
             $data['entry_fullname'] = $this->_admin->fullname;
             return $data;
