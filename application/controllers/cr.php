@@ -90,7 +90,7 @@ class Cr extends Admin_Controller {
                 name='city_id' style='width:auto' class='normal'>\n";
             echo "<option selected='selected' value=''>请选择城市</option>";
             foreach ($data['city'] as $key) {
-                echo "<option value='$key->id'>$key->name</option>\n";
+                echo "<option value='$key->id:$key->name'>$key->name</option>\n";
             }
             echo "</select>\n";
             echo "</span>";
@@ -101,7 +101,7 @@ class Cr extends Admin_Controller {
             echo "<select name='area_id' style='width:auto' class='normal'>\n";
             echo "<option selected='selected' value=''>请选择地区</option>";
             foreach ($data['area'] as $key) {
-                echo "<option value='$key->id'>$key->name</option>\n";
+                echo "<option value='$key->id:$key->name'>$key->name</option>\n";
             }
             echo "</select>\n";
             echo "</span>";
@@ -117,14 +117,18 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function add_0_customer() {
-        if ($this->_get_form_data(0)) {
-            $data = $this->_get_form_data(0);
-            var_dump($data);
-//            $this->customer_m->add_customer($data);
-//            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
-        } else {
-            $this->add_customer();
-        }
+        $data = $this->_get_form_data(0);
+        var_dump($data);
+        
+//        if ($data = $this->_get_form_data(0)) {
+//            var_dump($data);
+////            $this->customer_m->add_customer($data);
+////            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+//        } else {
+//            
+//           // $this->add_customer();
+//            $this->output->enable_profiler(TRUE);
+//        }
     }
 
     // ------------------------------------------------------------------------
@@ -189,6 +193,8 @@ class Cr extends Admin_Controller {
         $this->form_validation->set_rules('tel', '客户电话', 'trim|required|is_natural');
         $this->form_validation->set_rules('fax', '客户传真', 'trim');
         $this->form_validation->set_rules('address', '客户所在地', 'trim');
+        $this->form_validation->set_rules('channel', '客户渠道', 'trim');
+        $this->form_validation->set_rules('brand', '代理品牌', 'trim');
         $this->form_validation->set_rules('company', '客户公司或行业', 'trim');
         $this->form_validation->set_rules('intention', '客户意向或备注', 'trim');
         $this->form_validation->set_rules('user_id', '负责人', 'trim|is_natural' . $required_gj);
@@ -196,7 +202,7 @@ class Cr extends Admin_Controller {
         $this->form_validation->set_rules('level_id', '客户级别', 'trim|is_natural' . $required_yx);
         $this->form_validation->set_rules('district_level', '代理级别', 'trim|is_natural' . $required_yx);
         $district_id = $this->input->post('district_id', TRUE);
-        if($district_id == 1) {
+        if ($district_id == 1) {
             $required_province = '|required';
         }
         if ($district_id == 2 || $district_id == 3) {
@@ -205,9 +211,13 @@ class Cr extends Admin_Controller {
         if ($district_id == 4) {
             $required_area = '|required';
         }
+        if ($district_id == 0) {
+            $required_tg = '|required';
+        }
         $this->form_validation->set_rules('province_id', '省份', 'trim' . $required_province);
         $this->form_validation->set_rules('city_id', '城市', 'trim' . $required_city);
         $this->form_validation->set_rules('area_id', '县区', 'trim' . $required_area);
+        $this->form_validation->set_rules('group_buy', '团购单位', 'trim' . $required_tg);
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {
@@ -218,6 +228,8 @@ class Cr extends Admin_Controller {
             $data['tel'] = $this->input->post('tel', TRUE);
             $data['fax'] = $this->input->post('fax', TRUE);
             $data['address'] = $this->input->post('address', TRUE);
+            $data['channel'] = $this->input->post('channel', TRUE);
+            $data['brand'] = $this->input->post('brand', TRUE);
             $data['company'] = $this->input->post('company', TRUE);
             $data['intention'] = $this->input->post('intention', TRUE);
             $data['user_id'] = $this->input->post('user_id', TRUE);
@@ -227,33 +239,36 @@ class Cr extends Admin_Controller {
             $data['class_id'] = $this->input->post('class_id', TRUE);
             $data['level_id'] = $this->input->post('level_id', TRUE);
             $data['district_level'] = $this->input->post('district_level', TRUE);
-            $data['province_id'] = $data['city_id'] = $data['area_id'] = NULL;
+            $province = explode(':', $this->input->post('province_id', TRUE));
+            $city = explode(':', $this->input->post('city_id', TRUE));
+            $area = explode(':', $this->input->post('area_id', TRUE));
             switch ($data['district_level']) {
                 case 1:
-                    $data['province_id'] = $this->input->post('province_id', TRUE);
+                    $data['district_id'] = $province[0];
+                    $data['district_detail'] = $province[1];
                     break;
                 case 2:
-                    $data['province_id'] = $this->input->post('province_id', TRUE);
-                    $data['city_id'] = $this->input->post('city_id', TRUE);
+                    $data['district_id'] = $city[0];
+                    $data['district_detail'] = $province[1].$city[1];
                     break;
                 case 3:
-                    $data['province_id'] = $this->input->post('province_id', TRUE);
-                    $data['city_id'] = $this->input->post('city_id', TRUE);
+                    $data['district_id'] = $city[0];
+                    $data['district_detail'] = $province[1].$city[1];
                     break;
                 case 4:
-                    $data['province_id'] = $this->input->post('province_id', TRUE);
-                    $data['city_id'] = $this->input->post('city_id', TRUE);
-                    $data['area_id'] = $this->input->post('area_id', TRUE);
+                    $data['district_id'] = $area[0];
+                    $data['district_detail'] = $province[1].$city[1].$area[1];
+                    break;
+                case 0:
+                    $data['district_id'] = 0;
+                    $data['district_detail'] = $this->input->post('group_buy', TRUE);
                     break;
             }
-            $province_name = $data['province_id'] ? $this->district_m->get_name_by_id($data['province_id'])->name : '';
-            $city_name = $data['city_id'] ? $this->district_m->get_name_by_id($data['city_id'])->name : '';
-            $area_name = $data['area_id'] ? $this->district_m->get_name_by_id($data['area_id'])->name : '';
-            $data['district_detail'] = $province_name . $city_name . $area_name;
-            if($data['district_level'] ==0) $data['district_detail'] = '团购';
+            $data['entry_user'] = $this->_admin->fullname.':'.$this->_admin->user_id;
             $data['create_time'] = date('Y-m-d H:i:s');
             $data['entry_fullname'] = $this->_admin->fullname;
             return $data;
+            var_dump($data);
         }
     }
 

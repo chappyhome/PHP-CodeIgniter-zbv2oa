@@ -2,16 +2,16 @@
 <script type="text/javascript">
     function district(level){
         if(level == 0){
-            $("#district").hide('slow');
+            $("#district").hide();$("#district_tg").show('slow');
         }
         if(level == 1){
-            $("#district").show();
+            $("#district_tg").hide();$("#district").show('slow');
         }
         if(level == 2){
-            $("#district").show();
+            $("#district_tg").hide();$("#district").show('slow');
         }
         if(level == 3){
-            $("#district").show();
+            $("#district_tg").hide();$("#district").show('slow');
         }
     }
     function queryCity(province){
@@ -89,6 +89,16 @@ echo $menu[1]; ?></span>
                     <th> 所在地：</th>
                     <td><input type="text" value="" name="address" style="width:150px" class="normal"><label>客户所在地区.</label>
                         <b style="color:red"><?php echo form_error('address'); ?></b></td>
+                </tr>
+                <tr>
+                    <th> 渠道：</th>
+                    <td><input type="text" value="" name="channel" style="width:150px" class="normal"><label>客户渠道.</label>
+                        <b style="color:red"><?php echo form_error('channel'); ?></b></td>
+                </tr>
+                <tr>
+                    <th> 代理品牌：</th>
+                    <td><input type="text" value="" name="brand" style="width:150px" class="normal"><label>客户目前代理品牌.</label>
+                        <b style="color:red"><?php echo form_error('brand'); ?></b></td>
                 </tr>
                 <tr>
                     <th> 公司或行业：</th>
@@ -174,6 +184,16 @@ echo $menu[1]; ?></span>
                     <th> 所在地：</th>
                     <td><input type="text" value="" name="address" style="width:150px" class="normal"><label>客户所在地区.</label>
                         <b style="color:red"><?php echo form_error('address'); ?></b></td>
+                </tr>
+                <tr>
+                    <th> 渠道：</th>
+                    <td><input type="text" value="" name="channel" style="width:150px" class="normal"><label>客户渠道.</label>
+                        <b style="color:red"><?php echo form_error('channel'); ?></b></td>
+                </tr>
+                <tr>
+                    <th> 代理品牌：</th>
+                    <td><input type="text" value="" name="brand" style="width:150px" class="normal"><label>客户目前代理品牌.</label>
+                        <b style="color:red"><?php echo form_error('brand'); ?></b></td>
                 </tr>
                 <tr>
                     <th> 公司或行业：</th>
@@ -284,13 +304,18 @@ echo $menu[1]; ?></span>
                         <select class="normal" style="width:auto" id="province" name="province_id" onchange="queryCity(this.options[this.selectedIndex].value)">
                             <option selected="selected" value="">请选择省份</option>
                             <?php foreach ($province as $key): ?>
-                                <option value="<?php echo $key->id; ?>"><?php echo $key->name; ?></option>
+                                <option value="<?php echo $key->id.':'.$key->name; ?>"><?php echo $key->name; ?></option>
                             <?php endforeach; ?>
                         </select>
                         <span class="_city"></span>
                         <span class="_area"></span>
                         <label><span style="color:red">*</span> 选择代理地区.</label>
                     </td>
+                </tr>
+                <tr id="district_tg" style="display:none;">
+                    <th> 团购单位：</th>
+                    <td><input type="text" value="" name="group_buy" style="width:150px" class="normal"><label><span style="color:red">*</span> 团购单位或公司.</label>
+                        <b style="color:red"><?php echo form_error('group_buy'); ?></b></td>
                 </tr>
                 <tr>
                     <th> 姓名：</th>
@@ -311,6 +336,16 @@ echo $menu[1]; ?></span>
                     <th> 所在地：</th>
                     <td><input type="text" value="" name="address" style="width:150px" class="normal"><label>客户所在地区.</label>
                         <b style="color:red"><?php echo form_error('address'); ?></b></td>
+                </tr>
+                <tr>
+                    <th> 渠道：</th>
+                    <td><input type="text" value="" name="channel" style="width:150px" class="normal"><label>客户渠道.</label>
+                        <b style="color:red"><?php echo form_error('channel'); ?></b></td>
+                </tr>
+                <tr>
+                    <th> 代理品牌：</th>
+                    <td><input type="text" value="" name="brand" style="width:150px" class="normal"><label>客户目前代理品牌.</label>
+                        <b style="color:red"><?php echo form_error('brand'); ?></b></td>
                 </tr>
                 <tr>
                     <th> 公司或行业：</th>
