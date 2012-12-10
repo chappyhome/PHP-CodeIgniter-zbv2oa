@@ -289,7 +289,7 @@ echo $menu[1]; ?></span>
                         <input type="radio" name="district_level" value="2" onclick="district(2)" /> 市级 &nbsp;&nbsp;&nbsp;
                         <input type="radio" name="district_level" value="3" onclick="district(2)" /> 市区级 &nbsp;&nbsp;&nbsp;
                         <input type="radio" name="district_level" value="4" onclick="district(3)" /> 县级 &nbsp;&nbsp;&nbsp;
-                        <input type="radio" name="district_level" value="0" onclick="district(0)" /> 团购 &nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="district_level" value="5" onclick="district(0)" /> 团购 &nbsp;&nbsp;&nbsp;
                         <label><span style="color:red">*</span> 选择代理级别.</label>
                         <b style="color:red"><?php echo form_error('district_level'); ?></b>
                         <b style="color:red"><?php echo form_error('province_id'); ?></b>

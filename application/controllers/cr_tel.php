@@ -30,7 +30,7 @@ class Cr_tel extends Admin_Controller {
     public function __construct() {
         parent::__construct();
         $this->_check_permit();
-        $this->load->model(array());
+        $this->load->model(array('customer_m'));
     }
 
 // ------------------------------------------------------------------------

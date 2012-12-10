@@ -117,18 +117,12 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function add_0_customer() {
-        $data = $this->_get_form_data(0);
-        var_dump($data);
-        
-//        if ($data = $this->_get_form_data(0)) {
-//            var_dump($data);
-////            $this->customer_m->add_customer($data);
-////            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
-//        } else {
-//            
-//           // $this->add_customer();
-//            $this->output->enable_profiler(TRUE);
-//        }
+        if ($data = $this->_get_form_data(0)) {
+            $this->customer_m->add_customer($data);
+            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+        } else {
+            $this->add_customer();
+        }
     }
 
     // ------------------------------------------------------------------------
@@ -140,11 +134,9 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function add_1_customer() {
-        if ($this->_get_form_data(1)) {
-            $data = $this->_get_form_data(1);
-            var_dump($data);
-//            $this->customer_m->add_customer($data);
-//            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+        if ($data = $this->_get_form_data(1)) {
+            $this->customer_m->add_customer($data);
+            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
             $this->add_customer();
         }
@@ -159,11 +151,26 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function add_2_customer() {
-        if ($this->_get_form_data(2)) {
-            $data = $this->_get_form_data(2);
-            var_dump($data);
-//            $this->customer_m->add_customer($data);
-//            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+        if ($data = $this->_get_form_data(2)) {
+            $this->customer_m->add_customer($data);
+            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
+        } else {
+            $this->add_customer();
+        }
+    }
+    
+    // ------------------------------------------------------------------------
+
+    /**
+     * 分配客户
+     *
+     * @access  public
+     * @return  void
+     */
+    public function allot_customer() {
+        if ($data = $this->_get_form_data(2)) {
+            $this->customer_m->add_customer($data);
+            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
         } else {
             $this->add_customer();
         }
@@ -178,7 +185,7 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function _get_form_data($add = 0) {
-        $required_gj = $required_yx = $required_province = $required_city = $required_area = '';
+        $required_gj = $required_yx = $required_province = $required_city = $required_area = $required_tg = '';
         if ($add >= 1) {
             $required_gj = '|required';
         }
@@ -201,17 +208,17 @@ class Cr extends Admin_Controller {
         $this->form_validation->set_rules('class_id', '客户分组', 'trim|is_natural' . $required_yx);
         $this->form_validation->set_rules('level_id', '客户级别', 'trim|is_natural' . $required_yx);
         $this->form_validation->set_rules('district_level', '代理级别', 'trim|is_natural' . $required_yx);
-        $district_id = $this->input->post('district_id', TRUE);
-        if ($district_id == 1) {
+        $district_level = $this->input->post('district_level', TRUE);
+        if ($district_level == 1) {
             $required_province = '|required';
         }
-        if ($district_id == 2 || $district_id == 3) {
+        if ($district_level == 2 || $district_level == 3) {
             $required_city = '|required';
         }
-        if ($district_id == 4) {
+        if ($district_level == 4) {
             $required_area = '|required';
         }
-        if ($district_id == 0) {
+        if ($district_level == 5) {
             $required_tg = '|required';
         }
         $this->form_validation->set_rules('province_id', '省份', 'trim' . $required_province);
@@ -259,14 +266,13 @@ class Cr extends Admin_Controller {
                     $data['district_id'] = $area[0];
                     $data['district_detail'] = $province[1].$city[1].$area[1];
                     break;
-                case 0:
+                case 5:
                     $data['district_id'] = 0;
                     $data['district_detail'] = $this->input->post('group_buy', TRUE);
                     break;
             }
             $data['entry_user'] = $this->_admin->fullname.':'.$this->_admin->user_id;
             $data['create_time'] = date('Y-m-d H:i:s');
-            $data['entry_fullname'] = $this->_admin->fullname;
             return $data;
             var_dump($data);
         }
