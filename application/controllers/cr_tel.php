@@ -33,7 +33,7 @@ class Cr_tel extends Admin_Controller {
         $this->load->model(array('customer_m'));
     }
 
-// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     /**
      * 客服关系默认页
@@ -42,10 +42,31 @@ class Cr_tel extends Admin_Controller {
      * @return  void
      */
     public function my() {
-        $this->_template('default_v');
+        //$offset 分页偏移
+        $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
+        $district_detail = $this->input->get('province', TRUE);
+        $data['province'] = $this->customer_m->get_district(1);
+        $data['province_now'] = $district_detail;
+        $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail);
+        //加载分页
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('cr_tel/my') . '?province=' . $district_detail;
+        $config['per_page'] = 15;
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'page';
+        $config['total_rows'] = $this->customer_m->get_customers_num($district_detail);
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->create_links();
+        $this->_template('cr_tel_my_list_v', $data);
     }
 
-// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
+
+    public function ajax() {
+        $customer_id = $this->input->get('customer_id');
+        echo json_encode($this->customer_m->get_customer_by_id($customer_id));
+    }
+
 }
 
 /* End of file cr_tel.php */

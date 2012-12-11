@@ -17,8 +17,14 @@
     function queryCity(province){
         $.get('<?php echo site_url('cr/ajax'); ?>',{'province':province},function(data){$("._city").replaceWith(data);},'html');
     }
+    function queryCity_address(province){
+        $.get('<?php echo site_url('cr/ajax/1'); ?>',{'province':province},function(data){$("._city_address").replaceWith(data);},'html');
+    }
     function queryArea(city){
         $.get('<?php echo site_url('cr/ajax'); ?>',{'city':city},function(data){$("._area").replaceWith(data);},'html');
+    }
+    function queryArea_address(city){
+        $.get('<?php echo site_url('cr/ajax/1'); ?>',{'city':city},function(data){$("._area_address").replaceWith(data);},'html');
     }
 </script>
 <?php $current_tab = $this->input->get('tab') ? $this->input->get('tab') : 'add_0_customer'; ?>
@@ -176,14 +182,28 @@ echo $menu[1]; ?></span>
                         <b style="color:red"><?php echo form_error('tel'); ?></b></td>
                 </tr>
                 <tr>
+                    <th> 地址：</th>
+                    <td>
+                        <select class="normal" style="width:auto" id="province" name="province_id_address" onchange="queryCity_address(this.options[this.selectedIndex].value)">
+                            <option selected="selected" value="">请选择省份</option>
+                            <?php foreach ($province as $key): ?>
+                                <option value="<?php echo $key->id.':'.$key->name; ?>"><?php echo $key->name; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <span class="_city_address"></span>
+                        <span class="_area_address"></span></td>
+                 </tr>
+                 <tr>
+                     <th> </th>
+                     <td>
+                        <input type="text" value="" name="address" style="width:150px" class="normal">
+                        <span style="color:red">*</span><label>客户所在地区.</label>
+                        <b style="color:red"><?php echo form_error('address'); ?></b></td>
+                </tr>
+                <tr>
                     <th> 传真：</th>
                     <td><input type="text" value="" name="fax" style="width:150px" class="normal"><label>客户传真.</label>
                         <b style="color:red"><?php echo form_error('fax'); ?></b></td>
-                </tr>
-                <tr>
-                    <th> 所在地：</th>
-                    <td><input type="text" value="" name="address" style="width:150px" class="normal"><label>客户所在地区.</label>
-                        <b style="color:red"><?php echo form_error('address'); ?></b></td>
                 </tr>
                 <tr>
                     <th> 渠道：</th>
@@ -328,15 +348,30 @@ echo $menu[1]; ?></span>
                         <b style="color:red"><?php echo form_error('tel'); ?></b></td>
                 </tr>
                 <tr>
+                    <th> 地址：</th>
+                    <td>
+                        <select class="normal" style="width:auto" id="province" name="province_id" onchange="queryCity_address(this.options[this.selectedIndex].value)">
+                            <option selected="selected" value="">请选择省份</option>
+                            <?php foreach ($province as $key): ?>
+                                <option value="<?php echo $key->id.':'.$key->name; ?>"><?php echo $key->name; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <span class="_city_address"></span>
+                        <span class="_area_address"></span></td>
+                 </tr>
+                 <tr>
+                     <th> </th>
+                     <td>
+                        <input type="text" value="" name="address" style="width:150px" class="normal">
+                        <span style="color:red">*</span><label>客户所在地区.</label>
+                        <b style="color:red"><?php echo form_error('address'); ?></b></td>
+                </tr>
+                <tr>
                     <th> 传真：</th>
                     <td><input type="text" value="" name="fax" style="width:150px" class="normal"><label>客户传真.</label>
                         <b style="color:red"><?php echo form_error('fax'); ?></b></td>
                 </tr>
-                <tr>
-                    <th> 所在地：</th>
-                    <td><input type="text" value="" name="address" style="width:150px" class="normal"><label>客户所在地区.</label>
-                        <b style="color:red"><?php echo form_error('address'); ?></b></td>
-                </tr>
+                
                 <tr>
                     <th> 渠道：</th>
                     <td><input type="text" value="" name="channel" style="width:150px" class="normal"><label>客户渠道.</label>

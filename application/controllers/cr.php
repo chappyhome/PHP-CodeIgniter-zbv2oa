@@ -38,18 +38,6 @@ class Cr extends Admin_Controller {
     // ------------------------------------------------------------------------
 
     /**
-     * 客服关系默认页
-     *
-     * @access  public
-     * @return  void
-     */
-    public function my() {
-        $this->_template('default_v');
-    }
-
-    // ------------------------------------------------------------------------
-
-    /**
      * 增加客户视图
      *
      * @access  public
@@ -80,14 +68,15 @@ class Cr extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function ajax() {
+    public function ajax($is_address = 0) {
+        $address = $is_address ? '_address' : '';
         $city = $this->input->get('city');
         $province = $this->input->get('province');
         if ($province) {
             $data['city'] = $this->customer_m->get_district(2, $province);
-            echo "<span class='_city'>";
-            echo "<select onchange='queryArea(this.options[this.selectedIndex].value)'
-                name='city_id' style='width:auto' class='normal'>\n";
+            echo "<span class='_city$address'>";
+            echo "<select onchange='queryArea$address(this.options[this.selectedIndex].value)'
+                name='city_id$address' style='width:auto' class='normal'>\n";
             echo "<option selected='selected' value=''>请选择城市</option>";
             foreach ($data['city'] as $key) {
                 echo "<option value='$key->id:$key->name'>$key->name</option>\n";
@@ -97,8 +86,8 @@ class Cr extends Admin_Controller {
         }
         if ($city) {
             $data['area'] = $this->customer_m->get_district(3, $city);
-            echo "<span class='_area'>";
-            echo "<select name='area_id' style='width:auto' class='normal'>\n";
+            echo "<span class='_area$address'>";
+            echo "<select name='area_id$address' style='width:auto' class='normal'>\n";
             echo "<option selected='selected' value=''>请选择地区</option>";
             foreach ($data['area'] as $key) {
                 echo "<option value='$key->id:$key->name'>$key->name</option>\n";
@@ -158,7 +147,7 @@ class Cr extends Admin_Controller {
             $this->add_customer();
         }
     }
-    
+
     // ------------------------------------------------------------------------
 
     /**
@@ -199,11 +188,14 @@ class Cr extends Admin_Controller {
         $this->form_validation->set_rules('customer_name', '客户姓名', 'trim|required');
         $this->form_validation->set_rules('tel', '客户电话', 'trim|required|is_natural');
         $this->form_validation->set_rules('fax', '客户传真', 'trim');
-        $this->form_validation->set_rules('address', '客户所在地', 'trim');
         $this->form_validation->set_rules('channel', '客户渠道', 'trim');
         $this->form_validation->set_rules('brand', '代理品牌', 'trim');
         $this->form_validation->set_rules('company', '客户公司或行业', 'trim');
         $this->form_validation->set_rules('intention', '客户意向或备注', 'trim');
+        $this->form_validation->set_rules('address', '客户所在地具体位置', 'trim');
+        $this->form_validation->set_rules('province_id_address', '客户所在地省份', 'trim' . $required_gj);
+        $this->form_validation->set_rules('city_id_address', '客户所在地城市', 'trim' . $required_gj);
+        $this->form_validation->set_rules('area_id_address', '客户所在地县区', 'trim' . $required_gj);
         $this->form_validation->set_rules('user_id', '负责人', 'trim|is_natural' . $required_gj);
         $this->form_validation->set_rules('class_id', '客户分组', 'trim|is_natural' . $required_yx);
         $this->form_validation->set_rules('level_id', '客户级别', 'trim|is_natural' . $required_yx);
@@ -234,7 +226,10 @@ class Cr extends Admin_Controller {
             $data['customer_name'] = $this->input->post('customer_name', TRUE);
             $data['tel'] = $this->input->post('tel', TRUE);
             $data['fax'] = $this->input->post('fax', TRUE);
-            $data['address'] = $this->input->post('address', TRUE);
+            $province_address = explode(':', $this->input->post('province_id_address', TRUE));
+            $city_address = explode(':', $this->input->post('city_id_address', TRUE));
+            $area_address = explode(':', $this->input->post('area_id_address', TRUE));
+            $data['address'] = $province_address[1].$city_address[1].$area_address[1].$this->input->post('address', TRUE);
             $data['channel'] = $this->input->post('channel', TRUE);
             $data['brand'] = $this->input->post('brand', TRUE);
             $data['company'] = $this->input->post('company', TRUE);
@@ -256,22 +251,22 @@ class Cr extends Admin_Controller {
                     break;
                 case 2:
                     $data['district_id'] = $city[0];
-                    $data['district_detail'] = $province[1].$city[1];
+                    $data['district_detail'] = $province[1] . $city[1];
                     break;
                 case 3:
                     $data['district_id'] = $city[0];
-                    $data['district_detail'] = $province[1].$city[1];
+                    $data['district_detail'] = $province[1] . $city[1];
                     break;
                 case 4:
                     $data['district_id'] = $area[0];
-                    $data['district_detail'] = $province[1].$city[1].$area[1];
+                    $data['district_detail'] = $province[1] . $city[1] . $area[1];
                     break;
                 case 5:
                     $data['district_id'] = 0;
                     $data['district_detail'] = $this->input->post('group_buy', TRUE);
                     break;
             }
-            $data['entry_user'] = $this->_admin->fullname.':'.$this->_admin->user_id;
+            $data['entry_user'] = $this->_admin->fullname . ':' . $this->_admin->user_id;
             $data['create_time'] = date('Y-m-d H:i:s');
             return $data;
             var_dump($data);
