@@ -21,17 +21,17 @@
     <div class="position"><span><?php $menu = $this->acl->current_location();
 echo $menu[1]; ?></span>
         <span>></span><span><?php echo $menu[2]; ?></span>
-        <span>></span><span><?php echo $menu[3]?$menu[3]:''; ?></span>
+        <span>></span><span><?php echo $menu[3]; ?></span>
         <span>></span><span>列表</span>
     </div>
     <div class="operating">
         <a class="hack_ie" href="<?php echo site_url('cr/add_customer'); ?>"><button class="operating_btn" type="button"><span class="addition">录入新客户资源</span></button></a>
         <div class="search f_r">
-            <select class="normal" id="province" style="width:auto" name="province_id" onchange="location='<?php echo site_url('cr_tel/my') . '?province='; ?>'+this.value;">
-                <option selected="selected" value="">请选择省份</option>
-                <?php foreach ($province as $key): ?>
-                    <option <?php echo $province_now == $key->name ? 'selected="selected"' : '' ?> value="<?php echo $key->name; ?>"><?php echo $key->name; ?></option>
-<?php endforeach; ?>
+            <select class="normal" id="from" style="width:auto" name="from_id" onchange="location='<?php echo site_url('cr_tel/resource') . '?from_id='; ?>'+this.value;">
+                <option selected="selected" value="">请选择来源</option>
+                <?php foreach ($from as $key): ?>
+                    <option <?php echo $from_now == $key->from_id ? 'selected="selected"' : '' ?> value="<?php echo $key->from_id; ?>"><?php echo $key->from_name; ?></option>
+                <?php endforeach; ?>
             </select>
             <span class="_city"></span>
         </div>

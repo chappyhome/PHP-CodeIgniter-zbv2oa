@@ -12,7 +12,7 @@ class Test extends CI_Controller {
     }
 
     function index($user_id = 1) {
-        $this->cache_m->update_menu_cache($user_id);
+        $this->cache_m->update_role_cache($user_id);
     }
 
     function acl() {

@@ -120,7 +120,7 @@ class Cr_sm extends Admin_Controller {
         if (!$status) {
             $this->_message('不存在的状态', '', FALSE);
         }
-        if ($id == 1) {
+        if ($id === 1||$id === 3||$id === 4||$id === 8) {
             $this->_message('系统默认状态不能删除', 'cr_sm/view/', TRUE);
         }
         if ($this->customer_status_m->get_status_user_num($id) > 0) {

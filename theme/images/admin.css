@@ -50,7 +50,8 @@ select.normal{width:255px;height:24px;padding:3px 3px 2px 3px;margin-right:5px;b
 select.middle{width:95px;height:24px;padding:3px 3px 2px 3px;margin-right:5px;border:1px solid #e1e1e1;color:#7a7a7a}
 select.small{width:45px;height:24px;padding:3px 3px 2px 3px;margin-right:5px;border:1px solid #e1e1e1;color:#7a7a7a}
 textarea.normal{width:465px;height:65px;padding:0 0 0 5px;font-size:12px;color:#333;border:1px #d2d2d2 solid;line-height:24px}
-.btn{border:1px #e1e1e1 solid;color:#707070;cursor:pointer;vertical-align:bottom\9;overflow:hidden;background:url(admin_bg.gif) 0 -228px repeat-x}
+textarea.topbar{width:560px;height:35px;padding:3px 0 0 10px;margin:3px 5px 0 3px;font-size:12px;color:#333;border:1px #d2d2d2 solid;line-height:17px;}
+.btn{border:1px #e1e1e1 solid;color:#707070;cursor:pointer;vertical-align:bottom;overflow:hidden;background:url(admin_bg.gif) 0 -228px repeat-x}
 .submit{margin:10px 10px 10px 0;border:1px #e35c00 solid;font-weight:bold;color:#fff;cursor:pointer;background:url(admin_bg.gif) 0 -271px repeat-x}
 .pages_bar .submit{margin:5px auto}
 	button span{display:block;height:20px;line-height:20px;height:18px\9;padding:0 5px;white-space:nowrap;background:url(icon.gif) 0 -1000px no-repeat}
@@ -116,7 +117,7 @@ img.operator{width:12px;height:12px;margin:0 6px;cursor:pointer; vertical-align:
 /* operating style start */
 .operating{height:45px;margin-bottom:5px;border-top:1px solid #e1e1e1;border-bottom:1px solid #e1e1e1;padding-left:8px;background:url(admin_bg.gif) repeat-x 0 -110px;overflow:hidden;z-index:99}
 	.operating .search{margin:12px 10px 0 0;}
-		.operating .search input,.searchbar input{margin-right:5px; background-color:#fafafa; vertical-align:middle}
+		.operating .search input,.search textarea,.searchbar input{margin-right:5px; background-color:#fafafa; vertical-align:middle}
 		.operating .search select,.searchbar select{width:72px; vertical-align:middle; background-color:#fafafa}
 	.operating a{float:left;display:block;height:40px;margin:3px 3px 0;margin:3px 0 0\9;padding:0 0 0 6px;color:#4d4d4d;}
 	.operating a:hover{background:url(admin_bg.gif) no-repeat 0 0;}
@@ -190,9 +191,11 @@ img.operator{width:12px;height:12px;margin:0 6px;cursor:pointer; vertical-align:
 .list_table{width:100%;margin-top:-1px;border:1px #dddddd solid;table-layout:fixed;background-color:#fff}
 .field .list_table{margin-top:6px;border-width:0}
 	.list_table th{background:#f6f6f6;font-weight:bold}
-	.list_table thead th{white-space:nowrap;border-width:0;text-align:left;overflow:hidden}
+	.list_table thead th{white-space:nowrap;border-width:0;text-align:center;overflow:hidden}
 	.list_table tbody th{text-align:right}
 	.list_table tbody td{height:25px;padding-left:5px;border:1px #dddddd solid;border-width:1px 0;overflow:hidden;text-align:left;white-space:nowrap}
+        .list_table tbody td ul{clear: both;}
+        .list_table tbody td li{float: left;line-height: 150%}
         .list_table tbody tr.even td{background-color:#fffcf3}
 	.list_table tbody tr.sel td{background-color:#ffc}
 	.list_table tbody td.t_c,.list_table thead th.t_c{text-align:center}

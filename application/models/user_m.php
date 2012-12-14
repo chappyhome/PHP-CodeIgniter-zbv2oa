@@ -47,7 +47,7 @@ class User_m extends CI_Model {
         } else {
             $this->db->where('zb_user.user_name', $username);
         }
-        return $this->db->select("zb_user.user_id, zb_user.user_name, zb_user.password,zb_user.fullname,
+        return $this->db->select("zb_user.user_id, zb_user.user_name, zb_user.tel, zb_user.password,zb_user.fullname,
            zb_user.salt, zb_role.role_id, zb_role.role_name, zb_user.is_admin, zb_user.is_leave")
                         ->from('zb_user')
                         ->join('zb_role', 'zb_role.role_id = zb_user.role_id')

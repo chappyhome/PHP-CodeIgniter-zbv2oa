@@ -17,8 +17,9 @@
                     <th> 所属阶段：</th>
                     <td><select class="normal" style="width:auto" name="status_stage" >
                             <option value="0" <?php echo $status_stage == 0 ? 'selected="selected"' : '' ?>>未分配</option>
-                            <option value="1" <?php echo $status_stage == 1 ? 'selected="selected"' : '' ?>>跟进中</option>
-                            <option value="2" <?php echo $status_stage == 2 ? 'selected="selected"' : '' ?>>有效客户</option>
+                            <option value="1" <?php echo $status_stage == 1 ? 'selected="selected"' : '' ?>>未处理</option>
+                            <option value="2" <?php echo $status_stage == 2 ? 'selected="selected"' : '' ?>>跟进中</option>
+                            <option value="3" <?php echo $status_stage == 3 ? 'selected="selected"' : '' ?>>有效客户</option>
                         </select>
                         <label>*选择客户状态所属的阶段.</label>
                         <b style="color:red"><?php echo form_error('status_stage'); ?></b></td>

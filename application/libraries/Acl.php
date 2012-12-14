@@ -176,6 +176,13 @@ class Acl {
                         if ($n['right_class'] === $this->_class) {
                             $this->_current_level_1_menu = $key['menu_id'];
                             $this->_current_level_2_menu = $m['menu_id'];
+                            break;
+                        }
+                    }
+                    foreach ($m['level_3'] as $n) {
+                        if ($n['right_class'] === $this->_class && $n['right_method'] === $this->_method) {
+                            $this->_current_level_1_menu = $key['menu_id'];
+                            $this->_current_level_2_menu = $m['menu_id'];
                             $this->_current_level_3_menu = $n['menu_id'];
                             break;
                         }
@@ -200,7 +207,7 @@ class Acl {
                 break;
             }
         }
-        if ($ok == 1||$this->_method == 'ajax') {
+        if ($ok == 1 || $this->_method == 'ajax') {
             return 1;
         } else {
             return 0;
@@ -232,9 +239,13 @@ class Acl {
                 ->get('zb_menu')
                 ->row();
         for ($i = 1; $i <= 3; $i++) {
-            $k = $data[$i]->right_class.'/'.$data[$i]->right_method;
-            $link = site_url($k);
-            $menu[$i] = '<a href="' . $link . '"/>' . $data[$i]->menu_name . '</a>';
+            if ($data[$i]) {
+                $k = $data[$i]->right_class . '/' . $data[$i]->right_method;
+                $link = site_url($k);
+                $menu[$i] = '<a href="' . $link . '"/>' . $data[$i]->menu_name . '</a>';
+            }  else {
+                $menu[$i] = NULL;
+            }
         }
         return $menu;
     }

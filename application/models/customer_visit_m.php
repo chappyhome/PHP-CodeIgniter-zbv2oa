@@ -16,10 +16,10 @@ if (!defined('BASEPATH'))
 // ------------------------------------------------------------------------
 
 /**
- * ZBV2OA 客户操作模型
+ * ZBV2OA 客户回访记录模型
  * @author      Binarx
  */
-class Customer_m extends CI_Model {
+class Customer_visit_m extends CI_Model {
 
     /**
      * 构造函数
@@ -34,7 +34,7 @@ class Customer_m extends CI_Model {
 
     // ------------------------------------------------------------------------
     /**
-     * 根据指定信息获取客户信息
+     * 根据指定信息获取回访记录信息
      *
      * @access  public
      * @param   int
@@ -42,19 +42,12 @@ class Customer_m extends CI_Model {
      * @param   string
      * @return  object
      */
-    public function get_customers($limit = 0, $offset = 0, $district = '', $user_id = 0, $status = '', $from_id = 0) {
-        if ($district) {
-            $this->db->like('district_detail', $district);
-            $this->db->or_like('address', $district);
-        }
+    public function get_visit($limit = 0, $offset = 0, $user_id = 0, $customer_id = 0) {
         if ($user_id) {
-            $this->db->where('zb_customer.user_id', $user_id);
+            $this->db->where('zb_customer_visit.user_id', $user_id);
         }
-        if ($status) {
-            $this->db->where($status);
-        }
-        if ($from_id) {
-            $this->db->where('zb_customer.from_id', $from_id);
+        if ($customer_id) {
+            $this->db->where('zb_customer_visit.customer_id', $customer_id);
         }
         if ($limit) {
             $this->db->limit($limit);
@@ -62,82 +55,72 @@ class Customer_m extends CI_Model {
         if ($offset) {
             $this->db->offset($offset);
         }
-        return $this->db->select('customer_id,customer_name,tel,address,from_name,from_detail,status_name,channel,brand,intention,company')
-                        ->join('zb_customer_from', 'zb_customer.from_id = zb_customer_from.from_id')
-                        ->join('zb_customer_status', 'zb_customer.status_id = zb_customer_status.status_id')
-                        ->order_by('zb_customer.status_id')
-                        ->get('zb_customer')
+        return $this->db->select('visit_id,zb_customer_visit.user_detail,visit_message,zb_customer_visit.create_time,customer_name,tel,address,from_detail,channel,brand,intention,company')
+                        ->join('zb_customer', 'zb_customer_visit.customer_id = zb_customer.customer_id')
+                        ->order_by('zb_customer_visit.create_time','DESC')
+                        ->get('zb_customer_visit')
                         ->result();
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 获取指定客户总数
+     * 获取指定回访记录总数
      *
      * @access  public
      * @return  int
      */
-    public function get_customers_num($district = '', $user_id = 0, $status = '', $from_id = 0) {
+    public function get_visit_num($user_id = 0, $customer_id = 0) {
         if ($user_id) {
-            $this->db->where('zb_customer.user_id', $user_id);
+            $this->db->where('zb_customer_visit.user_id', $user_id);
         }
-        if ($district) {
-            $this->db->like('district_detail', $district);
+        if ($customer_id) {
+            $this->db->where('zb_customer_visit.customer_id', $customer_id);
         }
-        if ($status) {
-            $this->db->where($status);
-        }
-        if ($from_id) {
-            $this->db->where('zb_customer.from_id', $from_id);
-        }
-        return $this->db->join('zb_customer_status', 'zb_customer.status_id = zb_customer_status.status_id')
-                        ->count_all_results('zb_customer');
+        return $this->db->count_all_results('zb_customer_visit');
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 根据ID获取指定客户
+     * 根据ID获取指定回访记录
      *
      * @access  public
      * @return  int
      */
-    public function get_customer_by_id($customer_id = 0) {
-        return $this->db->where('customer_id', $customer_id)
-                        ->join('zb_customer_from', 'zb_customer.from_id = zb_customer_from.from_id', 'left')
-                        ->join('zb_customer_status', 'zb_customer.status_id = zb_customer_status.status_id', 'left')
-                        ->get('zb_customer')
-                        ->row_array();
+    public function get_visit_message_by_id($visit_message_id = 0) {
+        return $this->db->where('visit_id', $visit_message_id)
+                        ->get('zb_customer_visit')
+                        ->row();
     }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 添加状态
+     * 添加回访记录
      *
      * @access  public
      * @param   array
      * @return  bool
      */
-    public function add_customer($data) {
-        $this->db->insert('zb_customer', $data);
+    public function add_visit_message($data) {
+        $this->db->insert('zb_customer_visit', $data);
         return $this->db->insert_id();
     }
-
+    
     // ------------------------------------------------------------------------
 
     /**
-     * 修改状态
+     * 删除回访记录
      *
      * @access  public
      * @param   int
-     * @param   array
      * @return  bool
      */
-    // public function edit_status($id, $data) {
-//        return $this->db->where('status_id', $id)->update('zb_customer_status', $data);
-    // }
+     public function del_visit_message($id) {
+        return $this->db->where('visit_id', $id)->delete('zb_customer_visit');
+     }
+
     // ------------------------------------------------------------------------
 
     /**
@@ -150,18 +133,7 @@ class Customer_m extends CI_Model {
     // public function get_status_by_id($id) {
 //        return $this->db->where('status_id', $id)->get('zb_customer_status')->row();
     // }
-    // ------------------------------------------------------------------------
-
-    /**
-     * 删除状态
-     *
-     * @access  public
-     * @param   int
-     * @return  bool
-     */
-    // public function del_status($id) {
-//        return $this->db->where('status_id', $id)->delete('zb_customer_status');
-    // }
+    
     // ------------------------------------------------------------------------
 
     /**

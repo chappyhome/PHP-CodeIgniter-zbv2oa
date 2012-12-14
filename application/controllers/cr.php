@@ -269,7 +269,6 @@ class Cr extends Admin_Controller {
             $data['entry_user'] = $this->_admin->fullname . ':' . $this->_admin->user_id;
             $data['create_time'] = date('Y-m-d H:i:s');
             return $data;
-            var_dump($data);
         }
     }
 

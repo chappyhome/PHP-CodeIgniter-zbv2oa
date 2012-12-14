@@ -37,8 +37,9 @@
                     <td><?php echo $v->status_name; ?></td>
                     <td><?php switch ($v->status_stage){
                         case 0:echo '未分配';break;
-                        case 1:echo '跟进中';break;
-                        case 2:echo '有效客户';break;
+                        case 1:echo '未处理';break;
+                        case 2:echo '跟进中';break;
+                        case 3:echo '有效客户';break;
                         default:echo '[客户阶段错误]';break;
                         }?>
                     </td>
