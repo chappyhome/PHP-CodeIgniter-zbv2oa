@@ -111,7 +111,7 @@ class Customer_visit_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 删除回访记录
+     * 删除指定ID回访记录
      *
      * @access  public
      * @param   int
@@ -124,15 +124,15 @@ class Customer_visit_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 根据状态ID获取状态信息
+     * 删除指定客户的回访记录
      *
      * @access  public
      * @param   int
-     * @return  object
+     * @return  bool
      */
-    // public function get_status_by_id($id) {
-//        return $this->db->where('status_id', $id)->get('zb_customer_status')->row();
-    // }
+     public function del_visit_message_by_customer($id) {
+        return $this->db->where('customer_id', $id)->delete('zb_customer_visit');
+     }
     
     // ------------------------------------------------------------------------
 

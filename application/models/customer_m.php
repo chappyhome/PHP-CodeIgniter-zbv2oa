@@ -50,9 +50,6 @@ class Customer_m extends CI_Model {
         if ($user_id) {
             $this->db->where('zb_customer.user_id', $user_id);
         }
-        if ($status) {
-            $this->db->where($status);
-        }
         if ($from_id) {
             $this->db->where('zb_customer.from_id', $from_id);
         }
@@ -63,8 +60,8 @@ class Customer_m extends CI_Model {
             $this->db->offset($offset);
         }
         return $this->db->select('customer_id,customer_name,tel,address,from_name,from_detail,status_name,channel,brand,intention,company')
-                        ->join('zb_customer_from', 'zb_customer.from_id = zb_customer_from.from_id')
-                        ->join('zb_customer_status', 'zb_customer.status_id = zb_customer_status.status_id')
+                        ->join("zb_customer_from", "zb_customer.from_id = zb_customer_from.from_id")
+                        ->join("zb_customer_status", "zb_customer.status_id = zb_customer_status.status_id $status")
                         ->order_by('zb_customer.status_id')
                         ->get('zb_customer')
                         ->result();
@@ -114,7 +111,7 @@ class Customer_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 添加状态
+     * 添加客户信息
      *
      * @access  public
      * @param   array
@@ -128,16 +125,16 @@ class Customer_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 修改状态
+     * 修改客户信息
      *
      * @access  public
      * @param   int
      * @param   array
      * @return  bool
      */
-    // public function edit_status($id, $data) {
-//        return $this->db->where('status_id', $id)->update('zb_customer_status', $data);
-    // }
+     public function edit_customer($id, $data) {
+        return $this->db->where('customer_id', $id)->update('zb_customer', $data);
+     }
     // ------------------------------------------------------------------------
 
     /**

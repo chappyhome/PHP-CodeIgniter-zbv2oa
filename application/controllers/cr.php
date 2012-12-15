@@ -31,7 +31,7 @@ class Cr extends Admin_Controller {
         parent::__construct();
         $this->_check_permit();
         $this->load->model(array('customer_m', 'customer_status_m', 'customer_from_m',
-            'district_m', 'customer_class_m', 'customer_level_m'));
+            'district_m', 'customer_class_m', 'customer_level_m', 'customer_visit_m'));
         $this->load->library('form_validation');
     }
 
@@ -156,13 +156,52 @@ class Cr extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function allot_customer() {
-        if ($data = $this->_get_form_data(2)) {
-            $this->customer_m->add_customer($data);
-            $this->_message('客户添加成功!', 'cr/add_customer', TRUE);
-        } else {
-            $this->add_customer();
+    public function del($customer_id = 0, $fromuri = '') {
+        $customer = $this->customer_m->get_customer_by_id($customer_id);
+        if ($customer->status_stage == 0 || $customer->status_stage == 1) {
+            $this->customer_m->del($customer_id);
+            $this->_message('客户信息删除成功!', $fromuri, TRUE);
         }
+        if ($customer->status_stage == 2) {
+            $this->customer_visit_m->del_visit_message_by_customer($customer_id);
+            $this->customer_m->del($customer_id);
+            $this->_message('客户信息删除成功!', $fromuri, TRUE);
+        }
+        if ($customer->status_stage == 3) {
+            $this->_message('暂不支持删除有效客户!', $fromuri, TRUE);
+        }
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * 分配客户
+     *
+     * @access  public
+     * @return  void
+     */
+    public function allot_customer() {
+        //$offset 分页偏移
+        $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
+        $district_detail = $this->input->get('province', TRUE)?$this->input->get('province', TRUE):'';
+        $from_id = $this->input->get('from_id', TRUE);
+        $data['province'] = $this->customer_m->get_district(1);
+        $data['province_now'] = $district_detail;
+        $data['from'] = $this->customer_from_m->get_from();
+        $data['from_now'] = $this->input->get('from_id', TRUE);
+        $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, 0, "and zb_customer_status.status_stage=0", $from_id);
+        //加载分页
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('cr/allot_customer') . '?province=' . $district_detail . '&from_id=' . $from_id;
+        $config['per_page'] = 15;
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'page';
+        $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, 0, 'and zb_customer_status.status_stage = 0', $from_id);
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->create_links();
+        //$this->output->enable_profiler(TRUE);
+        $this->_template('cr_customer_allot_v', $data);
+        
     }
 
     // ------------------------------------------------------------------------
@@ -229,7 +268,7 @@ class Cr extends Admin_Controller {
             $province_address = explode(':', $this->input->post('province_id_address', TRUE));
             $city_address = explode(':', $this->input->post('city_id_address', TRUE));
             $area_address = explode(':', $this->input->post('area_id_address', TRUE));
-            $data['address'] = $province_address[1].$city_address[1].$area_address[1].$this->input->post('address', TRUE);
+            $data['address'] = $province_address[1] . $city_address[1] . $area_address[1] . $this->input->post('address', TRUE);
             $data['channel'] = $this->input->post('channel', TRUE);
             $data['brand'] = $this->input->post('brand', TRUE);
             $data['company'] = $this->input->post('company', TRUE);

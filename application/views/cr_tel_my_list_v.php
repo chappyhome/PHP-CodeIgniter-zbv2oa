@@ -33,7 +33,6 @@ echo $menu[1]; ?></span>
                     <option <?php echo $province_now == $key->name ? 'selected="selected"' : '' ?> value="<?php echo $key->name; ?>"><?php echo $key->name; ?></option>
 <?php endforeach; ?>
             </select>
-            <span class="_city"></span>
         </div>
     </div>
     <div class="field">
