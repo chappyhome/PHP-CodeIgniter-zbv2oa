@@ -17,18 +17,26 @@
         },'json');
     }
 </script>
+<form name='customer_form' id="customer_form" method='post' action='<?php echo site_url('cr/allot_customer'); ?>'>
 <div class="headbar">
-    <div class="position"><span><?php
-$menu = $this->acl->current_location();
-echo $menu[1];
-?></span>
+    <div class="position">
+        <span><?php $menu = $this->acl->current_location();echo $menu[1];?></span>
         <span>></span><span><?php echo $menu[2]; ?></span>
         <span>></span><span><?php echo $menu[3]; ?></span>
         <span>></span><span>添加</span>
     </div>
     <div class="operating">
         <a href="javascript:void(0)" onclick="selectAll('customer_id[]');"><button class="operating_btn" type="button"><span class="sel_all">全选</span></button></a>
-        <a href="javascript:;" onclick="$('#cache_form').submit();"><button class="operating_btn" type="button"><span class="remove">更新</span></button></a>
+        <a href="javascript:;" onclick="$('#customer_form').submit();"><button class="operating_btn" type="button"><span class="remove">分配</span></button></a>
+        <div class="search f_l">
+            <select class="normal" id="from" style="width:auto" name="user_id">
+                    <option selected="selected" value="">请选择员工</option>
+                    <?php foreach ($user_list as $key): ?>
+                        <option value="<?php echo $key->user_id; ?>"><?php echo $key->fullname; ?></option>
+                    <?php endforeach; ?>
+            </select>
+            <b class="f_r" style="color: red;padding:12px 0 0 5px;"><?php echo form_error('user_id'); ?></b>
+        </div>
         <div class="search f_r">
             <select class="normal" id="from" style="width:auto" name="from_id" onchange="location='<?php echo current_url() . '?from_id='; ?>'+this.value+'&province='+$('#province').val()">
                 <option selected="selected" value="">请选择来源</option>
@@ -69,11 +77,16 @@ echo $menu[1];
 </div>
 
 <div class="content">
-    <form name='cache_form' id="cache_form" method='post' action='<?php echo site_url('ss_cache/cache'); ?>'>
+    
         <table id="list_table" class="list_table">
             <col width="40px" />
             <col />
             <tbody>
+                <?php if(form_error('customer_id')): ?>
+                <tr>
+                    <td colspan="10"><b style="color: red;"><?php echo form_error('customer_id'); ?></b></td>
+                </tr>
+                <?php endif; ?>
                 <tr id="customer_detail" style="background-color:#ffc;width:100%;display:none;">
                     <td colspan="10">
                         <div>
@@ -115,5 +128,6 @@ echo $menu[1];
 <?php endforeach; ?>
             </tbody>
         </table>
-    </form>
+
 </div>
+</form>

@@ -128,22 +128,6 @@ class District_m extends CI_Model {
 
     // ------------------------------------------------------------------------
 
-    /**
-     * 获取某一阶段下的客户状态
-     *
-     * @access  public
-     * @param   int
-     * @return  bool
-     */
-    public function get_status_by_stage($stage = 0) {
-        return $this->db->select('status_id,status_name')
-                        ->where('status_id !=', '1')
-                        ->where('status_stage', $stage)
-                        ->get('zb_customer_status')
-                        ->result();
-    }
-
-    // ------------------------------------------------------------------------
 }
 
 /* End of file district_m.php */

@@ -179,6 +179,24 @@ class User_m extends CI_Model {
     }
 
     // ------------------------------------------------------------------------
+    /**
+     * 获取某些特定权限下所有用户
+     *
+     * @access  public
+     * @param   int
+     * @param   int
+     * @param   int
+     * @return  object
+     */
+    public function get_users_by_role($role_str = '') {
+        return $this->db->select('user_id,fullname')
+                        ->where('zb_user.is_admin =', 1)
+                        ->join('zb_role', "zb_role.role_id = zb_user.role_id and zb_role.rights like '$role_str'")
+                        ->get('zb_user')
+                        ->result();
+    }
+
+    // ------------------------------------------------------------------------
 
     /**
      * 获取部门下所有用户

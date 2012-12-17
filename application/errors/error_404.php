@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<title>404 Page Not Found</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>请求的页面不存在</title>
 <style type="text/css">
 
 ::selection{ background-color: #E13300; color: white; }
@@ -26,7 +27,7 @@ h1 {
 	background-color: transparent;
 	border-bottom: 1px solid #D0D0D0;
 	font-size: 19px;
-	font-weight: normal;
+	font-weight:bold;
 	margin: 0 0 14px 0;
 	padding: 14px 15px 10px 15px;
 }
@@ -45,6 +46,7 @@ code {
 #container {
 	margin: 10px;
 	border: 1px solid #D0D0D0;
+        padding: 5px 0 15px 10px;
 	-webkit-box-shadow: 0 0 8px #D0D0D0;
 }
 
@@ -55,8 +57,11 @@ p {
 </head>
 <body>
 	<div id="container">
-		<h1><?php echo $heading; ?></h1>
-		<?php echo $message; ?>
+		<h1>这个页面不存在 错误类型：404</h1>
+		您所请求的页面不存在，原因可能是：<br/><br/>
+                1.你所请求的URL链接错误，请检查地址栏<br/>
+                2.系统此功能还没有实现，请等待<br/>
+                3.程序出现错误，请联系binarx@gmail.com
 	</div>
 </body>
 </html>

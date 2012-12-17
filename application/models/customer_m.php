@@ -53,6 +53,9 @@ class Customer_m extends CI_Model {
         if ($from_id) {
             $this->db->where('zb_customer.from_id', $from_id);
         }
+        if ($status) {
+            $str = 'and '.$status;
+        }
         if ($limit) {
             $this->db->limit($limit);
         }
@@ -61,7 +64,7 @@ class Customer_m extends CI_Model {
         }
         return $this->db->select('customer_id,customer_name,tel,address,from_name,from_detail,status_name,channel,brand,intention,company')
                         ->join("zb_customer_from", "zb_customer.from_id = zb_customer_from.from_id")
-                        ->join("zb_customer_status", "zb_customer.status_id = zb_customer_status.status_id $status")
+                        ->join("zb_customer_status", "zb_customer.status_id = zb_customer_status.status_id $str")
                         ->order_by('zb_customer.status_id')
                         ->get('zb_customer')
                         ->result();
@@ -83,12 +86,12 @@ class Customer_m extends CI_Model {
             $this->db->like('district_detail', $district);
         }
         if ($status) {
-            $this->db->where($status);
+            $str = 'and '.$status;
         }
         if ($from_id) {
             $this->db->where('zb_customer.from_id', $from_id);
         }
-        return $this->db->join('zb_customer_status', 'zb_customer.status_id = zb_customer_status.status_id')
+        return $this->db->join('zb_customer_status', "zb_customer.status_id = zb_customer_status.status_id $str")
                         ->count_all_results('zb_customer');
     }
 
@@ -121,6 +124,22 @@ class Customer_m extends CI_Model {
         $this->db->insert('zb_customer', $data);
         return $this->db->insert_id();
     }
+    
+    // ------------------------------------------------------------------------
+
+    /**
+     * 更改客户负责人
+     *
+     * @access  public
+     * @param   array
+     * @return  bool
+     */
+    public function allot_customer($customer_arr,$data) {
+        foreach ($customer_arr as $key) {
+            return $this->db->where('customer_id', $key)->update('zb_customer', $data);
+        }
+    }
+
 
     // ------------------------------------------------------------------------
 

@@ -48,14 +48,14 @@ class Cr_tel extends Admin_Controller {
         $user_id = $this->_admin->user_id;
         $data['province'] = $this->customer_m->get_district(1);
         $data['province_now'] = $district_detail;
-        $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, $user_id, 'and zb_customer_status.status_stage > 1');
+        $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, $user_id, 'zb_customer_status.status_stage > 1');
         //加载分页
         $this->load->library('pagination');
         $config['base_url'] = site_url('cr_tel/my') . '?province=' . $district_detail;
         $config['per_page'] = 15;
         $config['page_query_string'] = TRUE;
         $config['query_string_segment'] = 'page';
-        $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, $user_id, 'and zb_customer_status.status_stage > 1');
+        $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, $user_id, 'zb_customer_status.status_stage > 1');
         $this->pagination->initialize($config);
         $data['pagination'] = $this->pagination->create_links();
         $this->_template('cr_tel_my_list_v', $data);
@@ -76,14 +76,14 @@ class Cr_tel extends Admin_Controller {
         $user_id = $this->_admin->user_id;
         $data['from'] = $this->customer_from_m->get_from();
         $data['from_now'] = $this->input->get('from_id', TRUE);
-        $data['list'] = $this->customer_m->get_customers(15, $offset, '', $user_id, 'and zb_customer_status.status_stage = 1', $from_id);
+        $data['list'] = $this->customer_m->get_customers(15, $offset, '', $user_id, 'zb_customer_status.status_stage=1', $from_id);
         //加载分页
         $this->load->library('pagination');
         $config['base_url'] = site_url('cr_tel/my') . '?from_id=' . $data['from_now'];
         $config['per_page'] = 15;
         $config['page_query_string'] = TRUE;
         $config['query_string_segment'] = 'page';
-        $config['total_rows'] = $this->customer_m->get_customers_num('', $user_id, 'and zb_customer_status.status_stage = 1', $from_id);
+        $config['total_rows'] = $this->customer_m->get_customers_num('', $user_id, 'zb_customer_status.status_stage=1', $from_id);
         $this->pagination->initialize($config);
         $data['pagination'] = $this->pagination->create_links();
         $this->_template('cr_tel_resource_list_v', $data);

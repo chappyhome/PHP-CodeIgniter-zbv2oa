@@ -151,7 +151,7 @@ class Cr extends Admin_Controller {
     // ------------------------------------------------------------------------
 
     /**
-     * 分配客户
+     * 删除客户
      *
      * @access  public
      * @return  void
@@ -175,33 +175,97 @@ class Cr extends Admin_Controller {
     // ------------------------------------------------------------------------
 
     /**
+     * 查询客户
+     *
+     * @access  public
+     * @return  void
+     */
+    public function check_customer() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('user_id', '分配员工', 'trim|required|is_natural');
+        $this->form_validation->set_rules('customer_id', '被分配客户', 'required');
+        if ($this->form_validation->run() == FALSE) {
+            $data['status'] = $this->customer_status_m->get_status();
+            $this->_message_if_null($data['status'], '客户状态为空，请先添加客户状态', 'cr_sm/view/');
+            $data['from'] = $this->customer_from_m->get_from();
+            $this->_message_if_null($data['from'], '客户来源为空，请先添加客户来源', 'cr_fm/view/');
+            $data['em_user'] = $this->user_m->get_em_users();
+            $this->_message_if_null($data['em_user'], '员工列表为空，请先添加员工', 'em/view/');
+            $data['class'] = $this->customer_class_m->get_class();
+            $this->_message_if_null($data['class'], '客户分类为空，请先添加分类', 'cr_gm/view/');
+            $data['level'] = $this->customer_level_m->get_level();
+            $this->_message_if_null($data['level'], '客户级别为空，请先添加级别', 'cr_lm/view/');
+            $data['province'] = $this->customer_m->get_district(1);
+            $this->_template('cr_customer_check_v', $data);
+        } else {
+            //$offset 分页偏移
+            $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
+            $district_detail = $this->input->get('province', TRUE) ? $this->input->get('province', TRUE) : '';
+            $from_id = $this->input->get('from_id', TRUE);
+            $data['province'] = $this->customer_m->get_district(1);
+            $data['province_now'] = $district_detail;
+            $data['from'] = $this->customer_from_m->get_from();
+            $data['from_now'] = $this->input->get('from_id', TRUE);
+            $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, 0, "zb_customer_status.status_stage=0", $from_id);
+            //得到可以分配客户的账号列表;29为 客户资源 权限
+            $data['user_list'] = $this->user_m->get_users_by_role('%,29,%');
+            //加载分页
+            $this->load->library('pagination');
+            $config['base_url'] = site_url('cr/allot_customer') . '?province=' . $district_detail . '&from_id=' . $from_id;
+            $config['per_page'] = 15;
+            $config['page_query_string'] = TRUE;
+            $config['query_string_segment'] = 'page';
+            $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, 0, 'zb_customer_status.status_stage = 0', $from_id);
+            $this->pagination->initialize($config);
+            $data['pagination'] = $this->pagination->create_links();
+            //$this->output->enable_profiler(TRUE);
+            $this->_template('cr_customer_allot_v', $data);
+        }
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
      * 分配客户
      *
      * @access  public
      * @return  void
      */
     public function allot_customer() {
-        //$offset 分页偏移
-        $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
-        $district_detail = $this->input->get('province', TRUE)?$this->input->get('province', TRUE):'';
-        $from_id = $this->input->get('from_id', TRUE);
-        $data['province'] = $this->customer_m->get_district(1);
-        $data['province_now'] = $district_detail;
-        $data['from'] = $this->customer_from_m->get_from();
-        $data['from_now'] = $this->input->get('from_id', TRUE);
-        $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, 0, "and zb_customer_status.status_stage=0", $from_id);
-        //加载分页
-        $this->load->library('pagination');
-        $config['base_url'] = site_url('cr/allot_customer') . '?province=' . $district_detail . '&from_id=' . $from_id;
-        $config['per_page'] = 15;
-        $config['page_query_string'] = TRUE;
-        $config['query_string_segment'] = 'page';
-        $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, 0, 'and zb_customer_status.status_stage = 0', $from_id);
-        $this->pagination->initialize($config);
-        $data['pagination'] = $this->pagination->create_links();
-        //$this->output->enable_profiler(TRUE);
-        $this->_template('cr_customer_allot_v', $data);
-        
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('user_id', '分配员工', 'trim|required|is_natural');
+        $this->form_validation->set_rules('customer_id', '被分配客户', 'required');
+        if ($this->form_validation->run() == TRUE) {
+            $data['user_id'] = $this->input->post('user_id');
+            //客户状态3为默认已分配未处理
+            $data['status_id'] = 3;
+            $customer_arr = $this->input->post('customer_id');
+            $this->customer_m->allot_customer($customer_arr, $data);
+            $this->_message('客户分配成功!', 'cr/allot_customer', TRUE);
+        } else {
+            //$offset 分页偏移
+            $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
+            $district_detail = $this->input->get('province', TRUE) ? $this->input->get('province', TRUE) : '';
+            $from_id = $this->input->get('from_id', TRUE);
+            $data['province'] = $this->customer_m->get_district(1);
+            $data['province_now'] = $district_detail;
+            $data['from'] = $this->customer_from_m->get_from();
+            $data['from_now'] = $this->input->get('from_id', TRUE);
+            $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, 0, "zb_customer_status.status_stage=0", $from_id);
+            //得到可以分配客户的账号列表;29为 客户资源 权限
+            $data['user_list'] = $this->user_m->get_users_by_role('%,29,%');
+            //加载分页
+            $this->load->library('pagination');
+            $config['base_url'] = site_url('cr/allot_customer') . '?province=' . $district_detail . '&from_id=' . $from_id;
+            $config['per_page'] = 15;
+            $config['page_query_string'] = TRUE;
+            $config['query_string_segment'] = 'page';
+            $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, 0, 'zb_customer_status.status_stage = 0', $from_id);
+            $this->pagination->initialize($config);
+            $data['pagination'] = $this->pagination->create_links();
+            //$this->output->enable_profiler(TRUE);
+            $this->_template('cr_customer_allot_v', $data);
+        }
     }
 
     // ------------------------------------------------------------------------
