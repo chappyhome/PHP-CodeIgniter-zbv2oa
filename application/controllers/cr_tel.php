@@ -92,7 +92,7 @@ class Cr_tel extends Admin_Controller {
     // ------------------------------------------------------------------------
 
     /**
-     * 回访客户（回访记录列表 添加）
+     * 回访客户（回访记 录列表 添加）
      *
      * @access  public
      * @return  void
@@ -128,6 +128,68 @@ class Cr_tel extends Admin_Controller {
             $config['total_rows'] = $this->customer_visit_m->get_visit_num($user_id, $customer_id);
             $this->pagination->initialize($config);
             $data['pagination'] = $this->pagination->create_links();
+            $this->_template('cr_tel_visit_v', $data);
+        }
+    }
+    
+    // ------------------------------------------------------------------------
+    
+    /**
+     * 回访任务
+     *
+     * @access  public
+     * @return  void
+     */
+    public function return_visit($customer_id = 0) {
+        $data['customer'] = $this->customer_m->get_customer_by_id($customer_id);
+        if (!$data['customer']) {
+            $this->_message('不存在的客户', '', FALSE);
+        }
+        if ($data_add = $this->_get_form_data()) {
+            $data_add['customer_id'] = $customer_id;
+            $data_add['user_id'] = $this->_admin->user_id;
+            $data_add['user_detail'] = $this->_admin->fullname . ':' . $this->_admin->tel;
+            $data_add['create_time'] = date('Y-m-d H:i:s');
+            $this->customer_visit_m->add_visit_message($data_add);
+            //更改客户状态
+            if($data['customer']['status_id'] == 3) {
+                $data_edit['status_id'] = 4;
+                $this->customer_m->edit_customer($customer_id, $data_edit);
+            }
+            $this->_message('回访信息添加成功!', 'cr_tel/visit/'.$customer_id, TRUE);
+        } else {
+            
+            $this->_template('cr_tel_visit_v', $data);
+        }
+    }
+    
+    // ------------------------------------------------------------------------
+    
+    /**
+     * 转移客户
+     *
+     * @access  public
+     * @return  void
+     */
+    public function transfer($customer_id = 0) {
+        $data['customer'] = $this->customer_m->get_customer_by_id($customer_id);
+        if (!$data['customer']) {
+            $this->_message('不存在的客户', '', FALSE);
+        }
+        if ($data_add = $this->_get_form_data()) {
+            $data_add['customer_id'] = $customer_id;
+            $data_add['user_id'] = $this->_admin->user_id;
+            $data_add['user_detail'] = $this->_admin->fullname . ':' . $this->_admin->tel;
+            $data_add['create_time'] = date('Y-m-d H:i:s');
+            $this->customer_visit_m->add_visit_message($data_add);
+            //更改客户状态
+            if($data['customer']['status_id'] == 3) {
+                $data_edit['status_id'] = 4;
+                $this->customer_m->edit_customer($customer_id, $data_edit);
+            }
+            $this->_message('回访信息添加成功!', 'cr_tel/visit/'.$customer_id, TRUE);
+        } else {
+            
             $this->_template('cr_tel_visit_v', $data);
         }
     }

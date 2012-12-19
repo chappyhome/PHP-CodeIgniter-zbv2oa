@@ -200,7 +200,7 @@ img.operator{width:12px;height:12px;margin:0 6px;cursor:pointer; vertical-align:
 	.list_table tbody tr.sel td{background-color:#ffc}
 	.list_table tbody td.t_c,.list_table thead th.t_c{text-align:center}
 		.list_table tbody td img.spec_photo{width:20px;height:20px;vertical-align:middle; border:1px solid #ccc;}
-		.list_table td a{margin:0 5px 0 0}
+		.list_table td a{margin:0 3px 0 0}
 /* list_table style end */
 /* border_table style start */
 .border_table{border-width:1px;margin:10px 5px;background:#fff}
@@ -333,7 +333,7 @@ span.prt{background-position: 0 -17px;}
 
 .pagination a, .pagination strong{display:inline-block;line-height:18px;padding:1px 5px;border: 1px solid #C2D5E3;color:#333;text-decoration:none}
 .pagination a:hover {border-color: #369;color: #369;} 
-.pagination strong {background-color: #E5EDF2;}
+.pagination strong {background-color: #E5EDF2;float: left;margin-right: 6px;}
 
 .linked_menu ul{padding:0}
 	.linked_menu ul li {list-style:none;overflow:hidden}

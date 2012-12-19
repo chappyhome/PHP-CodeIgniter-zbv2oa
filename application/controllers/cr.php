@@ -45,9 +45,9 @@ class Cr extends Admin_Controller {
      */
     public function add_customer() {
         $data['is_add'] = 1;
-        $data['status_0'] = $this->customer_status_m->get_status_by_stage($stage = 0);
-        $data['status_1'] = $this->customer_status_m->get_status_by_stage($stage = 1);
-        $data['status_2'] = $this->customer_status_m->get_status_by_stage($stage = 2);
+        $data['status_0'] = $this->customer_status_m->get_status_by_stage($stage = array('0'));
+        $data['status_1'] = $this->customer_status_m->get_status_by_stage($stage = array('2'));
+        $data['status_2'] = $this->customer_status_m->get_status_by_stage($stage = array('3'));
         $this->_message_if_null($data['status_0'], '客户状态为空，请先添加客户状态', 'cr_sm/view/');
         $data['from'] = $this->customer_from_m->get_from();
         $this->_message_if_null($data['from'], '客户来源为空，请先添加客户来源', 'cr_fm/view/');
@@ -63,6 +63,18 @@ class Cr extends Admin_Controller {
 
     // ------------------------------------------------------------------------
     /**
+     * 客户详细情况AJAX
+     *
+     * @access  public
+     * @return  void
+     */
+    public function ajax_customer() {
+        $customer_id = $this->input->get('customer_id');
+        echo json_encode($this->customer_m->get_customer_by_id($customer_id));
+    }
+    
+    // ------------------------------------------------------------------------
+    /**
      * 地区AJAX
      *
      * @access  public
@@ -75,8 +87,8 @@ class Cr extends Admin_Controller {
         if ($province) {
             $data['city'] = $this->customer_m->get_district(2, $province);
             echo "<span class='_city$address'>";
-            echo "<select onchange='queryArea$address(this.options[this.selectedIndex].value)'
-                name='city_id$address' style='width:auto' class='normal'>\n";
+            echo "<select onchange='queryArea$address(this.options[this.selectedIndex].value);address_city();'
+                name='city_id$address' id='city$address' style='width:auto' class='normal'>\n";
             echo "<option selected='selected' value=''>请选择城市</option>";
             foreach ($data['city'] as $key) {
                 echo "<option value='$key->id:$key->name'>$key->name</option>\n";
@@ -87,7 +99,8 @@ class Cr extends Admin_Controller {
         if ($city) {
             $data['area'] = $this->customer_m->get_district(3, $city);
             echo "<span class='_area$address'>";
-            echo "<select name='area_id$address' style='width:auto' class='normal'>\n";
+            echo "<select name='area_id$address' id='area$address' style='width:auto' class='normal'
+                onchange='address_area();'>\n";
             echo "<option selected='selected' value=''>请选择地区</option>";
             foreach ($data['area'] as $key) {
                 echo "<option value='$key->id:$key->name'>$key->name</option>\n";
@@ -181,46 +194,41 @@ class Cr extends Admin_Controller {
      * @return  void
      */
     public function check_customer() {
-        $this->load->library('form_validation');
-        $this->form_validation->set_rules('user_id', '分配员工', 'trim|required|is_natural');
-        $this->form_validation->set_rules('customer_id', '被分配客户', 'required');
-        if ($this->form_validation->run() == FALSE) {
-            $data['status'] = $this->customer_status_m->get_status();
-            $this->_message_if_null($data['status'], '客户状态为空，请先添加客户状态', 'cr_sm/view/');
-            $data['from'] = $this->customer_from_m->get_from();
-            $this->_message_if_null($data['from'], '客户来源为空，请先添加客户来源', 'cr_fm/view/');
-            $data['em_user'] = $this->user_m->get_em_users();
-            $this->_message_if_null($data['em_user'], '员工列表为空，请先添加员工', 'em/view/');
-            $data['class'] = $this->customer_class_m->get_class();
-            $this->_message_if_null($data['class'], '客户分类为空，请先添加分类', 'cr_gm/view/');
-            $data['level'] = $this->customer_level_m->get_level();
-            $this->_message_if_null($data['level'], '客户级别为空，请先添加级别', 'cr_lm/view/');
-            $data['province'] = $this->customer_m->get_district(1);
-            $this->_template('cr_customer_check_v', $data);
-        } else {
-            //$offset 分页偏移
-            $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
-            $district_detail = $this->input->get('province', TRUE) ? $this->input->get('province', TRUE) : '';
-            $from_id = $this->input->get('from_id', TRUE);
-            $data['province'] = $this->customer_m->get_district(1);
-            $data['province_now'] = $district_detail;
-            $data['from'] = $this->customer_from_m->get_from();
-            $data['from_now'] = $this->input->get('from_id', TRUE);
-            $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, 0, "zb_customer_status.status_stage=0", $from_id);
-            //得到可以分配客户的账号列表;29为 客户资源 权限
-            $data['user_list'] = $this->user_m->get_users_by_role('%,29,%');
-            //加载分页
-            $this->load->library('pagination');
-            $config['base_url'] = site_url('cr/allot_customer') . '?province=' . $district_detail . '&from_id=' . $from_id;
-            $config['per_page'] = 15;
-            $config['page_query_string'] = TRUE;
-            $config['query_string_segment'] = 'page';
-            $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, 0, 'zb_customer_status.status_stage = 0', $from_id);
-            $this->pagination->initialize($config);
-            $data['pagination'] = $this->pagination->create_links();
-            //$this->output->enable_profiler(TRUE);
-            $this->_template('cr_customer_allot_v', $data);
-        }
+        $data['status'] = $this->customer_status_m->get_status_by_stage($stage=array('1','2','3'));
+        $data['from'] = $this->customer_from_m->get_from();
+        $data['user'] = $this->user_m->get_users_by_role('%,29,%');
+        $data['class'] = $this->customer_class_m->get_class();
+        $data['level'] = $this->customer_level_m->get_level();
+        $data['province'] = $this->customer_m->get_district(1);
+        $province = $this->input->get('province_id', TRUE) ? explode(':', $this->input->get('province_id', TRUE)) : '';
+        $city = $this->input->get('city_id', TRUE) ? explode(':', $this->input->get('city_id', TRUE)) : '';
+        $area = $this->input->get('area_id', TRUE) ? explode(':', $this->input->get('area_id', TRUE)) : '';
+        $district_detail = $this->input->get('district_detail', TRUE)?$this->input->get('district_detail', TRUE):(($province ? $province[1] : '') . ($city ? $city[1] : '') . ($area ? $area[1] : ''));
+        $user_id = $this->input->get('user_id', TRUE);
+        $from_id = $this->input->get('from_id', TRUE);
+        $status_id = $this->input->get('status_id', TRUE);
+        $class_id = $this->input->get('class_id', TRUE);
+        $level_id = $this->input->get('level_id', TRUE);
+        $district_level = $this->input->get('district_level', TRUE);
+        $customer_name = $this->input->get('customer_name', TRUE);
+        $tel = $this->input->get('tel', TRUE);
+        $address = $this->input->get('address', TRUE);
+        $channel = $this->input->get('channel', TRUE);
+        $brand = $this->input->get('brand', TRUE);
+        $company = $this->input->get('company', TRUE);
+        //$offset 分页偏移
+        $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
+        $data['customer_list'] = $this->customer_m->check_customers(15, $offset, $district_detail, $user_id, $status_id, $from_id, $class_id, $level_id, $district_level, $customer_name, $tel, $address, $channel, $brand, $company);
+        //加载分页
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('cr/check_customer') . "?tab=result_customer&district_detail=$district_detail&user_id=$user_id&from_id=$from_id&status_id=$status_id&class_id=$class_id&level_id=$level_id&customer_name=$customer_name&tel=$tel&address=$address&channel=$channel&brand=$brand&company=$company";
+        $config['per_page'] = 15;
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'page';
+        $config['total_rows'] = $this->customer_m->check_customers_num($district_detail, $user_id, $status_id, $from_id, $class_id, $level_id, $district_level, $customer_name, $tel, $address, $channel, $brand, $company);
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->create_links();
+        $this->_template('cr_customer_check_v', $data);
     }
 
     // ------------------------------------------------------------------------
@@ -329,10 +337,10 @@ class Cr extends Admin_Controller {
             $data['customer_name'] = $this->input->post('customer_name', TRUE);
             $data['tel'] = $this->input->post('tel', TRUE);
             $data['fax'] = $this->input->post('fax', TRUE);
-            $province_address = explode(':', $this->input->post('province_id_address', TRUE));
-            $city_address = explode(':', $this->input->post('city_id_address', TRUE));
-            $area_address = explode(':', $this->input->post('area_id_address', TRUE));
-            $data['address'] = $province_address[1] . $city_address[1] . $area_address[1] . $this->input->post('address', TRUE);
+            $province_address = $this->input->post('province_id_address', TRUE) ? explode(':', $this->input->post('province_id_address', TRUE)) : 0;
+            $city_address = $this->input->post('city_id_address', TRUE) ? explode(':', $this->input->post('city_id_address', TRUE)) : 0;
+            $area_address = $this->input->post('area_id_address', TRUE) ? explode(':', $this->input->post('area_id_address', TRUE)) : 0;
+            $data['address'] = ($province_address ? $province_address[1] : '') . ($city_address ? $city_address[1] : '') . ($area_address ? $area_address[1] : '');
             $data['channel'] = $this->input->post('channel', TRUE);
             $data['brand'] = $this->input->post('brand', TRUE);
             $data['company'] = $this->input->post('company', TRUE);

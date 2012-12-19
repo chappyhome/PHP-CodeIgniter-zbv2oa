@@ -25,6 +25,31 @@
     }
     function queryArea_address(city){
         $.get('<?php echo site_url('cr/ajax/1'); ?>',{'city':city},function(data){$("._area_address").replaceWith(data);},'html');
+        
+    }
+    function address_province(){
+        var province_name_0 = $("#add_0_customer #province_address option:selected").text(); 
+        $("#add_0_customer ._address_1").replaceWith("<span class='_address_1'>"+province_name_0+" </span>");
+        var province_name_1 = $("#add_1_customer #province_address option:selected").text(); 
+        $("#add_1_customer ._address_1").replaceWith("<span class='_address_1'>"+province_name_1+" </span>");
+        var province_name_2 = $("#add_2_customer #province_address option:selected").text(); 
+        $("#add_2_customer ._address_1").replaceWith("<span class='_address_1'>"+province_name_2+" </span>");
+    }
+    function address_city(){
+        var city_name_0 = $("#add_0_customer #city_address option:selected").text(); 
+        $("#add_0_customer ._address_2").replaceWith("<span class='_address_2'>"+city_name_0+" </span>");
+        var city_name_1 = $("#add_1_customer #city_address option:selected").text(); 
+        $("#add_1_customer ._address_2").replaceWith("<span class='_address_2'>"+city_name_1+" </span>");
+        var city_name_2 = $("#add_2_customer #city_address option:selected").text(); 
+        $("#add_2_customer ._address_2").replaceWith("<span class='_address_2'>"+city_name_2+" </span>");
+    }
+    function address_area(){
+        var area_name_0 = $("#add_0_customer #area_address option:selected").text(); 
+        $("#add_0_customer ._address_3").replaceWith("<span class='_address_3'>"+area_name_0+" </span>");
+        var area_name_1 = $("#add_1_customer #area_address option:selected").text(); 
+        $("#add_1_customer ._address_3").replaceWith("<span class='_address_3'>"+area_name_1+" </span>");
+        var area_name_2 = $("#add_2_customer #area_address option:selected").text(); 
+        $("#add_2_customer ._address_3").replaceWith("<span class='_address_3'>"+area_name_2+" </span>");
     }
 </script>
 <?php $current_tab = $this->input->get('tab') ? $this->input->get('tab') : 'add_0_customer'; ?>
@@ -92,8 +117,22 @@ echo $menu[1]; ?></span>
                         <b style="color:red"><?php echo form_error('fax'); ?></b></td>
                 </tr>
                 <tr>
-                    <th> 所在地：</th>
-                    <td><input type="text" value="" name="address" style="width:150px" class="normal"><label>客户所在地区.</label>
+                    <th> 地址：</th>
+                    <td>
+                        <select class="normal" style="width:auto" id="province_address" name="province_id_address" onchange="queryCity_address(this.options[this.selectedIndex].value);address_province();">
+                            <option value="">请选择省份</option>
+                            <?php foreach ($province as $key): ?>
+                                <option value="<?php echo $key->id.':'.$key->name; ?>"><?php echo $key->name; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <span class="_city_address"></span>
+                        <span class="_area_address"></span></td>
+                 </tr>
+                 <tr>
+                     <th> </th>
+                     <td>
+                        <span class="_address_1"></span><span class="_address_2"></span><span class="_address_3"></span><input type="text" value="" name="address" style="width:150px" class="normal">
+                        <label>客户所在地区.</label>
                         <b style="color:red"><?php echo form_error('address'); ?></b></td>
                 </tr>
                 <tr>
@@ -184,8 +223,8 @@ echo $menu[1]; ?></span>
                 <tr>
                     <th> 地址：</th>
                     <td>
-                        <select class="normal" style="width:auto" id="province" name="province_id_address" onchange="queryCity_address(this.options[this.selectedIndex].value)">
-                            <option selected="selected" value="">请选择省份</option>
+                        <select class="normal" style="width:auto" id="province_address" name="province_id_address" onchange="queryCity_address(this.options[this.selectedIndex].value);address_province();">
+                            <option value="">请选择省份</option>
                             <?php foreach ($province as $key): ?>
                                 <option value="<?php echo $key->id.':'.$key->name; ?>"><?php echo $key->name; ?></option>
                             <?php endforeach; ?>
@@ -196,7 +235,7 @@ echo $menu[1]; ?></span>
                  <tr>
                      <th> </th>
                      <td>
-                        <input type="text" value="" name="address" style="width:150px" class="normal">
+                        <span class="_address_1"></span><span class="_address_2"></span><span class="_address_3"></span><input type="text" value="" name="address" style="width:150px" class="normal">
                         <span style="color:red">*</span><label>客户所在地区.</label>
                         <b style="color:red"><?php echo form_error('address'); ?></b></td>
                 </tr>
@@ -350,8 +389,8 @@ echo $menu[1]; ?></span>
                 <tr>
                     <th> 地址：</th>
                     <td>
-                        <select class="normal" style="width:auto" id="province" name="province_id" onchange="queryCity_address(this.options[this.selectedIndex].value)">
-                            <option selected="selected" value="">请选择省份</option>
+                        <select class="normal" style="width:auto" id="province_address" name="province_id_address" onchange="queryCity_address(this.options[this.selectedIndex].value);address_province();">
+                            <option value="">请选择省份</option>
                             <?php foreach ($province as $key): ?>
                                 <option value="<?php echo $key->id.':'.$key->name; ?>"><?php echo $key->name; ?></option>
                             <?php endforeach; ?>
@@ -362,7 +401,7 @@ echo $menu[1]; ?></span>
                  <tr>
                      <th> </th>
                      <td>
-                        <input type="text" value="" name="address" style="width:150px" class="normal">
+                        <span class="_address_1"></span><span class="_address_2"></span><span class="_address_3"></span><input type="text" value="" name="address" style="width:150px" class="normal">
                         <span style="color:red">*</span><label>客户所在地区.</label>
                         <b style="color:red"><?php echo form_error('address'); ?></b></td>
                 </tr>

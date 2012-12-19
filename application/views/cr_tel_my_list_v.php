@@ -92,10 +92,11 @@ echo $menu[1]; ?></span>
                 <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:6%;"><?php echo $v->from_name; ?></td>
                 <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:9%;"><?php echo $v->status_name; ?></td>
                 <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:7%;"><?php echo $v->channel ? $v->channel : '[暂无]'; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:8%;"><?php echo $v->brand ? $v->brand : '[暂无]'; ?></td>
+                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:7%;"><?php echo $v->brand ? $v->brand : '[暂无]'; ?></td>
                 <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:22%;"><?php echo $v->intention ? $v->intention : '[暂无]'; ?></td>
-                <td style="width:9%;">
+                <td style="width:12%;">
                     <a href="<?php echo site_url('cr_tel/visit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_refresh.gif" alt="回访" title="回访"></a>
+                    <a href="<?php echo site_url('em/edit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_send.gif" alt="转移负责人" title="转移负责人"></a>
                     <a href="<?php echo site_url('em/edit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_edit.gif" alt="修改" title="修改"></a>
                     <a class="confirm_delete" href="<?php echo site_url('em/del/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
                 </td>

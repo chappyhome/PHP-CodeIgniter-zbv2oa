@@ -69,6 +69,126 @@ class Customer_m extends CI_Model {
                         ->get('zb_customer')
                         ->result();
     }
+    
+    // ------------------------------------------------------------------------
+    
+    /**
+     * 根据指定信息获取客户信息
+     *
+     * @access  public
+     * @param   int
+     * @param   int
+     * @param   string
+     * @return  object
+     */
+    public function check_customers($limit = 0, $offset = 0, $district = '', $user_id = 0, $status_id = 0, $from_id = 0,
+            $class_id = 0, $level_id = 0, $district_level = 0, $customer_name = '', $tel = '',
+            $address = '', $channel = '', $brand = '', $company = '') {
+        if ($district) {
+            $this->db->like('district_detail', $district);
+        }
+        if ($user_id) {
+            $this->db->where('zb_customer.user_id', $user_id);
+        }
+        if ($from_id) {
+            $this->db->where('zb_customer.from_id', $from_id);
+        }
+        if ($status_id) {
+            $this->db->where('zb_customer.status_id', $status_id);
+        }
+        if($class_id) {
+            $this->db->where('zb_customer.class_id', $class_id);
+        }
+        if($level_id) {
+            $this->db->where('zb_customer.level_id', $level_id);
+        }
+        if($district_level) {
+            $this->db->where('zb_customer.district_level', $district_level);
+        }
+        if($customer_name) {
+            $this->db->like('zb_customer.customer_name', $customer_name);
+        }
+        if($tel) {
+            $this->db->like('zb_customer.tel', $tel);
+        }
+        if($address) {
+            $this->db->like('zb_customer.address', $address);
+        }
+        if($channel) {
+            $this->db->like('zb_customer.channel', $channel);
+        }
+        if($brand) {
+            $this->db->like('zb_customer.brand', $brand);
+        }
+        if($company) {
+            $this->db->like('zb_customer.company', $company);
+        }
+        if ($limit) {
+            $this->db->limit($limit);
+        }
+        if ($offset) {
+            $this->db->offset($offset);
+        }
+        return $this->db->select('customer_id,customer_name,tel,address,from_name,from_detail,status_name,channel,brand,intention,company')
+                        ->join("zb_customer_from", "zb_customer.from_id = zb_customer_from.from_id")
+                        ->join("zb_customer_status", "zb_customer.status_id = zb_customer_status.status_id and zb_customer_status.status_stage !=0")
+                        ->order_by('zb_customer.status_id')
+                        ->get('zb_customer')
+                        ->result();
+    }
+    
+    // ------------------------------------------------------------------------
+    
+    /**
+     * 获取指定客户总数
+     *
+     * @access  public
+     * @return  object
+     */
+    public function check_customers_num($district = '', $user_id = 0, $status_id = 0, $from_id = 0,
+            $class_id = 0, $level_id = 0, $district_level = 0, $customer_name = '', $tel = '',
+            $address = '', $channel = '', $brand = '', $company = '') {
+        if ($district) {
+            $this->db->like('district_detail', $district);
+        }
+        if ($user_id) {
+            $this->db->where('zb_customer.user_id', $user_id);
+        }
+        if ($from_id) {
+            $this->db->where('zb_customer.from_id', $from_id);
+        }
+        if ($status_id) {
+            $this->db->where('zb_customer.status_id', $status_id);
+        }
+        if($class_id) {
+            $this->db->where('zb_customer.class_id', $class_id);
+        }
+        if($level_id) {
+            $this->db->where('zb_customer.level_id', $level_id);
+        }
+        if($district_level) {
+            $this->db->where('zb_customer.district_level', $district_level);
+        }
+        if($customer_name) {
+            $this->db->like('zb_customer.customer_name', $customer_name);
+        }
+        if($tel) {
+            $this->db->like('zb_customer.tel', $tel);
+        }
+        if($address) {
+            $this->db->like('zb_customer.address', $address);
+        }
+        if($channel) {
+            $this->db->like('zb_customer.channel', $channel);
+        }
+        if($brand) {
+            $this->db->like('zb_customer.brand', $brand);
+        }
+        if($company) {
+            $this->db->like('zb_customer.company', $company);
+        }
+        return $this->db->count_all_results('zb_customer');
+    }
 
     // ------------------------------------------------------------------------
 

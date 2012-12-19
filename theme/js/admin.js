@@ -91,8 +91,8 @@ function selectAll(nameVal)
 //tabs
 function select_tab(id,target)
 {
-	$('table._tabs').hide();//隐藏全部_tabs的table
-	$('table#'+id).show('normal');//显示指定id的当前table
+	$('._tabs').hide();//隐藏全部_tabs的table
+	$('#'+id).show('normal');//显示指定id的当前table
 	var li = $(target).parent();
 	li.parent().children('li').removeClass('selected');
 	li.addClass('selected');

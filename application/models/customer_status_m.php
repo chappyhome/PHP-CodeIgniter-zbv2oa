@@ -135,16 +135,16 @@ class Customer_status_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 获取某一阶段下的客户状态
+     * 获取指定阶段下的客户状态
      *
      * @access  public
-     * @param   int
+     * @param   array
      * @return  bool
      */
-    public function get_status_by_stage($stage = 0) {
+    public function get_status_by_stage($stage = array()) {
         return $this->db->select('status_id,status_name')
                         ->where('status_id !=', '1')
-                        ->where('status_stage', $stage)
+                        ->where_in('status_stage', $stage)
                         ->get('zb_customer_status')
                         ->result();
     }

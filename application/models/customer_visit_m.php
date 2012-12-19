@@ -148,23 +148,6 @@ class Customer_visit_m extends CI_Model {
     // }
     // ------------------------------------------------------------------------
 
-    /**
-     * 获取地区数据
-     *
-     * @access  public
-     * @param   int
-     * @return  bool
-     */
-    public function get_district($level = 0, $id = 0) {
-        if ($id) {
-            $this->db->where('upid', $id);
-        }
-        return $this->db->where('level', $level)
-                        ->get('zb_district')
-                        ->result();
-    }
-
-    // ------------------------------------------------------------------------
 }
 
 /* End of file customer_status_m.php */
