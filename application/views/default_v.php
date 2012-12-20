@@ -2,9 +2,9 @@
 <div class="content_box" style="border:none">
 	<div class="content">
 		<?php if(file_exists(FCPATH.'install')): ?>
-        <div class="red_box"><img src="images/error.gif" />您的安装目录没有删除，为了系统安全，请尽快删除！</div>
+            <div class="red_box"><img src="<?php echo base_url(); ?>theme/images/error.gif" />您的安装目录没有删除，为了系统安全，请尽快删除！</div>
 		<?php endif; ?>
-        <div class="red_box" id="lower_ie" style="display:none"><img src="images/error.gif" />系统检测到你使用的浏览器为IE8以下的版本(含IE核心的浏览器)，为了更好的体验，请使用IE8以上的或者其他主流的浏览器进行浏览！</div>
+        <div class="red_box" id="lower_ie" style="display:none"><img src="<?php echo base_url(); ?>theme/images/error.gif" />系统检测到你使用的浏览器为IE8以下的版本(含IE核心的浏览器)，为了更好的体验，请使用IE8以上的或者其他主流的浏览器进行浏览！</div>
         <table width="48%" cellspacing="0" cellpadding="5" class="border_table_org" style="float:left">
 			<thead>
 				<tr>

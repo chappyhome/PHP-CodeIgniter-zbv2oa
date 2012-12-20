@@ -30,7 +30,7 @@ class Cr_tel extends Admin_Controller {
     public function __construct() {
         parent::__construct();
         $this->_check_permit();
-        $this->load->model(array('customer_m', 'customer_visit_m', 'customer_from_m'));
+        $this->load->model(array('customer_m', 'customer_visit_m', 'customer_from_m', 'customer_remind_m'));
     }
 
     // ------------------------------------------------------------------------
@@ -109,11 +109,11 @@ class Cr_tel extends Admin_Controller {
             $data_add['create_time'] = date('Y-m-d H:i:s');
             $this->customer_visit_m->add_visit_message($data_add);
             //更改客户状态
-            if($data['customer']['status_id'] == 3) {
+            if ($data['customer']['status_id'] == 3) {
                 $data_edit['status_id'] = 4;
                 $this->customer_m->edit_customer($customer_id, $data_edit);
             }
-            $this->_message('回访信息添加成功!', 'cr_tel/visit/'.$customer_id, TRUE);
+            $this->_message('回访信息添加成功!', 'cr_tel/visit/' . $customer_id, TRUE);
         } else {
             //$offset 分页偏移
             $user_id = $this->_admin->user_id;
@@ -131,11 +131,11 @@ class Cr_tel extends Admin_Controller {
             $this->_template('cr_tel_visit_v', $data);
         }
     }
-    
+
     // ------------------------------------------------------------------------
-    
+
     /**
-     * 回访任务
+     * 设置回访提醒
      *
      * @access  public
      * @return  void
@@ -145,26 +145,52 @@ class Cr_tel extends Admin_Controller {
         if (!$data['customer']) {
             $this->_message('不存在的客户', '', FALSE);
         }
-        if ($data_add = $this->_get_form_data()) {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('remind_content', '回访记录', 'trim|required');
+        $this->form_validation->set_rules('remind_date', '提醒时间', 'trim|required');
+        if ($this->form_validation->run() == FALSE) {
+            $this->_template('cr_tel_return_visit_v',$data);
+        } else {
             $data_add['customer_id'] = $customer_id;
             $data_add['user_id'] = $this->_admin->user_id;
-            $data_add['user_detail'] = $this->_admin->fullname . ':' . $this->_admin->tel;
+            $data_add['remind_content'] = $this->input->post('remind_content',TRUE);
+            $data_add['remind_date'] = $this->input->post('remind_date',TRUE);
             $data_add['create_time'] = date('Y-m-d H:i:s');
-            $this->customer_visit_m->add_visit_message($data_add);
-            //更改客户状态
-            if($data['customer']['status_id'] == 3) {
-                $data_edit['status_id'] = 4;
-                $this->customer_m->edit_customer($customer_id, $data_edit);
-            }
-            $this->_message('回访信息添加成功!', 'cr_tel/visit/'.$customer_id, TRUE);
-        } else {
-            
-            $this->_template('cr_tel_visit_v', $data);
+            $this->customer_remind_m->add_remind_content($data_add);
+            $this->_message('回访提醒添加成功!', 'cr_tel/my/', TRUE);
         }
     }
-    
+
     // ------------------------------------------------------------------------
-    
+
+    /**
+     * 回访提醒列表
+     *
+     * @access  public
+     * @return  void
+     */
+    public function return_visit_list() {
+        //$offset 分页偏移
+        $offset = $this->input->get('page', TRUE) ? $this->input->get('page', TRUE) : 0;
+        $district_detail = $this->input->get('province', TRUE);
+        $user_id = $this->_admin->user_id;
+        $data['province'] = $this->customer_m->get_district(1);
+        $data['province_now'] = $district_detail;
+        $data['list'] = $this->customer_m->get_customers(15, $offset, $district_detail, $user_id, 'zb_customer_status.status_stage > 1');
+        //加载分页
+        $this->load->library('pagination');
+        $config['base_url'] = site_url('cr_tel/my') . '?province=' . $district_detail;
+        $config['per_page'] = 15;
+        $config['page_query_string'] = TRUE;
+        $config['query_string_segment'] = 'page';
+        $config['total_rows'] = $this->customer_m->get_customers_num($district_detail, $user_id, 'zb_customer_status.status_stage > 1');
+        $this->pagination->initialize($config);
+        $data['pagination'] = $this->pagination->create_links();
+        $this->_template('cr_tel_return_visit_list_v', $data);
+    }
+
+    // ------------------------------------------------------------------------
+
     /**
      * 转移客户
      *
@@ -183,17 +209,17 @@ class Cr_tel extends Admin_Controller {
             $data_add['create_time'] = date('Y-m-d H:i:s');
             $this->customer_visit_m->add_visit_message($data_add);
             //更改客户状态
-            if($data['customer']['status_id'] == 3) {
+            if ($data['customer']['status_id'] == 3) {
                 $data_edit['status_id'] = 4;
                 $this->customer_m->edit_customer($customer_id, $data_edit);
             }
-            $this->_message('回访信息添加成功!', 'cr_tel/visit/'.$customer_id, TRUE);
+            $this->_message('回访信息添加成功!', 'cr_tel/visit/' . $customer_id, TRUE);
         } else {
-            
+
             $this->_template('cr_tel_visit_v', $data);
         }
     }
-    
+
     // ------------------------------------------------------------------------
 
     /**
@@ -202,15 +228,15 @@ class Cr_tel extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function del($customer_id = 0,$visit_id = 0) {
+    public function del($customer_id = 0, $visit_id = 0) {
         $data = $this->customer_visit_m->get_visit_message_by_id($visit_id);
         if (!$data) {
             $this->_message('不存在的回访记录', '', FALSE);
         }
         $this->customer_visit_m->del_visit_message($visit_id);
-        $this->_message('记录删除成功!', 'cr_tel/visit/'.$customer_id, TRUE);
+        $this->_message('记录删除成功!', 'cr_tel/visit/' . $customer_id, TRUE);
     }
-    
+
     // ------------------------------------------------------------------------
 
     /**

@@ -54,7 +54,7 @@ class Customer_m extends CI_Model {
             $this->db->where('zb_customer.from_id', $from_id);
         }
         if ($status) {
-            $str = 'and '.$status;
+            $str = 'and ' . $status;
         }
         if ($limit) {
             $this->db->limit($limit);
@@ -69,9 +69,9 @@ class Customer_m extends CI_Model {
                         ->get('zb_customer')
                         ->result();
     }
-    
+
     // ------------------------------------------------------------------------
-    
+
     /**
      * 根据指定信息获取客户信息
      *
@@ -81,9 +81,7 @@ class Customer_m extends CI_Model {
      * @param   string
      * @return  object
      */
-    public function check_customers($limit = 0, $offset = 0, $district = '', $user_id = 0, $status_id = 0, $from_id = 0,
-            $class_id = 0, $level_id = 0, $district_level = 0, $customer_name = '', $tel = '',
-            $address = '', $channel = '', $brand = '', $company = '') {
+    public function check_customers($limit = 0, $offset = 0, $district = '', $user_id = 0, $status_id = 0, $from_id = 0, $class_id = 0, $level_id = 0, $district_level = 0, $customer_name = '', $tel = '', $address = '', $channel = '', $brand = '', $company = '') {
         if ($district) {
             $this->db->like('district_detail', $district);
         }
@@ -96,31 +94,31 @@ class Customer_m extends CI_Model {
         if ($status_id) {
             $this->db->where('zb_customer.status_id', $status_id);
         }
-        if($class_id) {
+        if ($class_id) {
             $this->db->where('zb_customer.class_id', $class_id);
         }
-        if($level_id) {
+        if ($level_id) {
             $this->db->where('zb_customer.level_id', $level_id);
         }
-        if($district_level) {
+        if ($district_level) {
             $this->db->where('zb_customer.district_level', $district_level);
         }
-        if($customer_name) {
+        if ($customer_name) {
             $this->db->like('zb_customer.customer_name', $customer_name);
         }
-        if($tel) {
+        if ($tel) {
             $this->db->like('zb_customer.tel', $tel);
         }
-        if($address) {
+        if ($address) {
             $this->db->like('zb_customer.address', $address);
         }
-        if($channel) {
+        if ($channel) {
             $this->db->like('zb_customer.channel', $channel);
         }
-        if($brand) {
+        if ($brand) {
             $this->db->like('zb_customer.brand', $brand);
         }
-        if($company) {
+        if ($company) {
             $this->db->like('zb_customer.company', $company);
         }
         if ($limit) {
@@ -136,18 +134,16 @@ class Customer_m extends CI_Model {
                         ->get('zb_customer')
                         ->result();
     }
-    
+
     // ------------------------------------------------------------------------
-    
+
     /**
      * 获取指定客户总数
      *
      * @access  public
      * @return  object
      */
-    public function check_customers_num($district = '', $user_id = 0, $status_id = 0, $from_id = 0,
-            $class_id = 0, $level_id = 0, $district_level = 0, $customer_name = '', $tel = '',
-            $address = '', $channel = '', $brand = '', $company = '') {
+    public function check_customers_num($district = '', $user_id = 0, $status_id = 0, $from_id = 0, $class_id = 0, $level_id = 0, $district_level = 0, $customer_name = '', $tel = '', $address = '', $channel = '', $brand = '', $company = '') {
         if ($district) {
             $this->db->like('district_detail', $district);
         }
@@ -160,34 +156,35 @@ class Customer_m extends CI_Model {
         if ($status_id) {
             $this->db->where('zb_customer.status_id', $status_id);
         }
-        if($class_id) {
+        if ($class_id) {
             $this->db->where('zb_customer.class_id', $class_id);
         }
-        if($level_id) {
+        if ($level_id) {
             $this->db->where('zb_customer.level_id', $level_id);
         }
-        if($district_level) {
+        if ($district_level) {
             $this->db->where('zb_customer.district_level', $district_level);
         }
-        if($customer_name) {
+        if ($customer_name) {
             $this->db->like('zb_customer.customer_name', $customer_name);
         }
-        if($tel) {
+        if ($tel) {
             $this->db->like('zb_customer.tel', $tel);
         }
-        if($address) {
+        if ($address) {
             $this->db->like('zb_customer.address', $address);
         }
-        if($channel) {
+        if ($channel) {
             $this->db->like('zb_customer.channel', $channel);
         }
-        if($brand) {
+        if ($brand) {
             $this->db->like('zb_customer.brand', $brand);
         }
-        if($company) {
+        if ($company) {
             $this->db->like('zb_customer.company', $company);
         }
-        return $this->db->count_all_results('zb_customer');
+        return $this->db->join("zb_customer_status", "zb_customer.status_id = zb_customer_status.status_id and zb_customer_status.status_stage !=0")
+                        ->count_all_results('zb_customer');
     }
 
     // ------------------------------------------------------------------------
@@ -206,7 +203,7 @@ class Customer_m extends CI_Model {
             $this->db->like('district_detail', $district);
         }
         if ($status) {
-            $str = 'and '.$status;
+            $str = 'and ' . $status;
         }
         if ($from_id) {
             $this->db->where('zb_customer.from_id', $from_id);
@@ -244,7 +241,7 @@ class Customer_m extends CI_Model {
         $this->db->insert('zb_customer', $data);
         return $this->db->insert_id();
     }
-    
+
     // ------------------------------------------------------------------------
 
     /**
@@ -254,12 +251,11 @@ class Customer_m extends CI_Model {
      * @param   array
      * @return  bool
      */
-    public function allot_customer($customer_arr,$data) {
+    public function allot_customer($customer_arr, $data) {
         foreach ($customer_arr as $key) {
             return $this->db->where('customer_id', $key)->update('zb_customer', $data);
         }
     }
-
 
     // ------------------------------------------------------------------------
 
@@ -271,9 +267,10 @@ class Customer_m extends CI_Model {
      * @param   array
      * @return  bool
      */
-     public function edit_customer($id, $data) {
+    public function edit_customer($id, $data) {
         return $this->db->where('customer_id', $id)->update('zb_customer', $data);
-     }
+    }
+
     // ------------------------------------------------------------------------
 
     /**
