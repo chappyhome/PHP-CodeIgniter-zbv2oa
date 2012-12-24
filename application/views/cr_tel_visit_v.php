@@ -89,7 +89,7 @@ echo $menu[1]; ?></span>
                 </td>
                 <td class="t_c" style="width:64%; white-space: normal;"><?php echo $v->visit_message; ?></td>
                 <td class="t_c" style="width:10%;">
-                    <a class="confirm_delete" href="<?php echo site_url('cr_tel/del/'.$customer['customer_id'].'/'.$v->visit_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
+                    <a class="confirm_delete" href="<?php echo site_url('cr_tel/del_visit/'.$customer['customer_id'].'/'.$v->visit_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
                 </td>
             </tr>
             <?php endforeach; ?>

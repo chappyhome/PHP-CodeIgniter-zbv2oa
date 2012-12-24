@@ -29,7 +29,7 @@
                     <td>
                         <?php if(!empty($user)) { ?>
                         <?php foreach($user as $key) { ?>
-                        <input type="radio" name="user_id" value="<?php echo $key->user_id; ?>" <?php echo $from->user_id == $key->user_id ? 'checked="true"' : '' ?> />
+                        <input type="radio" name="user_id" value="<?php echo $key->from_user_id; ?>" <?php echo $from->from_user_id == $key->from_user_id ? 'checked="true"' : '' ?> />
                             <?php echo $key->fullname; ?>&nbsp;&nbsp;
                         <?php } ?>
                         <?php } ?>

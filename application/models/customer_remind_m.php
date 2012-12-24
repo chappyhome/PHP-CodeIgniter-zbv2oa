@@ -34,7 +34,7 @@ class Customer_remind_m extends CI_Model {
 
     // ------------------------------------------------------------------------
     /**
-     * 根据指定信息获取回访记录信息
+     * 根据指定信息获取回访提醒信息
      *
      * @access  public
      * @param   int
@@ -42,57 +42,56 @@ class Customer_remind_m extends CI_Model {
      * @param   string
      * @return  object
      */
-//    public function get_visit($limit = 0, $offset = 0, $user_id = 0, $customer_id = 0) {
-//        if ($user_id) {
-//            $this->db->where('zb_customer_visit.user_id', $user_id);
-//        }
-//        if ($customer_id) {
-//            $this->db->where('zb_customer_visit.customer_id', $customer_id);
-//        }
-//        if ($limit) {
-//            $this->db->limit($limit);
-//        }
-//        if ($offset) {
-//            $this->db->offset($offset);
-//        }
-//        return $this->db->select('visit_id,zb_customer_visit.user_detail,visit_message,zb_customer_visit.create_time,customer_name,tel,address,from_detail,channel,brand,intention,company')
-//                        ->join('zb_customer', 'zb_customer_visit.customer_id = zb_customer.customer_id')
-//                        ->order_by('zb_customer_visit.create_time','DESC')
-//                        ->get('zb_customer_visit')
-//                        ->result();
-//    }
+    public function get_remind($limit = 0, $offset = 0, $user_id = 0, $is_all = 0) {
+        if ($user_id) {
+            $this->db->where('zb_customer_remind.user_id', $user_id);
+        }
+        if (!$is_all) {
+            $this->db->where('remind_date <=',date('Ymd'));
+        }
+        if ($limit) {
+            $this->db->limit($limit);
+        }
+        if ($offset) {
+            $this->db->offset($offset);
+        }
+        return $this->db->select('zb_customer_remind.customer_id,remind_id,customer_name,address,tel,remind_content,remind_date,zb_customer_remind.create_time')
+                        ->join('zb_customer', 'zb_customer_remind.customer_id = zb_customer.customer_id')
+                        ->get('zb_customer_remind')
+                        ->result();
+    }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 获取指定回访记录总数
+     * 获取指定回访提醒总数
      *
      * @access  public
      * @return  int
      */
-//    public function get_visit_num($user_id = 0, $customer_id = 0) {
-//        if ($user_id) {
-//            $this->db->where('zb_customer_visit.user_id', $user_id);
-//        }
-//        if ($customer_id) {
-//            $this->db->where('zb_customer_visit.customer_id', $customer_id);
-//        }
-//        return $this->db->count_all_results('zb_customer_visit');
-//    }
+    public function get_remind_num($user_id = 0, $is_all = 0) {
+        if ($user_id) {
+            $this->db->where('zb_customer_remind.user_id', $user_id);
+        }
+        if (!$is_all) {
+            $this->db->where('remind_date >=',date('Ymd'));
+        }
+        return $this->db->count_all_results('zb_customer_remind');
+    }
 
     // ------------------------------------------------------------------------
-
+    
     /**
-     * 根据ID获取指定回访记录
+     * 根据ID获取指定回访提醒
      *
      * @access  public
      * @return  int
      */
-//    public function get_visit_message_by_id($visit_message_id = 0) {
-//        return $this->db->where('visit_id', $visit_message_id)
-//                        ->get('zb_customer_visit')
-//                        ->row();
-//    }
+    public function get_remind_by_id($remind_id = 0) {
+        return $this->db->where('remind_id', $remind_id)
+                        ->get('zb_customer_remind')
+                        ->row();
+    }
 
     // ------------------------------------------------------------------------
 
@@ -117,9 +116,9 @@ class Customer_remind_m extends CI_Model {
      * @param   int
      * @return  bool
      */
-//     public function del_visit_message($id) {
-//        return $this->db->where('visit_id', $id)->delete('zb_customer_visit');
-//     }
+     public function del_remind($id) {
+        return $this->db->where('remind_id', $id)->delete('zb_customer_remind');
+     }
 
     // ------------------------------------------------------------------------
 

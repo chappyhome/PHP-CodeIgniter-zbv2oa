@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2012 年 12 月 19 日 10:32
+-- 生成日期: 2012 年 12 月 24 日 10:25
 -- 服务器版本: 5.5.16
 -- PHP 版本: 5.3.8
 
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `zb_customer` (
   `mark_return_visit` int(1) NOT NULL DEFAULT '0',
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=23 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `zb_customer`
@@ -100,15 +100,16 @@ INSERT INTO `zb_customer` (`customer_id`, `user_id`, `user_detail`, `class_id`, 
 (11, 1, '周斌:15838201264', 0, 4, 0, '', 0, '', 'fds', '123', '河南省洛阳市新安县', '', '', '', '', 1, '', '', '周斌:1', 0, '2012-12-11 08:00:12'),
 (12, 1, '周斌:15838201264', 0, 4, 0, '', 0, '', '123', '312321', '河南省洛阳市新安县位置', '', '', '', '', 1, '', '', '周斌:1', 0, '2012-12-11 08:02:01'),
 (13, 1, '', 0, 4, 0, '', 0, '', '423423', '23423423', '', '', '', '', '', 4, '', '', '周斌:1', 0, '2012-12-15 06:50:58'),
-(14, 0, '', 0, 2, 0, '', 0, '', '发生的', '123456789', '', '', '', '', '', 2, '范德萨', '', '周斌:1', 0, '2012-12-15 06:53:04'),
+(14, 1, '', 0, 3, 0, '', 0, '', '发生的', '123456789', '', '', '', '', '', 2, '范德萨', '', '周斌:1', 0, '2012-12-15 06:53:04'),
 (15, 0, '', 0, 2, 0, '', 0, '', '范德萨', '15838214587', '', '', '', '', '', 4, '放到沙发的', '', '周斌:1', 0, '2012-12-18 06:51:22'),
 (16, 0, '', 0, 2, 0, '', 0, '', '范德萨', '123456789', '', '', '', '', '', 4, '', '', '周斌:1', 0, '2012-12-18 08:20:34'),
 (17, 0, '', 0, 2, 0, '', 0, '', '方的身份', '14', '河北省秦皇岛市北戴河区', '', '', '', '', 4, '', '', '周斌:1', 0, '2012-12-18 08:22:10'),
 (18, 0, '', 0, 2, 0, '', 0, '', '发生的', '123456', '', '', '', '', '', 2, '', '', '周斌:1', 0, '2012-12-18 08:35:16'),
 (19, 1, '周斌:15838201264', 1, 5, 1, '16', 1, '河南省', '发大水', '15874125896', '河南省洛阳市吉利区', '传真', '渠道', '代理品牌', '公司或行业', 2, '', '意向或备注', '周斌:1', 0, '2012-12-18 09:21:21'),
-(20, 1, '', 0, 3, 0, '', 0, '', '房东说了', '123456', '', '', '', '', '', 4, '', '', '周斌:1', 0, '2012-12-18 10:08:47'),
+(20, 1, '', 0, 4, 0, '', 0, '', '房东说了', '123456', '', '', '', '', '', 4, '', '', '周斌:1', 0, '2012-12-18 10:08:47'),
 (21, 0, '', 0, 2, 0, '', 0, '', '复读生', '123456789', '', '', '', '', '', 4, '', '', '周斌:1', 0, '2012-12-18 10:10:35'),
-(22, 1, '周斌:15838201264', 0, 4, 0, '', 0, '', '方式', '15345', '河南省郑州市惠济区', '', '', '', '', 1, '', '', '周斌:1', 0, '2012-12-19 04:09:25');
+(22, 1, '周斌:15838201264', 0, 4, 0, '', 0, '', '方式', '15345', '河南省郑州市惠济区', '', '', '', '', 1, '', '', '周斌:1', 0, '2012-12-19 04:09:25'),
+(23, 1, '周斌:15838201264', 1, 8, 1, '2665', 4, '河南省开封市兰考县', '好东西', '15874125896', '河南省开封市兰考县', '传真传真传真', '渠道渠道', '代理品牌代理品牌', '公司或行业', 2, '', '意向或备注意向或备注意向或备注意向或备注意向或备注', '周斌:1', 0, '2012-12-20 02:52:30');
 
 -- --------------------------------------------------------
 
@@ -118,10 +119,10 @@ INSERT INTO `zb_customer` (`customer_id`, `user_id`, `user_detail`, `class_id`, 
 
 CREATE TABLE IF NOT EXISTS `zb_customer_class` (
   `class_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `class_name` varchar(50) CHARACTER SET utf8 NOT NULL,
-  `class_introduce` varchar(90) CHARACTER SET utf8 NOT NULL,
+  `class_name` varchar(50) NOT NULL,
+  `class_introduce` varchar(90) NOT NULL,
   PRIMARY KEY (`class_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
 -- 转存表中的数据 `zb_customer_class`
@@ -141,17 +142,17 @@ INSERT INTO `zb_customer_class` (`class_id`, `class_name`, `class_introduce`) VA
 
 CREATE TABLE IF NOT EXISTS `zb_customer_from` (
   `from_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `from_name` varchar(30) CHARACTER SET utf8 NOT NULL,
-  `user_id` int(10) unsigned NOT NULL DEFAULT '0',
+  `from_name` varchar(30) NOT NULL,
+  `from_user_id` int(10) unsigned NOT NULL DEFAULT '0',
   `rate` int(2) NOT NULL,
   PRIMARY KEY (`from_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
 
 --
 -- 转存表中的数据 `zb_customer_from`
 --
 
-INSERT INTO `zb_customer_from` (`from_id`, `from_name`, `user_id`, `rate`) VALUES
+INSERT INTO `zb_customer_from` (`from_id`, `from_name`, `from_user_id`, `rate`) VALUES
 (1, '好礼的', 28, 5),
 (2, '外部来源1', 7, 7),
 (4, '周斌', 1, 5);
@@ -164,10 +165,10 @@ INSERT INTO `zb_customer_from` (`from_id`, `from_name`, `user_id`, `rate`) VALUE
 
 CREATE TABLE IF NOT EXISTS `zb_customer_level` (
   `level_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `level_name` varchar(30) CHARACTER SET utf8 NOT NULL,
-  `level_post` varchar(150) CHARACTER SET utf8 NOT NULL,
+  `level_name` varchar(30) NOT NULL,
+  `level_post` varchar(150) NOT NULL,
   PRIMARY KEY (`level_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=4 ;
 
 --
 -- 转存表中的数据 `zb_customer_level`
@@ -179,16 +180,43 @@ INSERT INTO `zb_customer_level` (`level_id`, `level_name`, `level_post`) VALUES
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `zb_customer_remind`
+--
+
+CREATE TABLE IF NOT EXISTS `zb_customer_remind` (
+  `remind_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned NOT NULL,
+  `customer_id` int(10) unsigned NOT NULL,
+  `remind_content` varchar(200) NOT NULL,
+  `remind_date` date NOT NULL,
+  `create_time` datetime NOT NULL,
+  PRIMARY KEY (`remind_id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
+
+--
+-- 转存表中的数据 `zb_customer_remind`
+--
+
+INSERT INTO `zb_customer_remind` (`remind_id`, `user_id`, `customer_id`, `remind_content`, `remind_date`, `create_time`) VALUES
+(2, 1, 6, '0', '2012-12-24', '2012-12-20 10:01:08'),
+(3, 1, 8, 'fgsdf', '2012-12-22', '2012-12-20 10:17:00'),
+(4, 1, 22, '发的撒饭', '2012-12-22', '2012-12-21 11:27:10'),
+(5, 1, 4, '发生的', '2012-12-28', '2012-12-21 11:28:55'),
+(6, 1, 19, '范德萨', '2012-12-21', '2012-12-21 11:59:59');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `zb_customer_status`
 --
 
 CREATE TABLE IF NOT EXISTS `zb_customer_status` (
   `status_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `status_stage` int(1) unsigned NOT NULL DEFAULT '0',
-  `status_name` varchar(30) CHARACTER SET utf8 NOT NULL,
-  `status_post` varchar(150) CHARACTER SET utf8 DEFAULT NULL,
+  `status_name` varchar(30) NOT NULL,
+  `status_post` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`status_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=10 ;
 
 --
 -- 转存表中的数据 `zb_customer_status`
@@ -207,6 +235,23 @@ INSERT INTO `zb_customer_status` (`status_id`, `status_stage`, `status_name`, `s
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `zb_customer_transfer`
+--
+
+CREATE TABLE IF NOT EXISTS `zb_customer_transfer` (
+  `transfer_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `old_user_id` int(10) unsigned NOT NULL,
+  `old_user_name` varchar(20) NOT NULL,
+  `new_user_id` int(10) unsigned NOT NULL,
+  `new_user_name` varchar(20) NOT NULL,
+  `transfer_message` varchar(150) NOT NULL,
+  `transfer_datetime` datetime NOT NULL,
+  PRIMARY KEY (`transfer_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `zb_customer_visit`
 --
 
@@ -218,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `zb_customer_visit` (
   `visit_message` varchar(250) NOT NULL,
   `create_time` datetime NOT NULL,
   PRIMARY KEY (`visit_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=17 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=24 ;
 
 --
 -- 转存表中的数据 `zb_customer_visit`
@@ -226,6 +271,8 @@ CREATE TABLE IF NOT EXISTS `zb_customer_visit` (
 
 INSERT INTO `zb_customer_visit` (`visit_id`, `customer_id`, `user_id`, `user_detail`, `visit_message`, `create_time`) VALUES
 (16, 1, 1, '周斌:15838201264', '发生的', '2012-12-19 10:23:34'),
+(17, 10, 1, '周斌:15838201264', '1231265456', '2012-12-20 02:59:44'),
+(18, 20, 1, '周斌:15838201264', '14656', '2012-12-20 03:59:27'),
 (9, 10, 1, '周斌:15838201264', '测试测试\r\n策划测if', '2012-12-14 06:42:52'),
 (10, 11, 1, '周斌:15838201264', '防守对方的手', '2012-12-15 02:49:26'),
 (11, 11, 1, '周斌:15838201264', '发生的', '2012-12-15 02:50:56'),
@@ -233,8 +280,12 @@ INSERT INTO `zb_customer_visit` (`visit_id`, `customer_id`, `user_id`, `user_det
 (13, 11, 1, '周斌:15838201264', '防守对方的手', '2012-12-15 02:52:26'),
 (14, 13, 1, '周斌:15838201264', '方的身份的事', '2012-12-17 08:54:16'),
 (15, 10, 1, '周斌:15838201264', '今天的回访', '2012-12-19 04:06:55'),
-(3, 10, 1, '周斌:15838201264', '首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个首次拜访的相关实习那个', '2012-12-13 05:25:22'),
-(8, 10, 1, '周斌:15838201264', 'gafgagagfdas', '2012-12-14 04:25:08');
+(8, 10, 1, '周斌:15838201264', 'gafgagagfdas', '2012-12-14 04:25:08'),
+(19, 6, 1, '周斌:15838201264', '规范的过', '2012-12-21 10:34:59'),
+(20, 6, 1, '周斌:15838201264', '进入房间房管局', '2012-12-21 03:35:27'),
+(21, 6, 1, '周斌:15838201264', '个地方', '2012-12-21 10:38:24'),
+(22, 6, 1, '周斌:15838201264', '发生的', '2012-12-21 10:38:39'),
+(23, 9, 1, '周斌:15838201264', '发的', '2012-12-21 13:26:52');
 
 -- --------------------------------------------------------
 
@@ -45373,7 +45424,7 @@ CREATE TABLE IF NOT EXISTS `zb_menu` (
   `menu_parent` tinyint(10) unsigned DEFAULT '0',
   `order` int(10) unsigned NOT NULL DEFAULT '999',
   PRIMARY KEY (`menu_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=33 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=36 ;
 
 --
 -- 转存表中的数据 `zb_menu`
@@ -45402,7 +45453,7 @@ INSERT INTO `zb_menu` (`menu_id`, `right_id`, `menu_name`, `menu_level`, `menu_p
 (20, 17, '部门管理', 2, 17, 999),
 (21, 32, '销售管理', 1, 8, 3),
 (22, 30, '我的客户', 2, 9, 999),
-(23, 31, '回访任务', 2, 9, 999),
+(23, 54, '回访提醒', 2, 9, 999),
 (24, 29, '客户资源', 2, 9, 999),
 (25, 9, '新增客户', 2, 10, 999),
 (26, 8, '查询客户', 2, 10, 999),
@@ -45411,7 +45462,10 @@ INSERT INTO `zb_menu` (`menu_id`, `right_id`, `menu_name`, `menu_level`, `menu_p
 (29, 28, '分组管理', 2, 10, 999),
 (30, 32, '申请发货', 2, 21, 999),
 (31, 39, '状态管理', 2, 10, 999),
-(32, 43, '级别管理', 2, 10, 999);
+(32, 43, '级别管理', 2, 10, 999),
+(33, 56, '流程管理', 1, 1, 999),
+(34, 56, '增加流程', 2, 33, 999),
+(35, 57, '流程列表', 2, 33, 999);
 
 -- --------------------------------------------------------
 
@@ -45472,7 +45526,7 @@ CREATE TABLE IF NOT EXISTS `zb_right` (
   `right_class` varchar(150) DEFAULT NULL,
   `right_method` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`right_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=54 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=58 ;
 
 --
 -- 转存表中的数据 `zb_right`
@@ -45509,7 +45563,7 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 (28, '分组管理（列表）', 'cr_gm', 'view'),
 (29, '客户资源', 'cr_tel', 'resource'),
 (30, '我的客户', 'cr_tel', 'my'),
-(31, '回访提醒', 'cr_tel', 'return_visit'),
+(31, '回访提醒', 'cr_tel', 'add_remind'),
 (32, '申请发货', 'cr_sale', 'apply'),
 (33, '编辑分组', 'cr_gm', 'edit'),
 (34, '删除分组', 'cr_gm', 'del'),
@@ -45529,9 +45583,13 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 (48, '新增跟进中客户', 'cr', 'add_1_customer'),
 (49, '新增有效客户', 'cr', 'add_2_customer'),
 (50, '回访客户', 'cr_tel', 'visit'),
-(51, '删除回访记录', 'cr_tel', 'del'),
+(51, '删除回访记录', 'cr_tel', 'del_visit'),
 (52, '转移客户', 'cr_tel', 'transfer'),
-(53, '编辑客户', 'cr', 'edit');
+(53, '编辑客户', 'cr', 'edit'),
+(54, '回访提醒（列表）', 'cr_tel', 'remind_list'),
+(55, '删除回访提醒', 'cr_tel', 'del_remind'),
+(56, '增加流程', 'ss_wf', 'add_workflow'),
+(57, '工作流程（列表）', 'ss_wf', 'workflow_list');
 
 -- --------------------------------------------------------
 
@@ -45542,7 +45600,7 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 CREATE TABLE IF NOT EXISTS `zb_role` (
   `role_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `role_name` varchar(20) NOT NULL,
-  `rights` varchar(150) DEFAULT NULL,
+  `rights` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`role_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
 
@@ -45551,7 +45609,7 @@ CREATE TABLE IF NOT EXISTS `zb_role` (
 --
 
 INSERT INTO `zb_role` (`role_id`, `role_name`, `rights`) VALUES
-(1, '超级管理员', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51'),
+(1, '超级管理员', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57'),
 (2, '测试组1', '1,2,3,4,5'),
 (4, '牛人组', '1,2,3,4,5,6,8,9,10,11,12,13,14,15');
 
@@ -45592,6 +45650,85 @@ INSERT INTO `zb_user` (`user_id`, `user_name`, `password`, `salt`, `fullname`, `
 (4, '123456', '176638168903db136bcd3e6a1551d851a279c6c7', '14810933e7', '牛二', 'binarx2@gmail.com', '15874125896', '15874125896', '中华人民共和国', '410258741258963214', '', '2012-11-24', '0000-00-00', 4, '范德萨', 1, 1, 0),
 (7, 'hahah', '9a6572a9801ef63b8d95dedf44419ffe51693b43', 'fad2fd8078', '好礼乐', 'binarx2@gmail.com', '15874125896', '15874125896', '中华人民共和国', '410258741258963214', '', '2012-11-26', '0000-00-00', 1, '辅导书', 2, 1, 0),
 (28, NULL, '', '', '周二呀2', '123@qq.com', '15839098765', '15830802132', '河南郑州啊的的', '123456789012345678', '', '2012-12-02', '0000-00-00', 1, '22', 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zb_workflow_defination`
+--
+
+CREATE TABLE IF NOT EXISTS `zb_workflow_defination` (
+  `defination_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `defination_name` varchar(50) NOT NULL,
+  `defination_handler` varchar(30) NOT NULL,
+  PRIMARY KEY (`defination_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zb_workflow_node`
+--
+
+CREATE TABLE IF NOT EXISTS `zb_workflow_node` (
+  `node_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `defination_id` int(10) unsigned NOT NULL,
+  `node_index` int(10) unsigned NOT NULL,
+  `node_name` varchar(50) NOT NULL,
+  `node_type` int(1) unsigned NOT NULL,
+  `init_function` varchar(30) NOT NULL,
+  `run_function` varchar(30) NOT NULL,
+  `save_function` varchar(30) NOT NULL,
+  `transit_function` varchar(30) NOT NULL,
+  `pre_node_index` int(10) unsigned NOT NULL,
+  `next_node_index` int(10) unsigned NOT NULL,
+  `executor` varchar(30) NOT NULL,
+  `execute_type` int(1) unsigned NOT NULL,
+  `remind` int(1) NOT NULL,
+  `field` varchar(50) NOT NULL,
+  `max_date` int(5) NOT NULL,
+  PRIMARY KEY (`node_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zb_workflow_process`
+--
+
+CREATE TABLE IF NOT EXISTS `zb_workflow_process` (
+  `process_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `defination_id` int(10) unsigned NOT NULL,
+  `process_desc` varchar(150) NOT NULL,
+  `context` varchar(100) NOT NULL,
+  `current_node_index` int(10) unsigned NOT NULL,
+  `start_time` datetime NOT NULL,
+  `finish_time` datetime NOT NULL,
+  `state` int(1) unsigned NOT NULL,
+  `start_user` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`process_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `zb_workflow_thread`
+--
+
+CREATE TABLE IF NOT EXISTS `zb_workflow_thread` (
+  `thread_id` int(10) NOT NULL AUTO_INCREMENT,
+  `process_id` int(10) NOT NULL,
+  `process_desc` varchar(150) NOT NULL,
+  `node_id` int(10) NOT NULL,
+  `node_name` varchar(50) NOT NULL,
+  `executor` varchar(50) NOT NULL,
+  `start_time` datetime NOT NULL,
+  `receive_time` datetime NOT NULL,
+  `finish_time` datetime NOT NULL,
+  `max_time` int(5) NOT NULL,
+  `state` int(1) NOT NULL,
+  PRIMARY KEY (`thread_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -131,14 +131,14 @@ class Cr_fm extends Admin_Controller {
         $this->load->library('form_validation');
         $is_unique = $is_insert ? '|is_unique[zb_customer_from.from_name]' : '';
         $this->form_validation->set_rules('from_name', '来源名称', 'trim|required|max_length[30]' . $is_unique);
-        $this->form_validation->set_rules('user_id', '此员工来源', 'trim|numeric|is_unique[zb_customer_from.user_id]');
+        $this->form_validation->set_rules('user_id', '此员工来源', 'trim|numeric|is_unique[zb_customer_from.from_user_id]');
         $this->form_validation->set_rules('rate', '业务点数', 'trim|numeric');
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {
             $data['from_name'] = $this->input->post('from_name', TRUE);
             $data['rate'] = $this->input->post('rate', TRUE);
-            $data['user_id'] = $this->input->post('user_id', TRUE);
+            $data['from_user_id'] = $this->input->post('user_id', TRUE);
             return $data;
         }
     }

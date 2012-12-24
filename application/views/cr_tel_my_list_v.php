@@ -96,8 +96,8 @@ echo $menu[1]; ?></span>
                 <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:22%;"><?php echo $v->intention ? $v->intention : '[暂无]'; ?></td>
                 <td style="width:12%;">
                     <a href="<?php echo site_url('cr_tel/visit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_refresh.gif" alt="回访" title="回访"></a>
-                    <a href="<?php echo site_url('cr_tel/return_visit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_recover.gif" alt="设置回访提醒" title="设置回访提醒"></a>
-                    <a href="<?php echo site_url('em/edit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_send.gif" alt="转移负责人" title="转移负责人"></a>
+                    <a href="<?php echo site_url('cr_tel/add_remind/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_recover.gif" alt="设置回访提醒" title="设置回访提醒"></a>
+                    <a href="<?php echo site_url('cr_tel/transfer/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_send.gif" alt="转移客户" title="转移客户"></a>
                     <a class="confirm_delete" href="<?php echo site_url('em/del/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
                 </td>
             </tr>

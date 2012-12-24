@@ -49,7 +49,7 @@ class Customer_from_m extends CI_Model {
             $this->db->offset($offset);
         }
         return $this->db->select('from_id,from_name,rate,fullname,department_id')
-                        ->join('zb_user', 'zb_user.user_id = zb_customer_from.user_id', 'left')
+                        ->join('zb_user', 'zb_user.user_id = zb_customer_from.from_user_id', 'left')
                         ->get('zb_customer_from')
                         ->result();
     }
@@ -106,7 +106,7 @@ class Customer_from_m extends CI_Model {
     public function get_from_by_id($id) {
         return $this->db->select('zb_user.user_id,zb_user.department_id,from_id,from_name,rate')
                         ->where('zb_customer_from.from_id', $id)
-                        ->join('zb_user', 'zb_user.user_id = zb_customer_from.user_id', 'left')
+                        ->join('zb_user', 'zb_user.user_id = zb_customer_from.from_user_id', 'left')
                         ->get('zb_customer_from')
                         ->row();
     }

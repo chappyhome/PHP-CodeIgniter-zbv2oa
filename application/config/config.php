@@ -358,5 +358,15 @@ $config['rewrite_short_tags'] = FALSE;
 $config['proxy_ips'] = '';
 
 
+/*
+|--------------------------------------------------------------------------
+| 设定时区
+|--------------------------------------------------------------------------
+|
+|设定时区为上海
+|
+*/
+$config['time_zone']=date_default_timezone_set('Asia/shanghai');
+
 /* End of file config.php */
 /* Location: ./application/config/config.php */

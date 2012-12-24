@@ -25,13 +25,11 @@ echo $menu[1]; ?></span>
         <span>></span><span>列表</span>
     </div>
     <div class="operating">
-        <a class="hack_ie" href="<?php echo site_url('cr/add_customer'); ?>"><button class="operating_btn" type="button"><span class="addition">录入新客户资源</span></button></a>
+        <a class="hack_ie" href="<?php echo site_url('cr_tel/my'); ?>"><button class="operating_btn" type="button"><span class="addition">设置新提醒</span></button></a>
         <div class="search f_r">
-            <select class="normal" id="province" style="width:auto" name="province_id" onchange="location='<?php echo site_url('cr_tel/my') . '?province='; ?>'+this.value;">
-                <option selected="selected" value="">请选择省份</option>
-                <?php foreach ($province as $key): ?>
-                    <option <?php echo $province_now == $key->name ? 'selected="selected"' : '' ?> value="<?php echo $key->name; ?>"><?php echo $key->name; ?></option>
-<?php endforeach; ?>
+            <select class="normal" style="width:auto" name="is_all" onchange="location='<?php echo site_url('cr_tel/remind_list') . '?is_all='; ?>'+this.value;">
+                <option <?php echo $is_all == 0 ? 'selected="selected"' : '' ?> value="0">当前提醒</option>
+                <option <?php echo $is_all == 1 ? 'selected="selected"' : '' ?> value="1">显示全部</option>
             </select>
         </div>
     </div>
@@ -41,14 +39,10 @@ echo $menu[1]; ?></span>
             <col />
             <thead>
                 <tr>
-                    <th style="width:7%;">姓名</th>
-                    <th style="width:8%;">电话</th>
-                    <th style="width:20%;">地址</th>
-                    <th style="width:5%;">来源</th>
-                    <th style="width:10%;">状态</th>
-                    <th style="width:5%;">渠道</th>
-                    <th style="width:10%;">代理品牌</th>
-                    <th style="width:23%;">意向</th>
+                    <th style="width:10%;">回访时间</th>
+                    <th style="width:10%;">客户姓名</th>
+                    <th style="width:10%;">电话</th>
+                    <th style="width:58%;">提醒备忘</th>
                     <th style="width:10%;">操作选项</th>
                 </tr>
             </thead>
@@ -62,7 +56,7 @@ echo $menu[1]; ?></span>
         <col />
         <tbody>
             <tr id="customer_detail" style="background-color:#ffc;width:100%;display:none;">
-                <td colspan="10">
+                <td colspan="6">
                     <div>
                         <ul>
                             <li><b>客户姓名</b>：</li>
@@ -86,19 +80,13 @@ echo $menu[1]; ?></span>
             <?php foreach ($list as $v) : ?>
             <tr>
                 <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width: 1%"></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:8%;"><?php echo $v->customer_name; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:8%;"><?php echo $v->tel; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:18%;"><?php echo $v->address; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:6%;"><?php echo $v->from_name; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:9%;"><?php echo $v->status_name; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:7%;"><?php echo $v->channel ? $v->channel : '[暂无]'; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:7%;"><?php echo $v->brand ? $v->brand : '[暂无]'; ?></td>
-                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:22%;"><?php echo $v->intention ? $v->intention : '[暂无]'; ?></td>
-                <td style="width:12%;">
+                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:10%;"><?php echo $v->remind_date; ?></td>
+                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:10%;"><?php echo $v->customer_name; ?></td>
+                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:10%;"><?php echo $v->tel; ?></td>
+                <td  onclick="get_customer_detail(<?php echo $v->customer_id; ?>)" style="width:57%;"><?php echo $v->remind_content; ?></td>
+                <td style="width:8%;">
                     <a href="<?php echo site_url('cr_tel/visit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_refresh.gif" alt="回访" title="回访"></a>
-                    <a href="<?php echo site_url('cr_tel/return_visit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_recover.gif" alt="设置回访提醒" title="设置回访提醒"></a>
-                    <a href="<?php echo site_url('em/edit/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_send.gif" alt="转移负责人" title="转移负责人"></a>
-                    <a class="confirm_delete" href="<?php echo site_url('em/del/' . $v->customer_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
+                    <a class="confirm_delete" href="<?php echo site_url('cr_tel/del_remind/' . $v->remind_id); ?>"><img class="operator" src="theme/images/icon_del.gif" alt="删除" title="删除"></a>
                 </td>
             </tr>
             <?php endforeach; ?>

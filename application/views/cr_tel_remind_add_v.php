@@ -9,7 +9,7 @@
 </div>
 <div class="content_box">
     <div class="content form_content">
-        <form action="<?php echo site_url('cr_tel/return_visit').'/'.$customer['customer_id']; ?>"  method="post">
+        <form action="<?php echo site_url('cr_tel/add_remind').'/'.$customer['customer_id']; ?>"  method="post">
             <table class="form_table">
                 <col width="150px" />
                 <col />
@@ -26,7 +26,7 @@
                 <tr>
                     <th> 提醒日期：</th>
                     <td><input class="Wdate" style="width:150px;" type="text" name="remind_date"
-                  onFocus="WdatePicker({isShowClear:false,readOnly:true})" ><label><span style="color:red">*</span> 要回访的日期.</label>
+                  onFocus="WdatePicker({dateFmt:'yyyy-MM-dd',isShowClear:false,readOnly:true})" ><label><span style="color:red">*</span> 要回访的日期.</label>
                         <b style="color:red"><?php echo form_error('remind_date'); ?></b></td>
                 </tr>
                 <tr>
