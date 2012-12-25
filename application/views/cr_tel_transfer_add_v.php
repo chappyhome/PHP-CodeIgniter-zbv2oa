@@ -43,6 +43,7 @@
                 <tr>
                     <th></th>
                     <td>
+                        <input type="hidden" name="start_time" value="<?php echo $start_time;?>">
                         <button class="submit" type='submit'><span>申请转移</span></button>
                     </td>
                 </tr>

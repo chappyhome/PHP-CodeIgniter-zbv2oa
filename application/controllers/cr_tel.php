@@ -30,7 +30,8 @@ class Cr_tel extends Admin_Controller {
     public function __construct() {
         parent::__construct();
         $this->_check_permit();
-        $this->load->model(array('customer_m', 'customer_visit_m', 'customer_from_m', 'customer_remind_m'));
+        $this->load->model(array('customer_m', 'customer_visit_m', 'customer_from_m',
+            'customer_remind_m', 'customer_transfer_m', 'workflow_m'));
     }
 
     // ------------------------------------------------------------------------
@@ -218,21 +219,63 @@ class Cr_tel extends Admin_Controller {
         if (!$data['customer']) {
             $this->_message('不存在的客户', '', FALSE);
         }
-        if ($data['customer']['user_id'] != $this->_admin->user_id){
-            $this->_message($data['customer']['customer_name']."不是您的客户，无权操作", '', FALSE);
+        if ($data['customer']['user_id'] != $this->_admin->user_id) {
+            $this->_message($data['customer']['customer_name'] . " 不是您的客户，无权操作", '', FALSE);
         }
-        //得到可以分配客户的账号列表;29为 客户资源 权限
-        $data['user_list'] = $this->user_m->get_users_by_role('%,29,%');
+
         $this->load->library('form_validation');
         $this->form_validation->set_rules('new_user', '新负责人', 'trim|required');
         $this->form_validation->set_rules('transfer_message', '备注', 'trim|required');
         if ($this->form_validation->run() == FALSE) {
+            //得到可以分配客户的账号列表;29为 客户资源 权限
+            $data['user_list'] = $this->user_m->get_users_by_role('%,29,%');
+            $data['start_time'] = date('Y-m-d H:i:s');
             $this->_template('cr_tel_transfer_add_v', $data);
         } else {
-            
-            $this->customer_visit_m->add_visit_message($data_add);
-            
-            $this->_message('客户转移成功!', 'cr_tel/my/', TRUE);
+            //添加业务表
+            $old_user_detail = explode(':', $data['customer']['user_detail']);
+            $new_user_detail = explode(':', $this->input->post('new_user', TRUE));
+            $data_add_transfer['customer_id'] = $data['customer']['customer_id'];
+            $data_add_transfer['customer_name'] = $data['customer']['customer_name'];
+            $data_add_transfer['old_user_id'] = $data['customer']['user_id'];
+            $data_add_transfer['old_user_name'] = $old_user_detail[0];
+            $data_add_transfer['new_user_id'] = $new_user_detail[0];
+            $data_add_transfer['new_user_name'] = $new_user_detail[1];
+            $data_add_transfer['transfer_message'] = $this->input->post('transfer_message', TRUE);
+            $transfer_id = $this->customer_transfer_m->add_transfer($data_add_transfer);
+            //添加进程表
+            $data_add_process['defination_id'] = 1; //流程表的ID
+            $data_add_process['process_desc'] = '申请客户 ' . $data_add_transfer['customer_name'] . ' 的负责人由' .
+                    $data_add_transfer['old_user_name'] . '转为' . $data_add_transfer['new_user_name'];
+            $data_add_process['context'] = $transfer_id; //客户转移表的ID
+            $data_add_process['current_node_index'] = 1; //当前节点1
+            $data_add_process['start_time'] = date('Y-m-d H:i:s');
+            $data_add_process['state'] = 1; //进行中
+            $data_add_process['start_user'] = $this->_admin->user_id;
+            $process_id = $this->workflow_m->add_process($data_add_process);
+            //添加线程
+            $data_add_thread['process_id'] = $process_id;
+            $data_add_thread['process_desc'] = $data_add_process['process_desc'];
+            $data_add_thread['node_id'] = 1;
+            $node_detail = $this->workflow_m->get_node_by_id($data_add_thread['node_id']);
+            $data_add_thread['node_name'] = $node_detail->node_name;
+            $data_add_thread['executor'] = $this->_admin->user_id;
+            $data_add_thread['start_time'] = $data_add_thread['receive_time'] = $this->input->post('strat_time', TRUE);
+            $data_add_thread['finish_time'] = date('Y-m-d H:i:s');
+            $data_add_thread['max_time'] = $node_detail->max_date;
+            $data_add_thread['state'] = 2;//已处理
+            $this->workflow_m->add_thread($data_add_thread);
+            //添加下一线程
+            $data_add_next_thread['process_id'] = $process_id;
+            $data_add_next_thread['process_desc'] = $data_add_process['process_desc'];
+            $data_add_next_thread['node_id'] = 2;
+            $node_next_detail = $this->workflow_m->get_node_by_id($data_add_next_thread['node_id']);
+            $data_add_next_thread['node_name'] = $node_next_detail->node_name;
+            $data_add_next_thread['start_time'] = $data_add_thread['finish_time'];
+            $data_add_next_thread['max_time'] = $node_next_detail->max_date;
+            $data_add_next_thread['state'] = 0;//未接收
+            $this->workflow_m->add_thread($data_add_next_thread);
+            $this->_message('客户 ' . $data_add_transfer['customer_name'] . ' 的负责人转为' . $data_add_transfer['new_user_name'].'的申请已提交', 'cr_tel/my/', TRUE);
         }
     }
 

@@ -16,7 +16,7 @@ if (!defined('BASEPATH'))
 // ------------------------------------------------------------------------
 
 /**
- * ZBV2OA 用户组操作模型
+ * ZBV2OA 工作流操作模型
  *
  * @package     ZBV2OA
  * @author      Binarx
@@ -32,7 +32,6 @@ class Workflow_m extends CI_Model {
     public function __construct() {
         parent::__construct();
         $this->load->database();
-        $this->load->helper('file');
     }
 
     // ------------------------------------------------------------------------
@@ -43,21 +42,21 @@ class Workflow_m extends CI_Model {
      * @access  public
      * @return  object
      */
-    public function get_roles() {
-        return $this->db->get('zb_role')->result();
-    }
+//    public function get_roles() {
+//        return $this->db->get('zb_role')->result();
+//    }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 根据用户组ID获取用户信息
+     * 根据节点ID获取节点信息
      *
      * @access  public
      * @param   int
      * @return  object
      */
-    public function get_role_by_id($id) {
-        return $this->db->where('role_id', $id)->get('zb_role')->row();
+    public function get_node_by_id($node_id) {
+        return $this->db->where('node_id', $node_id)->get('zb_workflow_node')->row();
     }
 
     // ------------------------------------------------------------------------
@@ -69,9 +68,9 @@ class Workflow_m extends CI_Model {
      * @param   string
      * @return  object
      */
-    public function get_role_by_name($name) {
-        return $this->db->where('role_name', $name)->get('zb_role')->row();
-    }
+//    public function get_role_by_name($name) {
+//        return $this->db->where('role_name', $name)->get('zb_role')->row();
+//    }
 
     // ------------------------------------------------------------------------
 
@@ -81,26 +80,68 @@ class Workflow_m extends CI_Model {
      * @access  public
      * @return  array
      */
-    public function get_form_rights() {
-        $array = $this->db->select('right_id,right_name')->get('zb_right')->result();
-        $data = array();
-        foreach ($array as $key) {
-            $data['rights'][$key->right_id] = $key->right_name;
-        }
-        return $data;
-    }
+//    public function get_form_rights() {
+//        $array = $this->db->select('right_id,right_name')->get('zb_right')->result();
+//        $data = array();
+//        foreach ($array as $key) {
+//            $data['rights'][$key->right_id] = $key->right_name;
+//        }
+//        return $data;
+//    }
 
     // ------------------------------------------------------------------------
 
     /**
-     * 添加用户组
+     * 添加流程执行进程
      *
      * @access  public
      * @param   array
      * @return  int
      */
-    public function add_role($data) {
-        $this->db->insert('zb_role', $data);
+    public function add_process($data) {
+        $this->db->insert('zb_workflow_process', $data);
+        return $this->db->insert_id();
+    }
+
+    // ------------------------------------------------------------------------
+    
+    /**
+     * 添加流程执行线程
+     *
+     * @access  public
+     * @param   array
+     * @return  int
+     */
+    public function add_thread($data) {
+        $this->db->insert('zb_workflow_thread', $data);
+        return $this->db->insert_id();
+    }
+
+    // ------------------------------------------------------------------------
+    
+    /**
+     * 添加工作流定义
+     *
+     * @access  public
+     * @param   array
+     * @return  int
+     */
+    public function add_defination($data) {
+        $this->db->insert('zb_workflow_defination', $data);
+        return $this->db->insert_id();
+    }
+
+    // ------------------------------------------------------------------------
+    
+    /**
+     * 添加流程节点
+     *
+     * @access  public
+     * @param   array
+     * @return  int
+     */
+    public function add_node($data) {
+        $this->db->insert('zb_workflow_node', $data);
         return $this->db->insert_id();
     }
 
@@ -114,9 +155,9 @@ class Workflow_m extends CI_Model {
      * @param   array
      * @return  bool
      */
-    public function edit_role($id, $data) {
-        return $this->db->where('role_id', $id)->update('zb_role', $data);
-    }
+//    public function edit_role($id, $data) {
+//        return $this->db->where('role_id', $id)->update('zb_role', $data);
+//    }
 
     // ------------------------------------------------------------------------
 
@@ -127,9 +168,9 @@ class Workflow_m extends CI_Model {
      * @param   int
      * @return  int
      */
-    public function get_role_user_num($id) {
-        return $this->db->where('role_id', $id)->count_all_results('zb_user');
-    }
+//    public function get_role_user_num($id) {
+//        return $this->db->where('role_id', $id)->count_all_results('zb_user');
+//    }
 
     // ------------------------------------------------------------------------
 
@@ -140,10 +181,10 @@ class Workflow_m extends CI_Model {
      * @param   int
      * @return  void
      */
-    public function del_role($id) {
-        $this->db->where('role_id', $id)->delete('zb_role');
-        delete_files('./application/date/role_' . $id . '.php');
-    }
+//    public function del_role($id) {
+//        $this->db->where('role_id', $id)->delete('zb_role');
+//        delete_files('./application/date/role_' . $id . '.php');
+//    }
 
     // ------------------------------------------------------------------------
 }
