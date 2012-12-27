@@ -45,13 +45,67 @@ class Index extends CI_Controller {
             redirect('/ss/home');
         } else {
             $data['cookie_username'] = $this->input->cookie('zbv2_username');
-            $data['cookie_password'] = $this->input->cookie('zbv2_password');
-            $data['isremeber'] = $data['cookie_password'] ? 1 : 0;
-            $this->load->view('login_v', $data);
+            $data['src'] = $this->verfication_code();
+            $this->load->view('system/login_v', $data);
         }
     }
 
     // ------------------------------------------------------------------------
+
+    /**
+     * 生成验证码
+     *
+     * @access  public
+     * @return  void
+     */
+    function verfication_code() {
+        $this->load->helper('captcha');
+        $this->load->helper('string');
+        $vals = array(
+            'word' => random_string('alnum', 4),
+            'img_width' => 75,
+            'img_height' => 24,
+            'img_path' => './public/captcha/',
+            'img_url' => base_url() . 'public/captcha/',
+            'expiration' => 300
+        );
+        $cap = create_captcha($vals);
+        $data = array(
+            'captcha_time' => $cap['time'],
+            'ip_address' => $this->input->ip_address(),
+            'word' => $cap['word']
+        );
+
+        $query = $this->db->insert_string('zb_captcha', $data);
+        $this->db->query($query);
+        echo $cap['src'];
+        return $cap['src'];
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * 验证验证码
+     *
+     * @access  public
+     * @return  void
+     */
+    function check_verfication_code($code, $ip) {
+        $expiration = time() - 300; // 5分钟限制
+        $this->db->query("DELETE FROM zb_captcha WHERE captcha_time < " . $expiration);
+        // 然后再看是否有验证码存在:
+        $sql = "SELECT COUNT(*) AS count FROM zb_captcha WHERE word = '$code' AND ip_address = '$ip' AND captcha_time > '$expiration'";
+        $query = $this->db->query($sql);
+        $row = $query->row();
+        if ($row->count == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    // ------------------------------------------------------------------------
+
     /**
      * 退出
      *
@@ -73,44 +127,40 @@ class Index extends CI_Controller {
     function checklogin() {
         $this->form_validation->set_rules('username', '用户名', 'trim|required');
         $this->form_validation->set_rules('password', '密码', 'required|min_length[6]');
-        $this->form_validation->set_rules('isremeber', 'cookie判断', 'required');
+        $this->form_validation->set_rules('code', '验证码', 'required');
         if ($this->form_validation->run() == FALSE) {
             $this->index();
         } else {
             $username = $this->input->post('username');
-            $user = $this->user_m->get_full_user_by_username($username); 
-            $remeber = (BOOL) $this->input->post('remeber');
-            $isremeber = (BOOL) $this->input->post('isremeber');
-            $password = ($isremeber&&$username==$this->input->cookie('zbv2_username'))?$this->input->post('password'):sha1($this->input->post('password').$user->salt);
-            if ($user) {
-                if ($user->password == $password) {
-                    if ($user->is_leave == 0&&$user->is_admin == 1) {
-                        if ($remeber == 1) {
-                            $cookie_username = array(
-                                'name' => 'username',
-                                'value' => $username,
-                                'expire' => '2592000',
-                                'prefix' => 'zbv2_'
-                            );
-                            $cookie_password = array(
-                                'name' => 'password',
-                                'value' => $password,
-                                'expire' => '2592000',
-                                'prefix' => 'zbv2_'
-                            );
-                            $this->input->set_cookie($cookie_username);
-                            $this->input->set_cookie($cookie_password);
+            $user = $this->user_m->get_full_user_by_username($username);
+            $code = $this->input->post('code');
+            $ip = $this->input->ip_address();
+            $is_code = $this->check_verfication_code($code, $ip);
+            $password = sha1($this->input->post('password') . $user->salt);
+            if ($is_code) {
+                if ($user) {
+                    if ($user->password == $password) {
+                        if ($user->is_leave == 0 && $user->is_admin == 1) {
+                                $cookie_username = array(
+                                    'name' => 'username',
+                                    'value' => $username,
+                                    'expire' => '2592000',
+                                    'prefix' => 'zbv2_'
+                                );
+                                $this->input->set_cookie($cookie_username);
+                            $this->session->set_userdata('user_id', $user->user_id);
+                            redirect('/ss/home');
+                        } else {
+                            $this->session->set_flashdata('error', "此账号已冻结或者员工已离职,请联系管理员!");
                         }
-                        $this->session->set_userdata('user_id', $user->user_id);
-                        redirect('/ss/home');
                     } else {
-                        $this->session->set_flashdata('error', "此账号已冻结或者员工已离职,请联系管理员!");
+                        $this->session->set_flashdata('error', "密码不正确!");
                     }
                 } else {
-                    $this->session->set_flashdata('error', "密码不正确!");
+                    $this->session->set_flashdata('error', "不存在的用户!");
                 }
             } else {
-                $this->session->set_flashdata('error', "不存在的用户!");
+                $this->session->set_flashdata('error', "验证码错误!");
             }
             redirect('/');
         }
