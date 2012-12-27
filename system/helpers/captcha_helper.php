@@ -235,10 +235,10 @@ if ( ! function_exists('create_captcha'))
 		$img_name = $now.'.jpg';
 
 		ImageJPEG($im, $img_path.$img_name);
-                
+
 		$img = "<img src=\"$img_url$img_name\" width=\"$img_width\" height=\"$img_height\" style=\"border:0;\" alt=\"验证码 \"
                     title=\"点击刷新验证码\" />";
-                
+
                 $src = $img_url.$img_name;
 
 		ImageDestroy($im);

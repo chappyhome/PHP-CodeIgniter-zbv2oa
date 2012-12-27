@@ -45,7 +45,6 @@ class Index extends CI_Controller {
             redirect('/ss/home');
         } else {
             $data['cookie_username'] = $this->input->cookie('zbv2_username');
-            $data['src'] = $this->verfication_code();
             $this->load->view('system/login_v', $data);
         }
     }
@@ -73,13 +72,13 @@ class Index extends CI_Controller {
         $data = array(
             'captcha_time' => $cap['time'],
             'ip_address' => $this->input->ip_address(),
-            'word' => $cap['word']
+            'word' => strtolower($cap['word'])
         );
-
         $query = $this->db->insert_string('zb_captcha', $data);
         $this->db->query($query);
-        echo $cap['src'];
-        return $cap['src'];
+        header("Cache-Control: no-cache, must-revalidate");
+        header("Content-type:image/jpeg");
+        readfile($cap['src']);
     }
 
     // ------------------------------------------------------------------------
@@ -131,23 +130,23 @@ class Index extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {
             $this->index();
         } else {
-            $username = $this->input->post('username');
+            $username = $this->input->post('username',TRUE);
             $user = $this->user_m->get_full_user_by_username($username);
-            $code = $this->input->post('code');
+            $code = strtolower($this->input->post('code',TRUE));
             $ip = $this->input->ip_address();
             $is_code = $this->check_verfication_code($code, $ip);
-            $password = sha1($this->input->post('password') . $user->salt);
+            $password = sha1($this->input->post('password',TRUE) . $user->salt);
             if ($is_code) {
                 if ($user) {
                     if ($user->password == $password) {
                         if ($user->is_leave == 0 && $user->is_admin == 1) {
-                                $cookie_username = array(
-                                    'name' => 'username',
-                                    'value' => $username,
-                                    'expire' => '2592000',
-                                    'prefix' => 'zbv2_'
-                                );
-                                $this->input->set_cookie($cookie_username);
+                            $cookie_username = array(
+                                'name' => 'username',
+                                'value' => $username,
+                                'expire' => '2592000',
+                                'prefix' => 'zbv2_'
+                            );
+                            $this->input->set_cookie($cookie_username);
                             $this->session->set_userdata('user_id', $user->user_id);
                             redirect('/ss/home');
                         } else {

@@ -16,3 +16,4 @@ _thumbs/
 
 # Netbeans
 nbproject/*
+/public/captcha/

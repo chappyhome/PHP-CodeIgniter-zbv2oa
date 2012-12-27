@@ -2,7 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<base href="<?php echo base_url(); ?>" />    
+<base href="<?php echo base_url(); ?>" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>风险管理平台</title>
 <link href="public/dwz/themes/css/login.css" rel="stylesheet" type="text/css" />
@@ -39,12 +39,12 @@
 					<p>
 						<label>验证码：</label>
 						<input name="code" class="code" type="text" size="5" />
-						<span><img src="<?php echo $src; ?>" width="" height="" style="border:0;" alt="验证码"
-                                                           title="点击刷新验证码" onClick="this.src='<?php echo site_url('index/verfication_code/'); ?>'" /></span>
+						<span><img src="<?php echo site_url('index/verfication_code'); ?>" width="" height="" style="border:0;" alt="验证码"
+                                                           title="点击刷新验证码"  onClick="this.src=this.src+'/'+Math.random();" /></span>
 					</p>
                                         <p>
-                                                <b style="color:red"><?php echo validation_errors(); ?></b>
-                                                <b style="color:red"><?php echo $this->session->flashdata('error'); ?></b>
+                                                <lable style="color:red"><?php echo validation_errors(); ?></lable>
+                                                <lable style="color:red"><?php echo $this->session->flashdata('error'); ?></lable>
                                         </p>
 					<div class="login_bar">
 						<input class="sub" type="submit" value=" " />
