@@ -316,7 +316,13 @@ class Cr_tel extends Admin_Controller {
     }
 
     // ------------------------------------------------------------------------
-
+    
+    /**
+     * 处理ajax请求
+     *
+     * @access  public
+     * @return  void
+     */
     public function ajax() {
         $customer_id = $this->input->get('customer_id');
         echo json_encode($this->customer_m->get_customer_by_id($customer_id));

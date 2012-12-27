@@ -37,14 +37,48 @@ class Workflow_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 获取出所有用户组
+     * 获取出指定流程进程
      *
      * @access  public
      * @return  object
      */
-//    public function get_roles() {
-//        return $this->db->get('zb_role')->result();
-//    }
+    public function get_process($limit = 0, $offset = 0, $start_user = 0, $is_all = 0) {
+        if ($start_user) {
+            $this->db->where('start_user', $start_user);
+        }
+        if (!$is_all) {
+            $this->db->where('state','1');
+        }
+        if ($limit) {
+            $this->db->limit($limit);
+        }
+        if ($offset) {
+            $this->db->offset($offset);
+        }
+        return $this->db->select('process_id,process_desc,node_name,executor,start_user,state,start_time,finish_time')
+                        ->join('zb_workflow_node', 'zb_workflow_process.defination_id = zb_workflow_node.defination_id and zb_workflow_process.current_node_index = zb_workflow_node.node_index')
+                        ->get('zb_workflow_process')
+                        ->result();
+    }
+    
+    // ------------------------------------------------------------------------
+
+    /**
+     * 获取指定流程进程总数
+     *
+     * @access  public
+     * @return  int
+     */
+    public function get_process_num($start_user = 0, $is_all = 0) {
+        if ($start_user) {
+            $this->db->where('start_user', $start_user);
+        }
+        if (!$is_all) {
+            $this->db->where('state','1');
+        }
+        return $this->db->count_all_results('zb_workflow_process');
+    }
+
 
     // ------------------------------------------------------------------------
 
