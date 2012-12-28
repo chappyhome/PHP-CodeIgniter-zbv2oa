@@ -76,7 +76,7 @@ abstract class Admin_Controller extends CI_Controller {
      */
     protected function _template($template, $data = array()) {
         $data['tpl'] = $template;
-        $this->load->view('entry_v', $data);
+        $this->load->view('system/entry_v', $data);
     }
 
     // ------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 <head>
 <base href="<?php echo base_url(); ?>" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>风险管理平台</title>
+<title>智拓企业管理平台</title>
 <link href="public/dwz/themes/css/login.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -43,8 +43,8 @@
                                                            title="点击刷新验证码"  onClick="this.src=this.src+'/'+Math.random();" /></span>
 					</p>
                                         <p>
-                                                <lable style="color:red"><?php echo validation_errors(); ?></lable>
-                                                <lable style="color:red"><?php echo $this->session->flashdata('error'); ?></lable>
+                                                <?php echo validation_errors('<lable class="error">* ', '</lable>'); ?>
+                                                <lable class="error"><?php echo $this->session->flashdata('error'); ?></lable>
                                         </p>
 					<div class="login_bar">
 						<input class="sub" type="submit" value=" " />

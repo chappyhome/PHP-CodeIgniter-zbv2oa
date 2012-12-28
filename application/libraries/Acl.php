@@ -37,7 +37,7 @@ class Acl {
      * @var array
      * @access  private
      * */
-    private $_menus = array();
+    public $_menus = array();
 
     /**
      * _class
@@ -123,13 +123,10 @@ class Acl {
      * @return  void
      */
     public function show_top_menus() {
-        $last_menu_key = count($this->_menus) - 1;
         foreach ($this->_menus as $key) {
-            $is_currentmenu = ($key['menu_id'] == $this->_current_level_1_menu) ? 1 : 0;
-            $link = site_url("$key[right_class]/$key[right_method]");
+            $link = site_url("_menu/left/" . "$key[menu_id]");
             $name = $key['menu_name'];
-            echo "<li class=\"" . ($key == 0 ? 'first' : ($key == $last_menu_key ? 'last' : '')) .
-            " " . ($is_currentmenu ? 'selected' : '') . "\"><a href=\"$link \">$name</a></li>";
+            echo '<li><a href="' . $link . '"><span>' . $name . '</span></a></li>';
         }
     }
 
@@ -141,23 +138,29 @@ class Acl {
      * @access  public
      * @return  void
      */
-    public function show_left_menus() {
+    public function show_left_menus($menu_id) {
         foreach ($this->_menus as $key) {
-            if ($key['menu_id'] == $this->_current_level_1_menu) {
+            if ($key['menu_id'] == $menu_id) {
+                echo '<div class="accordion" fillSpace="sidebar">';
+                echo '<div class="accordionHeader"><h2><span>Folder</span>'.$key['menu_name'].'</h2></div>';
+                echo '<div class="accordionContent">';
+                echo '<ul class="tree treeFolder expand">';
                 foreach ($key['level_2'] as $i) {
                     if (!empty($i)) {
-                        echo '<li><span>' . $i['menu_name'] . '</span><ul name="menu">';
+                        echo '<li><a>' . $i['menu_name'] . '</a>';
                         if (isset($i['level_3'])) {
+                            echo '<ul>';
                             foreach ($i['level_3'] as $j) {
                                 $link = site_url("$j[right_class]/$j[right_method]");
                                 $name = $j['menu_name'];
-                                echo "<li class=\"" . (($j['menu_id'] == $this->_current_level_3_menu) ? 'selected' : '') .
-                                "\"><a href=\"$link\">$name</a></li>";
+                                echo '<li><a href="' . $link . '" target="navTab" rel="' . $j['right_class'] . '_' . $j['right_method'] . '">' . $name . '</a></li>';
                             }
+                            echo '</ul>';
                         }
-                        echo '</ul></li>';
                     }
                 }
+                echo '</div>';
+                echo '</div>';
             }
         }
     }
@@ -207,7 +210,7 @@ class Acl {
                 break;
             }
         }
-        if ($ok == 1 || strstr($this->_method,'ajax')) {
+        if ($ok == 1 || strstr($this->_method, 'ajax')) {
             return 1;
         } else {
             return 0;
@@ -243,7 +246,7 @@ class Acl {
                 $k = $data[$i]->right_class . '/' . $data[$i]->right_method;
                 $link = site_url($k);
                 $menu[$i] = '<a href="' . $link . '"/>' . $data[$i]->menu_name . '</a>';
-            }  else {
+            } else {
                 $menu[$i] = NULL;
             }
         }

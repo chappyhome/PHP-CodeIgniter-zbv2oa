@@ -48,6 +48,11 @@ class Index extends CI_Controller {
             $this->load->view('system/login_v', $data);
         }
     }
+    
+    function test() {
+        $this->load->view('system/test');
+        
+    }
 
     // ------------------------------------------------------------------------
 
