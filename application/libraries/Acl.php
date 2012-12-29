@@ -66,33 +66,6 @@ class Acl {
     private $_role = array();
 
     /**
-     * _current_level_1_menu
-     * 当前操作所属的一级菜单
-     * 
-     * @var int
-     * @access privete
-     */
-    private $_current_level_1_menu = -1;
-
-    /**
-     * _current_level_2_menu
-     * 当前操作所属的二级菜单
-     * 
-     * @var int
-     * @access privete
-     */
-    private $_current_level_2_menu = -1;
-
-    /**
-     * _current_level_3_menu
-     * 当前操作所属的三级菜单
-     * 
-     * @var int
-     * @access privete
-     */
-    private $_current_level_3_menu = -1;
-
-    /**
      * 构造函数
      *
      * @access  public
@@ -109,12 +82,11 @@ class Acl {
         $this->_menus = json_decode(read_file("./application/date/menu_$user_role_id.php"), TRUE);
         $this->_role = json_decode(read_file("./application/date/role_$user_role_id.php"), TRUE);
         if (empty($this->_menus) || empty($this->_role)) {
-            redirect(site_url('debug/index/[acl.__construct]/获取权限和菜单文件失败'));
+            redirect(site_url('_system/info/001'));
         }
-        $this->_current_level_menu();
     }
 
-// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     /**
      * 输出顶部菜单
@@ -124,13 +96,13 @@ class Acl {
      */
     public function show_top_menus() {
         foreach ($this->_menus as $key) {
-            $link = site_url("_menu/left/" . "$key[menu_id]");
+            $link = site_url("_system/leftmenu/" . "$key[menu_id]");
             $name = $key['menu_name'];
             echo '<li><a href="' . $link . '"><span>' . $name . '</span></a></li>';
         }
     }
 
-// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
     /**
      * 输出边栏菜单
@@ -165,37 +137,7 @@ class Acl {
         }
     }
 
-// ------------------------------------------------------------------------
-    /**
-     * 判断当前操作所属的各项菜单
-     * @access private
-     * @return void
-     */
-    private function _current_level_menu() {
-        foreach ($this->_menus as $key) {
-            foreach ($key['level_2'] as $m) {
-                if (!empty($m)) {
-                    foreach ($m['level_3'] as $n) {
-                        if ($n['right_class'] === $this->_class) {
-                            $this->_current_level_1_menu = $key['menu_id'];
-                            $this->_current_level_2_menu = $m['menu_id'];
-                            break;
-                        }
-                    }
-                    foreach ($m['level_3'] as $n) {
-                        if ($n['right_class'] === $this->_class && $n['right_method'] === $this->_method) {
-                            $this->_current_level_1_menu = $key['menu_id'];
-                            $this->_current_level_2_menu = $m['menu_id'];
-                            $this->_current_level_3_menu = $n['menu_id'];
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     /**
      * 检测权限
      *
@@ -217,43 +159,7 @@ class Acl {
         }
     }
 
-// ------------------------------------------------------------------------
-    /**
-     * 当前位置
-     * 
-     * @access public
-     * @return array
-     */
-    public function current_location() {
-        $this->ci->load->database();
-        $data[1] = $this->ci->db->select('menu_name,right_class,right_method')
-                ->where('menu_id', $this->_current_level_1_menu)
-                ->join('zb_right', 'zb_right.right_id = zb_menu.right_id')
-                ->get('zb_menu')
-                ->row();
-        $data[2] = $this->ci->db->select('menu_name,right_class,right_method')
-                ->where('menu_id', $this->_current_level_2_menu)
-                ->join('zb_right', 'zb_menu.right_id = zb_right.right_id')
-                ->get('zb_menu')
-                ->row();
-        $data[3] = $this->ci->db->select('menu_name,right_class,right_method')
-                ->where('menu_id', $this->_current_level_3_menu)
-                ->join('zb_right', 'zb_menu.right_id = zb_right.right_id')
-                ->get('zb_menu')
-                ->row();
-        for ($i = 1; $i <= 3; $i++) {
-            if ($data[$i]) {
-                $k = $data[$i]->right_class . '/' . $data[$i]->right_method;
-                $link = site_url($k);
-                $menu[$i] = '<a href="' . $link . '"/>' . $data[$i]->menu_name . '</a>';
-            } else {
-                $menu[$i] = NULL;
-            }
-        }
-        return $menu;
-    }
-
-// ------------------------------------------------------------------------   
+    // ------------------------------------------------------------------------   
 }
 
 /* End of file Acl.php */

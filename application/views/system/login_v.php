@@ -27,7 +27,7 @@
 		</div>
 		<div id="login_content">
 			<div class="loginForm">
-				<form action="<?php echo site_url('index/checklogin'); ?>" method="post">
+				<form action="<?php echo site_url('login/checklogin'); ?>" method="post">
 					<p>
 						<label>用户名：</label>
 						<input type="text" name="username" value="<?php echo $cookie_username; ?>" size="20" class="login_input" />
@@ -39,7 +39,7 @@
 					<p>
 						<label>验证码：</label>
 						<input name="code" class="code" type="text" size="5" />
-						<span><img src="<?php echo site_url('index/verfication_code'); ?>" width="" height="" style="border:0;" alt="验证码"
+						<span><img src="<?php echo site_url('login/verfication_code'); ?>" width="" height="" style="border:0;" alt="验证码"
                                                            title="点击刷新验证码"  onClick="this.src=this.src+'/'+Math.random();" /></span>
 					</p>
                                         <p>

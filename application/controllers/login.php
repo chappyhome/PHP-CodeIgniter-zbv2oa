@@ -19,7 +19,7 @@ if (!defined('BASEPATH'))
  * ZBV2OA 用户登录/退出控制器
  * @author      Binarx
  */
-class Index extends CI_Controller {
+class Login extends CI_Controller {
 
     /**
      * 构造函数
@@ -42,18 +42,13 @@ class Index extends CI_Controller {
      */
     function index() {
         if ($this->session->userdata('user_id')) {
-            redirect('/ss/home');
+            redirect('/home');
         } else {
             $data['cookie_username'] = $this->input->cookie('zbv2_username');
             $this->load->view('system/login_v', $data);
         }
     }
     
-    function test() {
-        $this->load->view('system/test');
-        
-    }
-
     // ------------------------------------------------------------------------
 
     /**
@@ -118,7 +113,7 @@ class Index extends CI_Controller {
      */
     function quit() {
         $this->session->sess_destroy();
-        redirect('/');
+        redirect('/login');
     }
 
     // ------------------------------------------------------------------------
@@ -153,7 +148,7 @@ class Index extends CI_Controller {
                             );
                             $this->input->set_cookie($cookie_username);
                             $this->session->set_userdata('user_id', $user->user_id);
-                            redirect('/ss/home');
+                            redirect('/home');
                         } else {
                             $this->session->set_flashdata('error', "此账号已冻结或者员工已离职,请联系管理员!");
                         }
@@ -166,7 +161,7 @@ class Index extends CI_Controller {
             } else {
                 $this->session->set_flashdata('error', "验证码错误!");
             }
-            redirect('/');
+            redirect('/login');
         }
     }
 

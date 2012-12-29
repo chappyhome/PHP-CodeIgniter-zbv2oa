@@ -16,10 +16,10 @@ if (!defined('BASEPATH'))
 // ------------------------------------------------------------------------
 
 /**
- * ZBV2OA 菜单相关
+ * ZBV2OA 系统相关控制器
  * @author      Binarx
  */
-class _Menu extends Admin_Controller {
+class Home extends Admin_Controller {
 
     /**
      * 构造函数
@@ -29,23 +29,22 @@ class _Menu extends Admin_Controller {
      */
     public function __construct() {
         parent::__construct();
-        //$this->_check_permit();
     }
 
-    // ------------------------------------------------------------------------
+// ------------------------------------------------------------------------
 
     /**
-     * 左侧菜单输出
+     * 后台默认首页
      *
      * @access  public
      * @return  void
      */
-    public function left($menu_id = 1) {
-        $this->acl->show_left_menus($menu_id);
+    public function index() {
+        $this->_template('default_v');
     }
 
-
+// ------------------------------------------------------------------------
 }
 
-/* End of file ss.php */
-/* Location: ./admin/controllers/ss.php */
+/* End of file home.php */
+/* Location: ./admin/controllers/home.php */

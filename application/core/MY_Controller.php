@@ -54,12 +54,13 @@ abstract class Admin_Controller extends CI_Controller {
      */
     protected function _check_login() {
         if (!$this->session->userdata('user_id')) {
-            redirect('/');
+            $this->session->set_flashdata('error', "您没有登录或登录超时，请重新登陆系统!");
+            redirect('/login');
         } else {
             $this->_admin = $this->user_m->get_full_user_by_username($this->session->userdata('user_id'), 'uid');
             if ($this->_admin->is_admin != 1) {
                 $this->session->set_flashdata('error', "此帐号已被冻结,请联系管理员!");
-                redirect('/');
+                redirect('/login');
             }
         }
     }
@@ -90,7 +91,7 @@ abstract class Admin_Controller extends CI_Controller {
      */
     protected function _check_permit() {
         if (!$this->acl->permit()) {
-            $this->_message('对不起，你没有访问这里的权限！', '', FALSE);
+            redirect(site_url('_system/info/403'));
         }
     }
 
