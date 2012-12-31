@@ -46,16 +46,19 @@ class Ss_user extends Admin_Controller {
         $data['list'] = $this->user_m->get_users($role, 15, $offset);
         $data['role'] = $role;
         $data['roles'] = $this->user_m->get_roles();
+        $data['total_rows'] = $this->user_m->get_users_num($role);
+
         //加载分页
-        $this->load->library('pagination');
-        $config['base_url'] = site_url('ss_user/view') . '?';
-        $config['per_page'] = 15;
-        $config['page_query_string'] = TRUE;
-        $config['query_string_segment'] = 'page';
-        $config['total_rows'] = $this->user_m->get_users_num($role);
-        $this->pagination->initialize($config);
-        $data['pagination'] = $this->pagination->create_links();
-        $this->_template('ss_user_list_v', $data);
+//        $this->load->library('pagination');
+//        $config['base_url'] = site_url('ss_user/view') . '?';
+//        $config['per_page'] = 15;
+//        $config['page_query_string'] = TRUE;
+//        $config['query_string_segment'] = 'page';
+//        $config['total_rows'] = $this->user_m->get_users_num($role);
+//        $this->pagination->initialize($config);
+//        $data['pagination'] = $this->pagination->create_links();
+        $this->load->view('ss/ss_user_list_v',$data);
+        //$this->_template('ss_user_list_v', $data);
     }
 
     // ------------------------------------------------------------------------

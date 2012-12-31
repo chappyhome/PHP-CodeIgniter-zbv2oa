@@ -41,8 +41,18 @@ class Ss_setting extends Admin_Controller {
      * @return  void
      */
     public function site() {
-        echo 111;
+        echo $this->_json(300, '功能尚未开发!');
     }
+    /**
+     * 后台默认首页
+     *
+     * @access  public
+     * @return  void
+     */
+    public function backend() {
+        echo $this->_json(300, '功能尚未开发!');
+    }
+
 
 // ------------------------------------------------------------------------
 }

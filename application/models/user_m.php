@@ -131,7 +131,6 @@ class User_m extends CI_Model {
         if ($role_id) {
             $this->db->where('role_id', $role_id);
         }
-
         return $this->db->where('zb_user.is_admin !=', 0)->count_all_results('zb_user');
     }
 
