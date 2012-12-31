@@ -9,7 +9,6 @@ class Test extends Admin_Controller {
         parent::__construct();
         $this->load->model('cache_m');
         $this->load->helper('file');
-        $this->_check_permit();
     }
 
     function index($user_id = 1) {

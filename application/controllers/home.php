@@ -40,7 +40,7 @@ class Home extends Admin_Controller {
      * @return  void
      */
     public function index() {
-        $this->_template('default_v');
+        $this->load->view('system/entry_v');
     }
 
 // ------------------------------------------------------------------------

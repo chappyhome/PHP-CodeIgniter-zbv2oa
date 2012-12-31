@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=7" />
-        <title>企业管理平台</title>
+        <title>智拓企业管理平台</title>
         <base href="<?php echo base_url(); ?>" />
         <link href="public/dwz/themes/default/style.css" rel="stylesheet" type="text/css" media="screen"/>
         <link href="public/dwz/themes/css/core.css" rel="stylesheet" type="text/css" media="screen"/>
@@ -35,7 +35,7 @@
                 DWZ.init("public/dwz/dwz.frag.xml", {
                     //loginUrl:"login_dialog.html", loginTitle:"登录",	// 弹出登录对话框
                     loginUrl:"<?php echo site_url('login'); ?>",	// 跳到登录页面
-                    statusCode:{ok:200, error:300, timeout:301, forbidden:403}, //【可选】
+                    statusCode:{ok:200, error:300, timeout:301}, //【可选】
                     pageInfo:{pageNum:"pageNum", numPerPage:"numPerPage", orderField:"orderField", orderDirection:"orderDirection"}, //【可选】
                     debug:true,	// 调试模式 【true|false】
                     callback:function(){
@@ -137,119 +137,43 @@
                         <div class="page unitBox">
                             <div class="accountInfo">
                                 <div class="alertInfo">
-                                    <h2><a href="doc/dwz-user-guide.pdf" target="_blank">DWZ框架使用手册(PDF)</a></h2>
-                                    <a href="doc/dwz-user-guide.swf" target="_blank">DWZ框架演示视频</a>
+                                    <h2>最新消息：</h2>
+                                    <a href="">关于公司元旦放假的通知</a>
                                 </div>
                                 <div class="right">
-                                    <p><a href="doc/dwz-user-guide.zip" target="_blank" style="line-height:19px">DWZ框架使用手册(CHM)</a></p>
-                                    <p><a href="doc/dwz-ajax-develop.swf" target="_blank" style="line-height:19px">DWZ框架Ajax开发视频教材</a></p>
+                                    <p>待办工作 <a href="">3</a> 项，消息 <a href="">2</a> 条</p>
+                                    <p>07月12日，星期二</p>
                                 </div>
-                                <p><span>DWZ富客户端框架</span></p>
-                                <p>DWZ官方微博:<a href="http://weibo.com/dwzui" target="_blank">http://weibo.com/dwzui</a></p>
+                                <p><span>河南泰森宝酒业有限公司</span></p>
+                                <p>用户：<a href="" target="_blank">周斌</a></p>
                             </div>
-                            <div class="pageContent" selector="h1" layoutH="42">
-                                <div class="panel">
-                                    <h1>个人信息</h1>
-                                    <div>
-                                        <table class="list" width="98%">
-                                            <thead>
-                                                <tr>
-                                                    <th>姓名</th>
-                                                    <th>性别</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>员工姓名</td>
-                                                    <td><?php echo $this->_admin->fullname; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>部门</td>
-                                                    <td>###</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>当前登录帐号</td>
-                                                    <td><?php echo $this->_admin->user_name; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>所属用户组</td>
-                                                    <td><?php echo $this->_admin->role_name; ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>登录IP</td>
-                                                    <td><?php echo $this->input->ip_address(); ?></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="panel">
-                                    <h1>企业信息</h1>
-                                    <div>
-                                        <table class="list" width="98%">
-                                            <tr>
-                                                <td>企业名称</td>
-                                                <td>河南泰森宝酒业有限公司</td>
-                                            </tr>
-                                            <tr>
-                                                <td>当前员工数</td>
-                                                <td>18</td>
-                                            </tr>
-                                            <tr>
-                                                <td>公司电话</td>
-                                                <td>前台： 招商： 财务： 总经理： 传真：</td>
-                                            </tr>
-                                            <tr>
-                                                <td>公司地址</td>
-                                                <td>郑州市经二路中州都会广场3号楼903</td>
-                                            </tr>
-
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="panel">
-                                    <h1>平台信息</h1>
-                                    <div>
-                                        <table class="list" width="98%">
-                                            <tr>
-                                                <td>平台版本</td>
-                                                <td><b><?php echo SYS_VERSION; ?>(CI:<?php echo CI_VERSION; ?>)</b></td>
-                                            </tr>
-                                            <tr>
-                                                <td>网站IP</td>
-                                                <td><?php echo getHostByName(php_uname('n')) . ':' . $_SERVER['SERVER_PORT']; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>当前编码</td>
-                                                <td>UTF-8</td>
-                                            </tr>
-                                            <tr>
-                                                <td>脚本语言</td>
-                                                <td><?php echo 'PHP' . PHP_VERSION; ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>数据库</td>
-                                                <td><?php echo 'MySQL' . $this->db->version(); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>当前时区</td>
-                                                <td><?php echo date_default_timezone_get(); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>上传上限</td>
-                                                <td><?php echo @ini_get('upload_max_filesize'); ?></td>
-                                            </tr>
-                                            <tr>
-                                                <td>SimpleXMLElement支持</td>
-                                                <td><?php echo (class_exists('SimpleXMLElement')) ? '支持' : '不支持'; ?></td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </div>
+                            <div class="pageFormContent" layoutH="80">
+                                <p style="color:red">企业官网 <a href="http://www.xgtsb.com" target="_blank">http://www.xgtsb.com</a></p>
+                                <p style="color:red">企业微博 <a href="http://weibo.com/xgtsb" target="_blank">http://weibo.com/xgtsb</a></p>
+                                <div class="divider"></div>
+                                <h2>个人信息</h2>
+                                <div class="unit">员工姓名：<?php echo $this->_admin->fullname; ?></div>
+                                <div class="unit">所属部门：电商部</div>
+                                <div class="unit">登录帐号：<?php echo $this->_admin->user_name; ?></div>
+                                <div class="unit">用户组：<?php echo $this->_admin->role_name; ?></div>
+                                <div class="unit">登录IP：<?php echo $this->input->ip_address(); ?></div>
+                                <div class="divider"></div>
+                                <h2>企业信息</h2>
+                                <div class="unit">企业名称：河南泰森宝酒业有限公司</div>
+                                <div class="unit">当前员工数：18</div>
+                                <div class="unit">公司电话：前台： 招商： 财务： 总经理： 传真：</div>
+                                <div class="unit">公司地址：郑州市经二路中州都会广场3号楼903</div>
+                                <div class="divider"></div>
+                                <h2>平台信息</h2>
+                                <div class="unit">平台版本：<?php echo SYS_VERSION; ?>(CI:<?php echo CI_VERSION; ?>)</div>
+                                <div class="unit">服务器IP：<?php echo getHostByName(php_uname('n')) . ':' . $_SERVER['SERVER_PORT']; ?></div>
+                                <div class="unit">当前编码：UTF-8</div>
+                                <div class="unit">脚本语言：<?php echo 'PHP' . PHP_VERSION; ?></div>
+                                <div class="unit">数据库：<?php echo 'MySQL' . $this->db->version(); ?></div>
+                                <div class="unit">当前时区：<?php echo date_default_timezone_get(); ?></div>
+                                <div class="unit">上传上限：<?php echo @ini_get('upload_max_filesize'); ?></div>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
             </div>

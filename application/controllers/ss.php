@@ -30,7 +30,7 @@ class Ss extends Admin_Controller {
     public function __construct() {
         parent::__construct();
         $this->_check_permit();
-        $this->load->model('cache_m');
+        $this->load->model('company_info_m');
     }
 
 // ------------------------------------------------------------------------
@@ -41,8 +41,29 @@ class Ss extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function home() {
-        $this->_template('default_v');
+    public function company($submit = 0) {
+        if ($submit) {
+            $this->load->library('form_validation');
+            $this->form_validation->set_rules('company_name', "企业名称", 'required');
+            $this->form_validation->set_rules('company_address', "企业地址", 'required');
+            $this->form_validation->set_rules('company_site', "企业网站", 'required');
+            $this->form_validation->set_rules('company_weibo', "企业微博", 'required');
+            $this->form_validation->set_rules('company_tel', "企业电话", 'required');
+            if ($this->form_validation->run() == FALSE) {
+                echo $this->_json(300, '后台数据验证错误!');
+            } else {
+                $data_add['company_name'] = $this->input->post('company_name');
+                $data_add['company_address'] = $this->input->post('company_address');
+                $data_add['company_site'] = $this->input->post('company_site');
+                $data_add['company_weibo'] = $this->input->post('company_weibo');
+                $data_add['company_tel'] = $this->input->post('company_tel');
+                $this->company_info_m->edit_info(1,$data_add);
+                echo $this->_json(200, '操作成功!');
+            }
+        } else {
+            $data['info'] = $this->company_info_m->get_info_by_id('1');
+            $this->load->view('ss/company_v', $data);
+        }
     }
 
 // ------------------------------------------------------------------------

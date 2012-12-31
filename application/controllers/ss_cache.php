@@ -41,27 +41,30 @@ class Ss_cache extends Admin_Controller {
      * @access  private
      * @return  void
      */
-    public function cache() {
-        if ($this->_cache_post()) {
-            $array = $this->_cache_post();
-            foreach ($array as $v) {
-                $method = 'update_' . $v . '_cache';
-                $this->cache_m->$method();
+    public function cache($submit = 0) {
+        if ($submit) {
+            if ($this->_cache_post()) {
+                $array = $this->_cache_post();
+                foreach ($array as $v) {
+                    $method = 'update_' . $v . '_cache';
+                    $this->cache_m->$method();
+                }
+                echo $this->_json(200, '缓存更新成功!');
+            } else {
+                echo $this->_json(300, '缓存更新失败!');
             }
-            $this->_message("缓存更新成功！", '', TRUE);
-        } else {
-            $this->_template('ss_cache_v');
+        }  else {
+            $this->load->view('ss/ss_cache_v');
         }
     }
 
     // -------------------------------------------------------------------------
-    
+
     /**
      * 更新缓存处理post提交数据
      * @access private
      * @return boolean or array
      */
-
     private function _cache_post() {
         $this->load->library('form_validation');
         $this->form_validation->set_rules('cache', '要更新的缓存', 'required');

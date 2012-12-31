@@ -39,8 +39,9 @@
 					<p>
 						<label>验证码：</label>
 						<input name="code" class="code" type="text" size="5" />
-						<span><img src="<?php echo site_url('login/verfication_code'); ?>" width="" height="" style="border:0;" alt="验证码"
-                                                           title="点击刷新验证码"  onClick="this.src=this.src+'/'+Math.random();" /></span>
+						<span><img src="<?php echo site_url('login/verfication_code'); ?>" width="75" height="24" style="border:0;" alt="验证码"
+                                                           title="点击刷新验证码"  onClick="this.src=this.src+'/'+Math.random();" />
+                                                </span>
 					</p>
                                         <p>
                                                 <?php echo validation_errors('<lable class="error">* ', '</lable>'); ?>

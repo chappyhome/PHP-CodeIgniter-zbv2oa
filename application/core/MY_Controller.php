@@ -75,10 +75,10 @@ abstract class Admin_Controller extends CI_Controller {
      * @param   array
      * @return  void
      */
-    protected function _template($template, $data = array()) {
-        $data['tpl'] = $template;
-        $this->load->view('system/entry_v', $data);
-    }
+//    protected function _template($template, $data = array()) {
+//        $data['tpl'] = $template;
+//        $this->load->view('system/entry_v', $data);
+//    }
 
     // ------------------------------------------------------------------------
 
@@ -94,6 +94,25 @@ abstract class Admin_Controller extends CI_Controller {
             redirect(site_url('_system/info/403'));
         }
     }
+    
+    /**
+     * 检查权限
+     *
+     * @access  protected
+     * @param   string
+     * @return  void
+     */
+    protected function _json($code='',$message='',$navtabid='',$rel='',$callbacktype='',$forwardurl='',$confirmmsg='') {
+        return '{
+                "statusCode":"'.$code.'",
+                "message":"'.$message.'",
+                "navTabId":"'.$navtabid.'",
+                "rel":"'.$rel.'",
+                "callbackType":"'.$callbacktype.'",
+                "forwardUrl":"'.$forwardurl.'",
+                "confirmMsg":"'.$confirmmsg.'"
+              }';
+    }
 
     // ------------------------------------------------------------------------
 
@@ -107,16 +126,16 @@ abstract class Admin_Controller extends CI_Controller {
      * @param   string
      * @return  void
      */
-    public function _message($msg, $goto = '', $auto = TRUE) {
-        if ($goto == '') {
-            $goto = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : site_url();
-        } else {
-            $goto = strpos($goto, 'http') !== false ? $goto : site_url($goto);
-        }
-        $this->_template('_message_v', array('msg' => $msg, 'goto' => $goto, 'auto' => $auto));
-        echo $this->output->get_output();
-        exit();
-    }
+//    public function _message($msg, $goto = '', $auto = TRUE) {
+//        if ($goto == '') {
+//            $goto = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : site_url();
+//        } else {
+//            $goto = strpos($goto, 'http') !== false ? $goto : site_url($goto);
+//        }
+//        $this->_template('_message_v', array('msg' => $msg, 'goto' => $goto, 'auto' => $auto));
+//        echo $this->output->get_output();
+//        exit();
+//    }
 
     // ------------------------------------------------------------------------
 
@@ -127,11 +146,11 @@ abstract class Admin_Controller extends CI_Controller {
      * @param string $message 错误信息
      * @return void 
      */
-    public function _debug($from = '', $message = '') {
-        $data['from'] = $from;
-        $data['message'] = $message;
-        $this->load->view('debug_v', $data);
-    }
+//    public function _debug($from = '', $message = '') {
+//        $data['from'] = $from;
+//        $data['message'] = $message;
+//        $this->load->view('debug_v', $data);
+//    }
 
     // ------------------------------------------------------------------------
 
@@ -141,11 +160,11 @@ abstract class Admin_Controller extends CI_Controller {
      * @access  public
      * @return  void
      */
-    public function _message_if_null($data = NULL, $message = '', $url = '') {
-        if (!$data) {
-            $this->_message($message, $url, TRUE);
-        }
-    }
+//    public function _message_if_null($data = NULL, $message = '', $url = '') {
+//        if (!$data) {
+//            $this->_message($message, $url, TRUE);
+//        }
+//    }
 
     // ------------------------------------------------------------------------
 }
