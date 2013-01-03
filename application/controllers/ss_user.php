@@ -47,7 +47,7 @@ class Ss_user extends Admin_Controller {
         $offset = ($data['pageNum'] - 1) * $data['numPerPage'];
         $data['list'] = $this->user_m->get_users($data['role'], $data['numPerPage'], $offset);
         $data['roles'] = $this->user_m->get_roles();
-        $data['total_rows'] = $this->user_m->get_users_num($role);
+        $data['total_rows'] = $this->user_m->get_users_num($data['role']);
         $this->load->view('ss/ss_user_list_v', $data);
     }
 
