@@ -41,8 +41,8 @@ class Ss_user extends Admin_Controller {
      * @return  void
      */
     public function view() {
-        $this->input->post('role',TRUE) != "" ? $data['role'] = $this->input->post('role') : $data['role'] = 0;
-        $this->input->post('numPerPage', TRUE) != "" ? $data['numPerPage'] = $this->input->post('numPerPage', TRUE) : $data['numPerPage'] = 1;
+        $this->input->post('role', TRUE) != "" ? $data['role'] = $this->input->post('role') : $data['role'] = 0;
+        $this->input->post('numPerPage', TRUE) != "" ? $data['numPerPage'] = $this->input->post('numPerPage', TRUE) : $data['numPerPage'] = 10;
         $this->input->post('pageNum', TRUE) != "" ? $data['pageNum'] = $this->input->post('pageNum', TRUE) : $data['pageNum'] = 1;
         $offset = ($data['pageNum'] - 1) * $data['numPerPage'];
         $data['list'] = $this->user_m->get_users($data['role'], $data['numPerPage'], $offset);
@@ -59,16 +59,29 @@ class Ss_user extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function add_em_user($department_id = 0) {
-        if ($data = $this->_get_form_data(1, 0)) {
-            $this->user_m->add_user($data, $data['user_id']);
-            $this->_message('用户添加成功!', 'ss_user/view', TRUE);
-        } else {
+    public function add_em_user($operate = '') {
+        if ($operate == 'department') {
+            $data['departments'] = $this->user_m->get_em_departments();
+            exit(json_encode($data['departments']));
+        }
+        if ($operate == 'user') {
+            $this->input->get('department_id') != "" ? $department_id = $this->input->get('department_id') : 0;
+            $data['user'] = $department_id ? $this->user_m->get_em_users($department_id, 0, 0, 1, 1) : 0;
+            exit(json_encode($data['user']));
+        }
+        if ($operate == 'role') {
             $data['roles'] = $this->user_m->get_roles();
-            $data['list'] = $department_id ? $this->user_m->get_em_users($department_id, 0, 0, 1, 1) : 0;
-            $data['departments'] = $this->user_m->get_departments();
-            $data['department_id'] = $department_id;
-            $this->_template('ss_user_add_v', $data);
+            exit(json_encode($data['roles']));
+        }
+        if ($operate == 'submit') {
+            if ($data = $this->_get_form_data(1, 0)) {
+                $this->user_m->add_user($data, $data['user_id']);
+                echo $this->_json(200, '操作成功!', 'ss_user_view', '', 'closeCurrent');
+            } else {
+                echo $this->_json(300, "后台数据验证错误（检查用户名是否已经存在）!");
+            }
+        } else {
+            $this->load->view('ss/ss_user_em_add_v');
         }
     }
 
@@ -80,13 +93,20 @@ class Ss_user extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function add_user() {
-        if ($data = $this->_get_form_data(0, 0)) {
-            $this->user_m->add_user($data);
-            $this->_message('用户添加成功!', 'ss_user/view', TRUE);
-        } else {
+    public function add_user($operate = '') {
+        if ($operate == 'role') {
             $data['roles'] = $this->user_m->get_roles();
-            $this->_template('ss_user_add_v', $data);
+            exit(json_encode($data['roles']));
+        }
+        if ($operate == 'submit') {
+            if ($data = $this->_get_form_data(0, 0)) {
+                $this->user_m->add_user($data);
+                echo $this->_json(200, '操作成功!', 'ss_user_view', '', 'closeCurrent');
+            } else {
+                echo $this->_json(300, "后台数据验证错误（检查用户名是否已经存在）!");
+            }
+        } else {
+            $this->load->view('ss/ss_user_add_v');
         }
     }
 
@@ -98,17 +118,25 @@ class Ss_user extends Admin_Controller {
      * @param   int
      * @return  void
      */
-    public function edit($id = 0) {
-        $data['user'] = $this->user_m->get_full_user_by_username($id, 'uid');
-        if (!$data['user']) {
-            $this->_message('不存在的用户', '', FALSE);
-        }
-        if ($data2 = $this->_get_form_data(0, 1)) {
-            $this->user_m->edit_user($id, $data2);
-            $this->_message('用户修改成功!', 'ss_user/view/', TRUE);
+    public function edit($operate = '') {
+        if ($operate == 'submit') {
+            $user_id = $this->input->get('id');
+            if ($user_id == '') {
+                exit($this->_json(300, "不存在的用户!"));
+            }
+            if ($data_update = $this->_get_form_data(0, 1)) {
+                $this->user_m->edit_user($user_id, $data_update);
+                echo $this->_json(200, '操作成功!', 'ss_user_view', '', 'closeCurrent');
+            } else {
+                echo $this->_json(300, "后台数据验证错误（检查用户名是否已经存在）!");
+            }
         } else {
+            $data['user'] = $this->user_m->get_full_user_by_username($operate, 'uid');
+            if (!$data['user']) {
+                exit($this->_json(300, "不存在的用户!"));
+            }
             $data['roles'] = $this->user_m->get_roles();
-            $this->_template('ss_user_edit_v', $data);
+            $this->load->view('ss/ss_user_edit_v', $data);
         }
     }
 
@@ -121,16 +149,16 @@ class Ss_user extends Admin_Controller {
      * @param   int
      * @return  void
      */
-    public function del($id) {
+    public function del($id = 0) {
         $user = $this->user_m->get_full_user_by_username($id, 'uid');
         if (!$user) {
-            $this->_message('不存在的用户!', '', FALSE);
+            exit($this->_json(300, "不存在的用户!"));
         }
         if (isset($user->fullname)) {
-            $this->_message('内部员工用户不能删除，可选择冻结用户!', '', FALSE);
+            exit($this->_json(300, "内部员工用户不能直接删除，可选择冻结用户!"));
         }
         $this->user_m->del_user($id);
-        $this->_message('用户删除成功!', 'ss_user/view/', TRUE);
+        echo $this->_json(200, '删除用户成功!', 'ss_user_view');
     }
 
     // ------------------------------------------------------------------------
@@ -142,17 +170,17 @@ class Ss_user extends Admin_Controller {
      * @param   int
      * @return  void
      */
-    public function stop($id) {
+    public function stop($id = 0) {
         $user = $this->user_m->get_full_user_by_username($id, 'uid');
         if (!$user) {
-            $this->_message('不存在的用户!', '', FALSE);
+            exit($this->_json(300, "不存在的用户!"));
         }
         if ($user->is_admin == '1') {
             $this->user_m->stop_user($id);
-            $this->_message('冻结用户成功，此用户将不能登陆系统!', 'ss_user/view/', TRUE);
+            echo $this->_json(200, '冻结用户成功，此用户将不能登陆系统!', 'ss_user_view');
         } else {
             $this->user_m->stop_user($id, 1);
-            $this->_message('恢复用户成功!', 'ss_user/view/', TRUE);
+            echo $this->_json(200, '恢复用户成功!', 'ss_user_view');
         }
     }
 
@@ -166,23 +194,26 @@ class Ss_user extends Admin_Controller {
      */
     private function _get_form_data($is_em = 0, $is_edit = 0) {
         $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('', '');
         if ($is_em) {
-            $this->form_validation->set_rules('user_id', '员工', 'trim|required|is_natural_no_zero');
+            $this->form_validation->set_rules('user_id', '员工', 'trim|is_natural_no_zero');
         }
         $is_unique = !$is_edit ? '|is_unique[zb_user.user_name]' : '';
         $is_require = !$is_edit ? '|required' : '';
-        $this->form_validation->set_rules('user_name', '用户名', 'trim|required|max_length[20]|min_length[4]' . $is_unique);
+        $this->form_validation->set_rules('user_name_add', '用户名', 'trim|required|max_length[20]|min_length[4]' . $is_unique);
         $this->form_validation->set_rules('password', '密码', 'trim|max_length[16]|min_length[6]' . $is_require);
-        $this->form_validation->set_rules('confirm_password', '确认密码', 'trim|max_length[16]|min_length[6]|matches[password]' . $is_require);
-        $this->form_validation->set_rules('role_id', '用户组', 'trim|required|is_natural_no_zero');
+        $this->form_validation->set_rules('password_ok', '确认密码', 'trim|max_length[16]|min_length[6]|matches[password]' . $is_require);
+        $this->form_validation->set_rules('role_id', '用户组', 'trim|is_natural_no_zero');
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {
-            $data['user_id'] = $this->input->post('user_id', TRUE);
-            $data['user_name'] = $this->input->post('user_name', TRUE);
+            if ($is_em) {
+                $data['user_id'] = $this->input->post('user_id');
+            }
+            $data['user_name'] = $this->input->post('user_name_add', TRUE);
             $data['password'] = $this->input->post('password', TRUE);
             $data['is_admin'] = '1';
-            $data['role_id'] = $this->input->post('role_id', TRUE);
+            $data['role_id'] = $this->input->post('role_id');
             return $data;
         }
     }

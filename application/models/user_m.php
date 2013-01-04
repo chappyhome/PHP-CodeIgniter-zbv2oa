@@ -95,11 +95,8 @@ class User_m extends CI_Model {
      * @return  object
      */
     public function get_roles() {
-        $roles = array();
-        foreach ($this->db->select('role_id, role_name')->get('zb_role')->result_array() as $v) {
-            $roles[$v['role_id']] = $v['role_name'];
-        }
-        return $roles;
+        return $this->db->select('role_id, role_name')->get('zb_role')->result_array();
+         
     }
 
     // ------------------------------------------------------------------------
@@ -111,11 +108,29 @@ class User_m extends CI_Model {
      * @return  object
      */
     public function get_departments() {
-        $departments = array();
-        foreach ($this->db->select('department_id, department_name')->get('zb_department')->result_array() as $v) {
-            $departments[$v['department_id']] = $v['department_name'];
-        }
-        return $departments;
+//        $departments = array();
+//        foreach ($this->db->select('department_id, department_name')->get('zb_department')->result_array() as $v) {
+//            $departments[$v['department_id']] = $v['department_name'];
+//        }
+//        return $departments;
+        return $this->db->select('department_id, department_name')->get('zb_department')->result_array();
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * 获取有未添加账号的员工所在的部门
+     *
+     * @access  public
+     * @return  object
+     */
+    public function get_em_departments() {
+        return $this->db->select('zb_department.department_id, zb_department.department_name')
+                        ->where('zb_user.is_admin', '0')
+                        ->group_by('zb_user.department_id')
+                        ->join('zb_department', 'zb_department.department_id=zb_user.department_id')
+                        ->get('zb_user')
+                        ->result_array();
     }
 
     // ------------------------------------------------------------------------
@@ -198,7 +213,7 @@ class User_m extends CI_Model {
     // ------------------------------------------------------------------------
 
     /**
-     * 获取部门下所有用户
+     * 获取部门下指定用户
      *
      * @access  public
      * @param   int

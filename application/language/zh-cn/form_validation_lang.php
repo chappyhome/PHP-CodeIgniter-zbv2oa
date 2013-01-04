@@ -1,6 +1,6 @@
 <?php
 
-$lang['required'] 			= "%s 必须填写.";
+$lang['required'] 			= "%s必须填写";
 $lang['isset']				= "%s 一定要有内容.";
 $lang['valid_email']		= "%s 必须是一个有效的电子邮箱地址.";
 $lang['valid_emails'] 		= "%s 必须是有效的电子邮箱地址.";

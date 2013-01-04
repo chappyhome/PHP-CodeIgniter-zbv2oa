@@ -62,7 +62,7 @@ class Ss extends Admin_Controller {
             }
         } else {
             $data['info'] = $this->company_info_m->get_info_by_id('1');
-            $this->load->view('ss/company_v', $data);
+            $this->load->view('ss/ss_company_v', $data);
         }
     }
 

@@ -13,9 +13,9 @@
                 <li>
                     <select class="select" name="role">
                         <option value="0">选择用户组</option>
-                        <?php foreach ($roles as $k => $r): ?>
-                            <option <?php echo $role == $k ? 'selected="selected"' : '' ?> value="<?php echo $k; ?>">
-                                <?php echo $r; ?>
+                        <?php foreach ($roles as $key): ?>
+                            <option <?php echo $role == $key['role_id'] ? 'selected="selected"' : '' ?> value="<?php echo $key['role_id']; ?>">
+                                <?php echo $key['role_name']; ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -32,8 +32,9 @@
 <div class="pageContent">
     <div class="panelBar">
         <ul class="toolBar">
-            <li><a class="add" href="<?php echo site_url('ss_user/add_em_user'); ?>" target="navTab"><span>添加</span></a></li>
-            <li><a class="edit" href="<?php echo site_url('ss_user/edit') . '/'; ?>{user_id}" target="navTab" mask="true" warn="请选择用户!"><span>修改</span></a></li>
+            <li><a class="add" href="<?php echo site_url('ss_user/add_em_user'); ?>" target="dialog"><span>添加内部用户</span></a></li>
+            <li><a class="add" href="<?php echo site_url('ss_user/add_user'); ?>" target="dialog"><span>添加外部用户</span></a></li>
+            <li><a class="edit" href="<?php echo site_url('ss_user/edit') . '/'; ?>{user_id}" target="dialog" mask="true" warn="请选择用户!"><span>修改</span></a></li>
             <li><a class="icon" href="<?php echo site_url('ss_user/stop') . '/'; ?>{user_id}" target="ajaxTodo" mask="true" warn="请选择用户!"><span>冻结</span></a></li>
             <li><a class="delete" href="<?php echo site_url('ss_user/del') . '/'; ?>{user_id}" target="ajaxTodo" mask="true" warn="请选择用户!" title="确定要删除吗?"><span>删除</span></a></li>
             <li class="line">line</li>
