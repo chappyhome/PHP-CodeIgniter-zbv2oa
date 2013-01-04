@@ -42,8 +42,12 @@ class Ss_role extends Admin_Controller {
      * @return  void
      */
     public function view() {
-        $data['list'] = $this->role_m->get_roles();
-        $this->_template('ss_role_list_v', $data);
+        $this->input->post('numPerPage', TRUE) != "" ? $data['numPerPage'] = $this->input->post('numPerPage', TRUE) : $data['numPerPage'] = 10;
+        $this->input->post('pageNum', TRUE) != "" ? $data['pageNum'] = $this->input->post('pageNum', TRUE) : $data['pageNum'] = 1;
+        $offset = ($data['pageNum'] - 1) * $data['numPerPage'];
+        $data['list'] = $this->role_m->get_roles($data['numPerPage'], $offset);
+        $data['total_rows'] = $this->role_m->get_roles_num();
+        $this->load->view('ss/ss_role_list_v', $data);
     }
 
     // ------------------------------------------------------------------------
@@ -61,8 +65,11 @@ class Ss_role extends Admin_Controller {
             $this->cache_m->_update_menu_cache($role_id);
             $this->_message('用户组添加成功!', 'ss_role/view', TRUE);
         } else {
-            $data = $this->role_m->get_form_rights();
-            $this->_template('ss_role_add_v', $data);
+            $data['right_ss'] = $this->role_m->get_form_rights('ss');
+            $data['right_em'] = $this->role_m->get_form_rights('em');
+            $data['right_cr'] = $this->role_m->get_form_rights('cr');
+            $data['right_mi'] = $this->role_m->get_form_rights('mi');
+            $this->load->view('ss/ss_role_add_v', $data);
         }
     }
 
@@ -124,7 +131,7 @@ class Ss_role extends Admin_Controller {
     private function _get_form_data($is_insert = 0) {
         $this->load->library('form_validation');
         $is_unique = $is_insert ? '|is_unique[zb_role.role_name]' : '';
-        $this->form_validation->set_rules('name', '用户组名称', 'trim|required|min_length[3]|max_length[20]' . $is_unique);
+        $this->form_validation->set_rules('name', '用户组名称', 'trim|required|min_length[4]|max_length[20]' . $is_unique);
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {

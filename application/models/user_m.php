@@ -96,7 +96,6 @@ class User_m extends CI_Model {
      */
     public function get_roles() {
         return $this->db->select('role_id, role_name')->get('zb_role')->result_array();
-         
     }
 
     // ------------------------------------------------------------------------
@@ -185,10 +184,9 @@ class User_m extends CI_Model {
         if ($offset) {
             $this->db->offset($offset);
         }
-        return $this->db->from('zb_user')
-                        ->where('zb_user.is_admin !=', 0)
+        return $this->db->where('zb_user.is_admin !=', 0)
                         ->join('zb_role', 'zb_role.role_id = zb_user.role_id')
-                        ->get()
+                        ->get('zb_user')
                         ->result();
     }
 

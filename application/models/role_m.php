@@ -43,8 +43,27 @@ class Role_m extends CI_Model {
      * @access  public
      * @return  object
      */
-    public function get_roles() {
+    public function get_roles($limit = 0, $offset = 0) {
+        if ($limit) {
+            $this->db->limit($limit);
+        }
+        if ($offset) {
+            $this->db->offset($offset);
+        }
         return $this->db->get('zb_role')->result();
+    }
+
+    // ------------------------------------------------------------------------
+
+    /**
+     * 获取用户组数
+     *
+     * @access  public
+     * @param   int
+     * @return  int
+     */
+    public function get_roles_num() {
+        return $this->db->count_all_results('zb_role');
     }
 
     // ------------------------------------------------------------------------
@@ -81,11 +100,16 @@ class Role_m extends CI_Model {
      * @access  public
      * @return  array
      */
-    public function get_form_rights() {
-        $array = $this->db->select('right_id,right_name')->get('zb_right')->result();
+    public function get_form_rights($str = '') {
+        if ($str) {
+            $this->db->like('right_class', $str);
+        }
+        $array = $this->db->select('right_id,right_name')
+                          ->get('zb_right')
+                          ->result();
         $data = array();
         foreach ($array as $key) {
-            $data['rights'][$key->right_id] = $key->right_name;
+            $data[$key->right_id] = $key->right_name;
         }
         return $data;
     }
