@@ -101,7 +101,7 @@ class Ss_user extends Admin_Controller {
         if ($operate == 'submit') {
             if ($data = $this->_get_form_data(0, 0)) {
                 $this->user_m->add_user($data);
-                echo $this->_json(200, '操作成功!', 'ss_user_view', '', 'closeCurrent');
+                echo $this->_json(200, '添加成功!', 'ss_user_view', '', 'closeCurrent');
             } else {
                 echo $this->_json(300, "后台数据验证错误（检查用户名是否已经存在）!");
             }
@@ -121,12 +121,13 @@ class Ss_user extends Admin_Controller {
     public function edit($operate = '') {
         if ($operate == 'submit') {
             $user_id = $this->input->get('id');
-            if ($user_id == '') {
+            $data['user'] = $this->user_m->get_full_user_by_username($user_id, 'uid');
+            if ($user_id == ''||!$data['user']) {
                 exit($this->_json(300, "不存在的用户!"));
             }
             if ($data_update = $this->_get_form_data(0, 1)) {
                 $this->user_m->edit_user($user_id, $data_update);
-                echo $this->_json(200, '操作成功!', 'ss_user_view', '', 'closeCurrent');
+                echo $this->_json(200, '用户修改成功!', 'ss_user_view', '', 'closeCurrent');
             } else {
                 echo $this->_json(300, "后台数据验证错误（检查用户名是否已经存在）!");
             }

@@ -58,12 +58,16 @@ class Ss_role extends Admin_Controller {
      * @access  public
      * @return  void
      */
-    public function add() {
-        if ($this->_get_form_data(1)) {
-            $role_id = $this->role_m->add_role($this->_get_form_data(1));
-            $this->cache_m->_update_role_cache($role_id);
-            $this->cache_m->_update_menu_cache($role_id);
-            $this->_message('用户组添加成功!', 'ss_role/view', TRUE);
+    public function add($operate = '') {
+        if ($operate == 'submit') {
+            if ($this->_get_form_data(1)) {
+                $role_id = $this->role_m->add_role($this->_get_form_data(1));
+                $this->cache_m->_update_role_cache($role_id);
+                $this->cache_m->_update_menu_cache($role_id);
+                echo $this->_json(200, '用户组添加成功!', 'ss_role_view', '', 'closeCurrent');
+            } else {
+                echo $this->_json(300, "后台数据验证错误（检查用户组名称是否已经存在）!");
+            }
         } else {
             $data['right_ss'] = $this->role_m->get_form_rights('ss');
             $data['right_em'] = $this->role_m->get_form_rights('em');
@@ -82,19 +86,32 @@ class Ss_role extends Admin_Controller {
      * @param   int
      * @return  void
      */
-    public function edit($id = 0) {
-        $data = $this->role_m->get_form_rights();
-        $data['role'] = $this->role_m->get_role_by_id($id);
-        if (!$data['role']) {
-            $this->_message('不存在的用户组', '', FALSE);
-        }
-        if ($this->_get_form_data(0)) {
-            $this->role_m->edit_role($id, $this->_get_form_data(0));
-            $this->cache_m->_update_role_cache($id);
-            $this->cache_m->_update_menu_cache($id);
-            $this->_message('用户组修改成功!', 'ss_role/edit/' . $id, TRUE);
+    public function edit($operate = '') {
+        if ($operate == 'submit') {
+            $role_id = $this->input->get('id');
+            $data['role'] = $this->role_m->get_role_by_id($role_id);
+            if ($role_id == '' || !$data['role']) {
+                exit($this->_json(300, "不存在的用户组!"));
+            }
+            if ($this->_get_form_data(0)) {
+                $this->role_m->edit_role($role_id, $this->_get_form_data(0));
+                $this->cache_m->_update_role_cache($role_id);
+                $this->cache_m->_update_menu_cache($role_id);
+                echo $this->_json(200, '用户组修改成功!', 'ss_role_view', '', 'closeCurrent');
+            } else {
+                echo $this->_json(300, "后台数据验证错误（检查用户名是否已经存在）!");
+            }
         } else {
-            $this->_template('ss_role_edit_v', $data);
+            $data['role'] = $this->role_m->get_role_by_id($operate);
+            if (!$data['role']) {
+                $this->_message('不存在的用户组!', '', FALSE);
+            }
+            $data['right_ss'] = $this->role_m->get_form_rights('ss');
+            $data['right_em'] = $this->role_m->get_form_rights('em');
+            $data['right_cr'] = $this->role_m->get_form_rights('cr');
+            $data['right_mi'] = $this->role_m->get_form_rights('mi');
+            $data['role'] = $this->role_m->get_role_by_id($operate);
+            $this->load->view('ss/ss_role_edit_v', $data);
         }
     }
 
@@ -110,13 +127,13 @@ class Ss_role extends Admin_Controller {
     public function del($id = 0) {
         $role = $this->role_m->get_role_by_id($id);
         if (!$role) {
-            $this->_message('不存在的用户组', '', FALSE);
+             exit($this->_json(300, "不存在的用户组!"));
         }
         if ($this->role_m->get_role_user_num($id) > 0) {
-            $this->_message('该用户组下有用户不允许删除!', '', FALSE);
+             exit($this->_json(300, "该用户组下有用户不允许删除!"));
         }
         $this->role_m->del_role($id);
-        $this->_message('用户组删除成功!', '', FALSE);
+        echo $this->_json(200, '用户组删除成功!', 'ss_role_view');
     }
 
     // ------------------------------------------------------------------------
@@ -131,11 +148,13 @@ class Ss_role extends Admin_Controller {
     private function _get_form_data($is_insert = 0) {
         $this->load->library('form_validation');
         $is_unique = $is_insert ? '|is_unique[zb_role.role_name]' : '';
-        $this->form_validation->set_rules('name', '用户组名称', 'trim|required|min_length[4]|max_length[20]' . $is_unique);
+        $this->form_validation->set_rules('role_name', '用户组名称', 'trim|required|min_length[4]|max_length[20]' . $is_unique);
+        $this->form_validation->set_rules('role_desc', '描述', 'trim|max_length[100]');
         if ($this->form_validation->run() == FALSE) {
             return FALSE;
         } else {
-            $data['role_name'] = $this->input->post('name', TRUE);
+            $data['role_name'] = $this->input->post('role_name', TRUE);
+            $data['role_desc'] = $this->input->post('role_desc', TRUE);
             $data['rights'] = $this->_array_to_string($this->input->post('right', TRUE));
             return $data;
         }

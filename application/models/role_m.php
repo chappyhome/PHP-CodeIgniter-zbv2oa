@@ -166,7 +166,8 @@ class Role_m extends CI_Model {
      */
     public function del_role($id) {
         $this->db->where('role_id', $id)->delete('zb_role');
-        delete_files('./application/date/role_' . $id . '.php');
+        unlink("./application/date/role_$id.php");
+        unlink("./application/date/menu_$id.php");
     }
 
     // ------------------------------------------------------------------------

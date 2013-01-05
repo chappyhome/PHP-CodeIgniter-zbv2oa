@@ -12,7 +12,7 @@
                 <col />
                 <tr>
                     <th> 用户组名称：</th>
-                    <td><input type="text" value="" autocomplete="off" style="width:150px" id="name" name="name" class="normal"><label>*3-20位用户组标识</label><b style="color:red"><?php echo form_error('name'); ?></b></td>
+                    <td><input type="text" value="" autocomplete="off" style="width:150px"  id="name" name="name" class="normal"><label>*3-20位用户组标识</label><b style="color:red"><?php echo form_error('name'); ?></b></td>
                 </tr>
                 <tr>
                     <th> 允许的权限：</th>

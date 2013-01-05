@@ -4,7 +4,7 @@
         <div class="pageFormContent" layoutH="56">
             <dl>
                 <dt>用户名：</dt>
-                <dd><input name="user_name_add" class="required textInput"  minlength="4" maxlength="20" type="text" value="" /></dd>
+                <dd><input name="user_name_add" class="required alphanumeric textInput" alt="用户名添加后不能修改" minlength="4" maxlength="20" type="text" value="" /></dd>
             </dl>
             <dl>
                 <dt>用户密码：</dt>

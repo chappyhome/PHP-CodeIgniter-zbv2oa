@@ -4,7 +4,7 @@
         <div class="pageFormContent" layoutH="56">
             <dl>
                 <dt>用户名：</dt>
-                <dd><input name="user_name_add" class="required textInput"  minlength="4" maxlength="20" type="text" value="<?php echo $user->user_name; ?>" /></dd>
+                <dd><input name="user_name_add" class="readonly alphanumeric required textInput" readonly="readonly"  minlength="4" maxlength="20" type="text" value="<?php echo $user->user_name; ?>" /></dd>
             </dl>
             <dl>
                 <dt>用户密码：</dt>
@@ -18,7 +18,7 @@
                 <dt>权限组：</dt>
                 <dd>
                     <input name="role_id" value="<?php echo $user->role_id; ?>" type="hidden">
-                    <input class="required" name="role_name" type="text" suggestFields="role_name" 
+                    <input class="required" name="role_name" type="text" readonly="readonly" suggestFields="role_name" 
                            suggestUrl="<?php echo site_url('ss_user/add_em_user/role'); ?>" lookupGroup="" value="<?php echo $user->role_name; ?>"/>
                 </dd>
             </dl>

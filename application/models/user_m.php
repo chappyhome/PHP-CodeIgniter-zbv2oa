@@ -49,9 +49,8 @@ class User_m extends CI_Model {
         }
         return $this->db->select("zb_user.user_id, zb_user.user_name, zb_user.tel, zb_user.password,zb_user.fullname,
            zb_user.salt, zb_role.role_id, zb_role.role_name, zb_user.is_admin, zb_user.is_leave")
-                        ->from('zb_user')
-                        ->join('zb_role', 'zb_role.role_id = zb_user.role_id')
-                        ->get()
+                        ->join('zb_role', 'zb_role.role_id = zb_user.role_id','left')
+                        ->get('zb_user')
                         ->row();
     }
 
@@ -107,12 +106,7 @@ class User_m extends CI_Model {
      * @return  object
      */
     public function get_departments() {
-//        $departments = array();
-//        foreach ($this->db->select('department_id, department_name')->get('zb_department')->result_array() as $v) {
-//            $departments[$v['department_id']] = $v['department_name'];
-//        }
-//        return $departments;
-        return $this->db->select('department_id, department_name')->get('zb_department')->result_array();
+        return $this->db->select('department_id, department_name')->get('zb_department')->result();
     }
 
     // ------------------------------------------------------------------------
@@ -221,7 +215,7 @@ class User_m extends CI_Model {
      */
     public function get_em_users($department_id = 0, $limit = 0, $offset = 0, $is_not_admin = 0, $is_not_leave = 0) {
         if ($department_id) {
-            $this->db->where('department_id', $department_id);
+            $this->db->where('zb_user.department_id', $department_id);
         }
         if ($limit) {
             $this->db->limit($limit);
@@ -235,9 +229,9 @@ class User_m extends CI_Model {
         if ($is_not_leave) {
             $this->db->where('is_leave', 0);
         }
-        return $this->db->from('zb_user')
-                        ->where('fullname !=', 'NULL')
-                        ->get()
+        return $this->db->where('fullname !=', 'NULL')
+                        ->join('zb_department', 'zb_user.department_id=zb_department.department_id')
+                        ->get('zb_user')
                         ->result();
     }
 

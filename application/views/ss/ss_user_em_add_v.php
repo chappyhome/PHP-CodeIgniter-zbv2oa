@@ -7,7 +7,7 @@
                 <dd>
                     <input id="department_id" name="department.department_id" value="" type="hidden"/>
                     <input class="required readonly textInput" name="department.department_name" type="text" suggestFields="department_name" 
-                           suggestUrl="<?php echo site_url('ss_user/add_em_user/department'); ?>" lookupGroup="department"/>
+                           readonly="readonly" suggestUrl="<?php echo site_url('ss_user/add_em_user/department'); ?>" lookupGroup="department"/>
                 </dd>
             </dl>
             <dl>
@@ -15,12 +15,12 @@
                 <dd>
                     <input id="user_id" name="user_id" value="" type="hidden"/>
                     <input class="required readonly textInput" name="fullname" type="text"  suggestFields="fullname" 
-                           suggestUrl="<?php echo site_url('ss_user/add_em_user/user') . '?department_id={department_id}'; ?>" warn="请先选择部门" lookupGroup=""/>
+                           readonly="readonly" suggestUrl="<?php echo site_url('ss_user/add_em_user/user') . '?department_id={department_id}'; ?>" warn="请先选择部门" lookupGroup=""/>
                 </dd>
             </dl>
             <dl>
                 <dt>用户名：</dt>
-                <dd><input name="user_name_add" class="required textInput"  minlength="4" maxlength="20" type="text" value="" /></dd>
+                <dd><input name="user_name_add" class="required alphanumeric textInput" alt="用户名添加后不能修改" minlength="4" maxlength="20" type="text" value="" /></dd>
             </dl>
             <dl>
                 <dt>用户密码：</dt>
@@ -35,7 +35,7 @@
                 <dd>
                     <input name="role_id" value="" type="hidden">
                     <input class="required" name="role_name" type="text" suggestFields="role_name" 
-                           suggestUrl="<?php echo site_url('ss_user/add_em_user/role'); ?>" lookupGroup=""/>
+                           readonly="readonly" suggestUrl="<?php echo site_url('ss_user/add_em_user/role'); ?>" lookupGroup=""/>
                 </dd>
             </dl>
         </div>
