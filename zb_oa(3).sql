@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2012 年 12 月 31 日 10:40
+-- 生成日期: 2013 年 01 月 05 日 11:56
 -- 服务器版本: 5.5.16
 -- PHP 版本: 5.3.8
 
@@ -63,20 +63,14 @@ CREATE TABLE IF NOT EXISTS `zb_captcha` (
   `word` varchar(20) NOT NULL,
   PRIMARY KEY (`captcha_id`),
   KEY `word` (`word`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=464 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=468 ;
 
 --
 -- 转存表中的数据 `zb_captcha`
 --
 
 INSERT INTO `zb_captcha` (`captcha_id`, `captcha_time`, `ip_address`, `word`) VALUES
-(457, 1356931129, '::1', 't5la'),
-(458, 1356931173, '::1', 'edej'),
-(459, 1356931186, '::1', 'pfsy'),
-(460, 1356931247, '::1', 'kkpi'),
-(461, 1356931249, '::1', 'jacy'),
-(462, 1356931252, '::1', '6f06'),
-(463, 1356931254, '::1', 'zwc6');
+(467, 1357353526, '::1', 'xypa');
 
 -- --------------------------------------------------------
 
@@ -45608,8 +45602,8 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 (2, '站点设置', 'ss_setting', 'site'),
 (3, '后台设置', 'ss_setting', 'backend'),
 (4, '更新缓存', 'ss_cache', 'cache'),
-(5, '用户组管理（列表）', 'ss_role', 'view'),
-(6, '用户管理（列表）', 'ss_user', 'view'),
+(5, '用户组（列表）', 'ss_role', 'view'),
+(6, '用户（列表）', 'ss_user', 'view'),
 (7, '编辑用户组', 'ss_role', 'edit'),
 (8, '查询客户', 'cr', 'check_customer'),
 (9, '新增客户（显示）', 'cr', 'add_customer'),
@@ -45630,7 +45624,7 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 (24, '编辑用户', 'ss_user', 'edit'),
 (25, '删除用户', 'ss_user', 'del'),
 (26, '冻结用户', 'ss_user', 'stop'),
-(27, '客户来源管理（列表）', 'cr_fm', 'view'),
+(27, '客户来源（列表）', 'cr_fm', 'view'),
 (28, '分组管理（列表）', 'cr_gm', 'view'),
 (29, '客户资源', 'cr_tel', 'resource'),
 (30, '我的客户', 'cr_tel', 'my'),
@@ -45642,11 +45636,11 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 (36, '添加客户来源', 'cr_fm', 'add'),
 (37, '编辑客户来源', 'cr_fm', 'edit'),
 (38, '删除客户来源', 'cr_fm', 'del'),
-(39, '客户状态管理（列表）', 'cr_sm', 'view'),
+(39, '客户状态（列表）', 'cr_sm', 'view'),
 (40, '增加客户状态', 'cr_sm', 'add'),
 (41, '修改客户状态', 'cr_sm', 'edit'),
 (42, '删除客户状态', 'cr_sm', 'del'),
-(43, '客户级别管理（列表）', 'cr_lm', 'view'),
+(43, '客户级别（列表）', 'cr_lm', 'view'),
 (44, '增加客户级别', 'cr_lm', 'add'),
 (45, '修改客户级别', 'cr_lm', 'edit'),
 (46, '删除客户级别', 'cr_lm', 'del'),
@@ -45674,18 +45668,19 @@ INSERT INTO `zb_right` (`right_id`, `right_name`, `right_class`, `right_method`)
 CREATE TABLE IF NOT EXISTS `zb_role` (
   `role_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `role_name` varchar(20) NOT NULL,
+  `role_desc` varchar(100) DEFAULT NULL,
   `rights` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`role_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
 -- 转存表中的数据 `zb_role`
 --
 
-INSERT INTO `zb_role` (`role_id`, `role_name`, `rights`) VALUES
-(1, '超级管理员', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60'),
-(2, '测试组1', '1,2,3,4,5'),
-(4, '牛人组', '1,2,3,4,5,6,8,9,10,11,12,13,14,15');
+INSERT INTO `zb_role` (`role_id`, `role_name`, `role_desc`, `rights`) VALUES
+(1, '超级管理员', '这个一个超级的管理员用户组', '1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60'),
+(2, '测试组1', '测试是一个很重要的环节', '1,2,3,4,5'),
+(4, '牛人组', '牛人组是我瞎扒出来的你知道', '1,2,3,4,5,6,8,9,10,11,12,13,14,15');
 
 -- --------------------------------------------------------
 
@@ -45695,35 +45690,51 @@ INSERT INTO `zb_role` (`role_id`, `role_name`, `rights`) VALUES
 
 CREATE TABLE IF NOT EXISTS `zb_user` (
   `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` int(10) unsigned DEFAULT '0',
   `user_name` varchar(20) DEFAULT NULL,
   `password` varchar(255) NOT NULL,
   `salt` varchar(10) NOT NULL,
   `fullname` varchar(20) DEFAULT NULL,
-  `email` varchar(40) DEFAULT NULL,
+  `sex` varchar(10) DEFAULT NULL,
+  `nation` varchar(30) DEFAULT NULL,
+  `marriage` varchar(10) DEFAULT NULL,
+  `education` varchar(20) DEFAULT NULL,
+  `school` varchar(50) DEFAULT NULL,
+  `major` varchar(50) DEFAULT NULL,
+  `id_cart` varchar(20) DEFAULT NULL,
+  `address_cart` varchar(50) DEFAULT NULL,
   `tel` varchar(20) DEFAULT NULL,
+  `email` varchar(40) DEFAULT NULL,
+  `emergency_name` varchar(20) DEFAULT NULL,
   `emergency_tel` varchar(20) DEFAULT NULL,
   `address` varchar(50) DEFAULT NULL,
-  `id_cart` varchar(20) DEFAULT NULL,
-  `ss` varchar(100) NOT NULL COMMENT '社会保障金状况',
-  `entry_time` date DEFAULT NULL,
-  `leave_time` date DEFAULT NULL,
+  `level` varchar(50) DEFAULT NULL,
   `department_id` int(10) unsigned DEFAULT NULL,
   `post` varchar(40) DEFAULT NULL,
+  `entry_time` date DEFAULT NULL,
+  `formal_time` date DEFAULT NULL,
+  `ss_strat_time` date DEFAULT NULL COMMENT '社会保障金状况',
+  `ss_end_time` date DEFAULT NULL,
+  `leave_time` date DEFAULT NULL,
   `is_admin` int(1) DEFAULT '0',
-  `role_id` int(10) unsigned DEFAULT '0',
+  `is_formal` int(1) DEFAULT '0',
   `is_leave` int(1) DEFAULT '0',
   PRIMARY KEY (`user_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=35 ;
 
 --
 -- 转存表中的数据 `zb_user`
 --
 
-INSERT INTO `zb_user` (`user_id`, `user_name`, `password`, `salt`, `fullname`, `email`, `tel`, `emergency_tel`, `address`, `id_cart`, `ss`, `entry_time`, `leave_time`, `department_id`, `post`, `is_admin`, `role_id`, `is_leave`) VALUES
-(1, 'admin', 'c5da0823ddf32a9743116d18105adb6afa79ceb5', '516f36ef1b', '周斌', 'binarx@gmail.com', '15838201264', '15903658375', '文化路5号', '410323199106197015', '', '2012-07-12', '0000-00-00', 4, '程序员', 1, 1, 0),
-(4, '123456', '176638168903db136bcd3e6a1551d851a279c6c7', '14810933e7', '牛二', 'binarx2@gmail.com', '15874125896', '15874125896', '中华人民共和国', '410258741258963214', '', '2012-11-24', '0000-00-00', 4, '范德萨', 1, 1, 0),
-(7, 'hahah', '9a6572a9801ef63b8d95dedf44419ffe51693b43', 'fad2fd8078', '好礼乐', 'binarx2@gmail.com', '15874125896', '15874125896', '中华人民共和国', '410258741258963214', '', '2012-11-26', '0000-00-00', 1, '辅导书', 2, 1, 0),
-(28, NULL, '', '', '周二呀2', '123@qq.com', '15839098765', '15830802132', '河南郑州啊的的', '123456789012345678', '', '2012-12-02', '0000-00-00', 1, '22', 0, 0, 0);
+INSERT INTO `zb_user` (`user_id`, `role_id`, `user_name`, `password`, `salt`, `fullname`, `sex`, `nation`, `marriage`, `education`, `school`, `major`, `id_cart`, `address_cart`, `tel`, `email`, `emergency_name`, `emergency_tel`, `address`, `level`, `department_id`, `post`, `entry_time`, `formal_time`, `ss_strat_time`, `ss_end_time`, `leave_time`, `is_admin`, `is_formal`, `is_leave`) VALUES
+(1, 1, 'admin', 'c5da0823ddf32a9743116d18105adb6afa79ceb5', '516f36ef1b', '周斌', NULL, NULL, NULL, NULL, NULL, NULL, '410323199106197015', NULL, '15838201264', 'binarx@gmail.com', NULL, '15903658375', '文化路5号', NULL, 4, '程序员', '2012-07-12', NULL, '0000-00-00', NULL, '0000-00-00', 1, NULL, 0),
+(4, 4, '123456', '84f9a873061914673da7de6b1af346320524c719', '96ba314735', '牛二', NULL, NULL, NULL, NULL, NULL, NULL, '410258741258963214', NULL, '15874125896', 'binarx2@gmail.com', NULL, '15874125896', '中华人民共和国', NULL, 4, '范德萨', '2012-11-24', NULL, '0000-00-00', NULL, '0000-00-00', 1, NULL, 0),
+(7, 1, 'hahah', '838682582d3482f1373a84cb883b0fa058e05df1', 'b7aece628f', '好礼乐', NULL, NULL, NULL, NULL, NULL, NULL, '410258741258963214', NULL, '15874125896', 'binarx2@gmail.com', NULL, '15874125896', '中华人民共和国', NULL, 1, '辅导书', '2012-11-26', NULL, '0000-00-00', NULL, '0000-00-00', 2, NULL, 0),
+(28, 0, NULL, '', '', '周二呀2', NULL, NULL, NULL, NULL, NULL, NULL, '123456789012345678', NULL, '15839098765', '123@qq.com', NULL, '15830802132', '河南郑州啊的的', NULL, 4, '22', '2012-12-02', NULL, '0000-00-00', NULL, '0000-00-00', 0, NULL, 0),
+(8, 4, 'erfendou123', '6947773492ee6e630893af7381d5ff90071b95be', '6e4c28581f', '而奋斗', NULL, NULL, NULL, NULL, NULL, NULL, '453453153153415345', NULL, '13513415311', '123@qq.com', NULL, '15315315315', '飞的非师范读书', NULL, 1, '22', '2012-12-11', NULL, '0000-00-00', NULL, '0000-00-00', 1, NULL, 0),
+(0, 0, 'lele', 'a3200717582580ea59d3b307f1acc80e3aa79188', '153c24758a', '乐乐', NULL, NULL, NULL, NULL, NULL, NULL, '123123123123123123', NULL, '12312312312', '123@qq.cm', NULL, '12312312311', '发生的', NULL, 1, '22', '2012-12-04', NULL, '0000-00-00', NULL, '0000-00-00', 1, NULL, 0),
+(33, 2, 'erfendou', '1210a3c943303dd64c21e2e98e934b199e77c844', '88ec4530d6', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, 1, NULL, 0),
+(34, 2, 'hahah123', 'dbcebdf39aeb2c028fba1a42aa5adbd8a5a18694', '4996b990a5', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0000-00-00', NULL, NULL, 1, NULL, 0);
 
 -- --------------------------------------------------------
 
